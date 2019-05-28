@@ -1,5 +1,5 @@
 const USERNAME = 'CNYRB8810';
-const PASSWORD = '1234asdf';
+const PASSWORD = '1234asdff';
 
 module.exports = {
     username: USERNAME,
