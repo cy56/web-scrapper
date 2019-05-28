@@ -25,12 +25,9 @@ class GEN extends PuppeteerClient {
             currency: this.vendor.selectors.filterCurrency,
             viewBy: this.vendor.selectors.filterViewBy,
             list: this.vendor.selectors.filterList,
-            start: this.vendor.selectors.startDate,
-            end: this.vendor.selectors.endDate,
-            datePicker: this.vendor.selectors.datepicker,
-            runReport: this.vendor.selectors.runReport,
             vCurrency: 'CNY',
-            vView: 'Currency'
+            vView: 'Currency',
+            report: this.vendor.selectors.runReport
         }
         await this.page.waitFor(filters.currency, { visible: true });
         await this.page.evaluate((filters) => {
@@ -44,24 +41,17 @@ class GEN extends PuppeteerClient {
             }
         }, filters);
 
-        await this.page.evaluate((filters, start, end) => {
-            document.querySelector(filters.start).click();
-            let datePicker = document.querySelectorAll(filters.datepicker);
-            for (let index = 0; index < datePicker.length; index++) {
-                if (datePicker[index].getAttribute('title') === start) {
-                    datePicker[index].click();
-                }
-            }
-            document.querySelector(filters.end).click();
-            let datePicker2 = document.querySelectorAll(filters.datepicker);
-            for (let index = 0; index < datePicker2.length; index++) {
-                if (datePicker2[index].getAttribute('title') === end) {
-                    datePicker2[index].click();
-                }
-            }
-        }, filters, start, end);
+        await this.page.click(this.vendor.selectors.startDate);
+        await this.page.click(this.vendor.selectors.dateValue, { clickCount : 3 });
+        await this.page.type(this.vendor.selectors.dateValue, start);
+        await this.page.click(this.vendor.selectors.endDate);
+        await this.page.waitFor(this.vendor.selectors.dateValue);
+        await this.page.click(this.vendor.selectors.dateValue, { clickCount: 3 });
+        await this.page.type(this.vendor.selectors.dateValue, end);
         await this.page.waitFor(1000);
-        await this.page.click(filters.runReport);
+        await this.page.evaluate((filters) => { 
+            document.querySelector(filters.report).click();
+        }, filters);
     }
 
     async extractHtmlTableProcess() {
@@ -73,7 +63,7 @@ class GEN extends PuppeteerClient {
                 const table = document.querySelectorAll(htmlTable);
                 for (let index = 0; index < table.length; index++) {
                     const item = table[index].outerText.replace(/(\r\n|\n|\r)/gm, "").split('\t');
-                    if (item[0] !== 'Subtotal') {
+                    if (item[0] !== 'Subtotal' && item[0] !== 'Total') {
                         items.push(item);
                     }     
                 }
@@ -91,22 +81,22 @@ class GEN extends PuppeteerClient {
 module.exports = async function run(start, end) {
     const worker = new GEN({ headless: false });
     const dateResolver = worker.resolveDateTime(start, end);
-    console.log(worker);
-    // try {
-    //     await worker.init();
-    //     await worker.login();
-    //     await worker.gotoReport();
-    //     for (let index = 0; index < dateResolver.dates.length; index++) {
-    //         const start = dateResolver.dates[index].start;
-    //         const end = dateResolver.dates[index].end;
-    //         await worker.filterConditions(start, end);
-    //         await worker.extractHtmlTable();
-    //         await worker.resolveSource(start);
-    //         await worker.insertIntoDB();
-    //     }
-    //     await worker.logout();
-    //     return 'Task Done!!!';
-    // } catch (err) {
-    //     console.error(err.message);
-    // }
+    try {
+        await worker.init();
+        await worker.login();
+        await worker.gotoReport();
+        for (let index = 0; index < dateResolver.dates.length; index++) {
+            const start = dateResolver.dates[index].start;
+            const end = dateResolver.dates[index].end;
+            await worker.filterConditions(start, end);
+            await worker.extractHtmlTable();
+            await worker.resolveSource(start);
+            console.log(worker.resolved);
+            await worker.insertIntoDB();
+        }
+        await worker.logout();
+        return 'Task Done!!!';
+    } catch (err) {
+        console.error(err.message);
+    }
 }

@@ -11,11 +11,12 @@ const REPORT_SELECTOR = '#root > div > div > aside > div > nav > ul > li:nth-chi
 const GAME_REPORT_SELECTOR = 'li.ant-menu-item';
 const START_DATE = '#root > div > div > section > div > div.sc-htpNat.aFPWW > form > div:nth-child(3) > div:nth-child(1) > div > div.ant-form-item-control-wrapper > div > span > span > div > input';
 const END_DATE = '#root > div > div > section > div > div.sc-htpNat.aFPWW > form > div:nth-child(3) > div:nth-child(3) > div > div.ant-form-item-control-wrapper > div > span > span > div > input';
+const DATE_VAL = '.ant-calendar > .ant-calendar-panel > .ant-calendar-input-wrap > .ant-calendar-date-input-wrap > .ant-calendar-input';
 const DATE_PICKER = 'tbody.ant-calendar-tbody tr td';
 const FILTER_CURRENCY = '#reportCurrency';
 const FILTER_VIEWBY = '#viewBy';
 const FILTER_LIST = 'ul[role="listbox"] li';
-const RUN_REPORT = '#root > div > div > section > div > div.sc-htpNat.aFPWW > div.clearfix > div:nth-child(2) > button';
+const RUN_REPORT = '.content-wrapper > .sc-htpNat > .clearfix > .mt-lg > .btn-primary';
 const TABLE_SELECTOR = 'table.ant-table-fixed tr.ant-table-row';
 
 const PAGES = {
@@ -32,6 +33,7 @@ const SELECTORS = {
     gameReport: GAME_REPORT_SELECTOR,
     startDate: START_DATE,
     endDate: END_DATE,
+    dateValue: DATE_VAL,
     datepicker: DATE_PICKER,
     filterCurrency: FILTER_CURRENCY,
     filterViewBy: FILTER_VIEWBY,
