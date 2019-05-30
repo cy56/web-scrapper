@@ -15,10 +15,18 @@ app.use(auth.passport.initialize());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    next();
+});
+
 // Registry Routing
 app.use('/api/auth', require('./app/routes/api/auth/authenticate.js'));
-app.use('/api/vendors/gd', require('./app/routes/api/vendors/gd.js'));
-app.use('/api/vendors/cmd', require('./app/routes/api/vendors/cmd.js'));
+app.use('/api/upload', require('./app/routes/api/system/upload.js'));
+// app.use('/api/vendors/gd', require('./app/routes/api/vendors/gd.js'));
+// app.use('/api/vendors/cmd', require('./app/routes/api/vendors/cmd.js'));
 
 // Create a Server
 const PORT = process.env.PORT || 5000;

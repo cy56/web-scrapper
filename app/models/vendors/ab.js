@@ -1,74 +1,80 @@
-module.exports = (sequelize, Sequelize) => {
-    const AB = sequelize.define('ab', {
-        source: {
-            type: Sequelize.STRING
-        },
-        vendor: {
-            type: Sequelize.STRING
-        },
-        filename: {
-            type: Sequelize.STRING
-        },
-        date: {
-            type: Sequelize.DATEONLY
-        },
-        class: {
-            type: Sequelize.STRING
-        },
-        username: {
-            type: Sequelize.STRING
-        },
-        game: {
-            type: Sequelize.STRING
-        },
-        betAmount: {
-            type: Sequelize.DECIMAL(24, 2)
-        },
-        winloss: {
-            type: Sequelize.DECIMAL(24, 2)
-        },
-        validBetAmount: {
-            type: Sequelize.DECIMAL(24, 2)
-        },
-        type: {
-            type: Sequelize.STRING
-        },
-        rebate: {
-            type: Sequelize.DECIMAL(24, 2)
-        },
-        rebateAmount: {
-            type: Sequelize.DECIMAL(24, 2)
-        },
-        netProfitLoss: {
-            type: Sequelize.DECIMAL(24, 2)
-        },
-        sharePercent: {
-            type: Sequelize.DECIMAL(24, 2)
-        },
-        shareBetAmount: {
-            type: Sequelize.DECIMAL(24, 2)
-        },
-        shareWinloss: {
-            type: Sequelize.DECIMAL(24, 2)
-        },
-        shareValidBet: {
-            type: Sequelize.DECIMAL(24, 2)
-        },
-        actualSettlement: {
-            type: Sequelize.DECIMAL(24, 2)
-        },
-        shareWinPercent: {
-            type: Sequelize.DECIMAL(24, 7)
-        }
+const Model = require('../vendorModel');
 
-    }, {
-            indexes: [
-                {
-                    unique: true,
-                    fields: ['date', 'source']
-                }
-            ]
-        });
-
-    return AB;
+class AB extends Model {
+    static initial(sequelize, Datatypes) {
+        this.sequelize = sequelize;
+        this.Datatypes = Datatypes;
+        this.attributes = ['id', 'source', 'date', 'username', 'game', 'type', 'betAmount', 'winloss'];
+        this.structure = {
+            source: {
+                type: this.Datatypes.STRING
+            },
+            vendor: {
+                type: this.Datatypes.STRING
+            },
+            filename: {
+                type: this.Datatypes.STRING
+            },
+            date: {
+                type: this.Datatypes.DATEONLY
+            },
+            class: {
+                type: this.Datatypes.STRING
+            },
+            username: {
+                type: this.Datatypes.STRING
+            },
+            game: {
+                type: this.Datatypes.STRING
+            },
+            betAmount: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            winloss: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            validBetAmount: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            type: {
+                type: this.Datatypes.STRING
+            },
+            rebate: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            rebateAmount: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            netProfitLoss: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            sharePercent: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            shareBetAmount: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            shareWinloss: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            shareValidBet: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            actualSettlement: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            shareWinPercent: {
+                type: this.Datatypes.DECIMAL(24, 7)
+            }
+        };
+        this.indexes = [
+            {
+                unique: true,
+                fields: ['date', 'source']
+            }
+        ];
+        return super.setup();
+    }
 }
+
+module.exports = AB;

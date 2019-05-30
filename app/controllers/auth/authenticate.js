@@ -10,7 +10,7 @@ const CODE_USER_CREATE_FAILED = 3;
 const CODE_SYSTEM_ERROR = 9;
 
 //API
-exports.login =  async (req, res) => {
+exports.login = async (req, res) => {
     try {
         errors = verifyLogin(req);
 
@@ -109,10 +109,9 @@ createUser = async(params, password) => {
 };
 
 getToken = (result) => {
-    let { id, firstname, lastname, email, password } = result.dataValues || result;
-    let payload = { id, firstname, lastname, email, password };
-    let token = auth.jwt.sign(payload, auth.jwtOptions.secretOrKey);
-    return { code: CODE_PERFECT, token };
+    let token = auth.jwt.sign(result, auth.jwtOptions.secretOrKey);
+    let { id, firstname, lastname, email } = result;
+    return { code: CODE_PERFECT, token, user: { id, firstname, lastname, email }};
 };
 
 hashPassword = (password) => {

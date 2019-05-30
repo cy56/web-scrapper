@@ -1,41 +1,48 @@
-module.exports = (sequelize, Sequelize) => {
-    const BSG = sequelize.define('bsg', {
-        source: {
-            type: Sequelize.STRING
-        },
-        date: {
-            type: Sequelize.DATEONLY
-        },
-        type: {
-            type: Sequelize.STRING
-        },
-        games: {
-            type: Sequelize.INTEGER
-        },
-        betAmount: {
-            type: Sequelize.DECIMAL(24, 2)
-        },
-        roundCount: {
-            type: Sequelize.INTEGER
-        },
-        totalPayout: {
-            type: Sequelize.DECIMAL(24, 2)
-        },
-        winloss: {
-            type: Sequelize.DECIMAL(24, 2)
-        }
-    }, {
-            indexes: [
-                {
-                    unique: true,
-                    fields: ['date', 'source', 'type']
-                },
-                {
-                    name: 'source_date',
-                    fields: ['date', 'source']
-                }
-            ]
-        });
+const Model = require('../vendorModel');
 
-    return BSG;
+class BSG extends Model {
+    static initial(sequelize, Datatypes) {
+        this.sequelize = sequelize;
+        this.Datatypes = Datatypes;
+        this.attributes = ['id', 'source', 'date', 'betAmount', 'roundCount', 'totalPayout', 'winloss'];
+        this.structure = {
+            source: {
+                type: this.Datatypes.STRING
+            },
+            date: {
+                type: this.Datatypes.DATEONLY
+            },
+            type: {
+                type: this.Datatypes.STRING
+            },
+            games: {
+                type: this.Datatypes.INTEGER
+            },
+            betAmount: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            roundCount: {
+                type: this.Datatypes.INTEGER
+            },
+            totalPayout: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            winloss: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            }
+        };
+        this.indexes = [
+            {
+                unique: true,
+                fields: ['date', 'source', 'type']
+            },
+            {
+                name: 'source_date',
+                fields: ['date', 'source']
+            }
+        ];
+        return super.setup();
+    }
 }
+
+module.exports = BSG;

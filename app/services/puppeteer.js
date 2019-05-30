@@ -18,10 +18,10 @@ class PuppeteerClient {
         this.browser = null;
         this.page = null;
 
-        this.creds = require(`../jobs/vendors/creds/${this.toString()}`);
-        this.vendor = require(`../jobs/vendors/libs/${this.toString()}`);
-        this.parser = require(`../jobs/vendors/parsers/${this.toString()}`);
-        this.model = require(`../controllers/vendors/${this.toString()}`);
+        this.creds = require(`../creds/${this.toString()}`);
+        this.vendor = require(`../libs/${this.toString()}`);
+        this.parser = require(`../parsers/${this.toString()}`);
+        this.model = require(`../models/vendors/${this.toString()}`);
     }
 
     async init() {
@@ -73,7 +73,8 @@ class PuppeteerClient {
 
     async resolveSource(date) {
         try {
-            this.resolved = await this.resolveParser(this.toString(), this.filename, date, this.unresolved, this.parser);
+            const source = (this.toString() !== 'hydra') ? 'vendor' : 'hydra';
+            this.resolved = await this.resolveParser(source, this.toString(), this.filename, date, this.unresolved, this.parser);
         } catch (err) {
             this.reportError('resolveSource', err);
         }
@@ -107,11 +108,11 @@ class PuppeteerClient {
         this.endProcess();
     }
 
-    async resolveParser(vendor, filename, startDate, unresolved, parser) {
+    async resolveParser(source, vendor, filename, startDate, unresolved, parser) {
         let items = [];
         for (let index = 0; index < unresolved.length; index++) {
             const date = libDate.format(new Date(startDate), 'YYYY-MM-DD');
-            const newParser = new parser({ vendor, filename, date}, unresolved[index]);
+            const newParser = new parser({ source, vendor, filename, date}, unresolved[index]);
             items.push(newParser.getResults());
         }
         return items;

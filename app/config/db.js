@@ -5,13 +5,13 @@ const sequelize = new Sequelize(env.database, env.username, env.password, {
     host: env.host,
     dialect: env.dialect,
     operatorsAliases: false,
-
     pool: {
         max: env.max,
         min: env.pool.min,
         acquire: env.pool.acquire,
         idle: env.pool.idle
-    }
+    },
+    query: { raw: true }
 });
 
 const db = {};
@@ -21,7 +21,7 @@ db.sequelize = sequelize;
 
 //Models/tables
 db.user = require('../models/auth/user').init(sequelize, Sequelize);
-// db.cmd = require('../models/vendors/cmd.js')(sequelize, Sequelize);
+db.cmd = require('../models/vendors/cmd.js').initial(sequelize, Sequelize);
 // db.gd = require('../models/vendors/gd.js')(sequelize, Sequelize);
 // db.gen = require('../models/vendors/gen.js')(sequelize, Sequelize);
 // db.pt = require('../models/vendors/pt.js')(sequelize, Sequelize);

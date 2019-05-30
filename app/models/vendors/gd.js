@@ -1,40 +1,46 @@
-module.exports = (sequelize, Sequelize) => {
-    const GD = sequelize.define('gd', {
-        source: {
-            type: Sequelize.STRING
-        },
-        date: {
-            type: Sequelize.DATEONLY
-        },
-        currency: {
-            type: Sequelize.STRING
-        },
-        vendor: {
-            type: Sequelize.STRING
-        },
-        filename: {
-            type: Sequelize.STRING
-        },
-        provider: {
-            type: Sequelize.STRING
-        },
-        activePlayer: {
-            type: Sequelize.INTEGER
-        },
-        betCount: {
-            type: Sequelize.INTEGER
-        },
-        betAmount: {
-            type: Sequelize.DECIMAL(24, 2)
-        },
-        validBetAmount: {
-            type: Sequelize.DECIMAL(24, 2)
-        },
-        playerWinLoss: {
-            type: Sequelize.DECIMAL(24, 2)
-        }
-    }, {
-        indexes: [
+const Model = require('../vendorModel');
+
+class GD extends Model {
+    static initial(sequelize, Datatypes) {
+        this.sequelize = sequelize;
+        this.Datatypes = Datatypes;
+        this.attributes = ['id', 'source', 'date', 'currency', 'activePlayer', 'betCount', 'betAmount', 'validBetAmount', 'playerWinLoss'];
+        this.structure = {
+            source: {
+                type: this.Datatypes.STRING
+            },
+            date: {
+                type: this.Datatypes.DATEONLY
+            },
+            currency: {
+                type: this.Datatypes.STRING
+            },
+            vendor: {
+                type: this.Datatypes.STRING
+            },
+            filename: {
+                type: this.Datatypes.STRING
+            },
+            provider: {
+                type: this.Datatypes.STRING
+            },
+            activePlayer: {
+                type: this.Datatypes.INTEGER
+            },
+            betCount: {
+                type: this.Datatypes.INTEGER
+            },
+            betAmount: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            validBetAmount: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            playerWinLoss: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            }
+        };
+        this.indexes = [
             {
                 unique: true,
                 fields: ['date', 'currency', 'source']
@@ -43,8 +49,9 @@ module.exports = (sequelize, Sequelize) => {
                 name: 'source_date',
                 fields: ['date', 'source']
             }
-        ]
-    });
-
-    return GD;
+        ];
+        return super.setup();
+    }
 }
+
+module.exports = GD;

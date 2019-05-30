@@ -721,13 +721,24 @@ const data = [{
 
 //const model = require('./app/controllers/vendors/gen');
 //model.bulkCreate(data);
-const db = require('./app/config/db.js');
-const bcrypt = require('bcryptjs');
-var salt = bcrypt.genSaltSync(10);
-var hash = bcrypt.hashSync("B4c0/\/", salt);
-console.log(salt);
-const model = db.user;
-const user = model.createUser({ firstname: 'cy', lastname: 'lim', email: 'limcy@example.com', password: '123qwe'});
-user.then((result) => {
-    console.log(result);
-});
+test = async() => {
+    const bcrypt = require('bcryptjs');
+    var salt = bcrypt.genSaltSync(10);
+    var hash = bcrypt.hashSync("B4c0/\/", salt);
+    //console.log(salt);
+    //const model = db.user;
+    
+    const test = await resolveData();
+    //const test = model.createUser({ firstname: 'cy', lastname: 'lim', email: 'limcy@example.com', password: '123qwe'});
+    console.log(test);
+}
+
+resolveData = async() => {
+    const db = require('./app/config/db.js');
+    const model = db.cmd;
+    const result = await model.findByParams({ currency: 'CNY' });
+    const data = result;
+    return data;
+}
+
+test();

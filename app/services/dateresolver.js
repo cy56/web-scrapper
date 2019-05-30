@@ -171,7 +171,7 @@ class dateresolver {
     resolveForSAG(items) {
         items.forEach((item) => {
             let start = date.format(item.start, 'YYYY-MM-DD');
-            let end = date.format(item.end, 'YYYY-MM-DD');
+            let end = date.format(date.addDays(item.end, 1), 'YYYY-MM-DD');
             this.dates.push({ start: start, end: end });
         });
         return this;

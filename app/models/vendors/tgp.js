@@ -1,56 +1,66 @@
-module.exports = (sequelize, Sequelize) => {
-    const TGP = sequelize.define('tgp', {
-        source: {
-            type: Sequelize.STRING
-        },
-        vendor: {
-            type: Sequelize.STRING
-        },
-        filename: {
-            type: Sequelize.STRING
-        },
-        date: {
-            type: Sequelize.DATEONLY
-        },
-        currency: {
-            type: Sequelize.STRING
-        },
-        players: {
-            type: Sequelize.INTEGER
-        },
-        rounds: {
-            type: Sequelize.INTEGER
-        },
-        betAmount: {
-            type: Sequelize.DECIMAL(24, 2)
-        },
-        turnover: {
-            type: Sequelize.DECIMAL(24, 2)
-        },
-        validBet: {
-            type: Sequelize.DECIMAL(24, 2)
-        },
-        companyWinloss: {
-            type: Sequelize.DECIMAL(24, 2)
-        },
-        commission: {
-            type: Sequelize.DECIMAL(24, 2)
-        },
-        percentComWinloss: {
-            type: Sequelize.DECIMAL(24, 2)
-        }
-    }, {
-            indexes: [
-                {
-                    unique: true,
-                    fields: ['date', 'currency', 'source']
-                },
-                {
-                    name: 'source_date',
-                    fields: ['date', 'source']
-                }
-            ]
-        });
+const Model = require('../vendorModel');
 
-    return TGP;
+class TGP extends Model {
+    static initial(sequelize, Datatypes) {
+        this.sequelize = sequelize;
+        this.Datatypes = Datatypes;
+        this.attributes = ['id', 'source', 'date', 'currency', 'players', 'rounds', 'betAmount', 'turnover', 'companyWinloss', 'commission'];
+        this.structure = {
+            source: {
+                type: this.Datatypes.STRING
+            },
+            vendor: {
+                type: this.Datatypes.STRING
+            },
+            filename: {
+                type: this.Datatypes.STRING
+            },
+            date: {
+                type: this.Datatypes.DATEONLY
+            },
+            currency: {
+                type: this.Datatypes.STRING
+            },
+            players: {
+                type: this.Datatypes.INTEGER
+            },
+            rounds: {
+                type: this.Datatypes.INTEGER
+            },
+            betAmount: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            turnover: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            validBet: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            companyWinloss: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            commission: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            percentComWinloss: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            }
+        };
+        this.indexes = [
+            {
+                unique: true,
+                fields: ['date', 'currency', 'source']
+            },
+            {
+                name: 'source_date',
+                fields: ['date', 'source']
+            }
+        ];
+        return super.setup();
+    }
 }
+
+module.exports = TGP;
+
+
+

@@ -8,7 +8,7 @@ class Worker
         this.vendor = params.vendor.toUpperCase();
         this.start = params.start;
         this.end = params.end || params.start;
-        this.module = require(`../jobs/vendors/${params.vendor}`);
+        this.module = require(`../jobs/${params.vendor}`);
 
         return this;
     }

@@ -1,59 +1,66 @@
-module.exports = (sequelize, Sequelize) => {
-    const GEN = sequelize.define('gen', {
-        source: {
-            type: Sequelize.STRING
-        },
-        date: {
-            type: Sequelize.DATEONLY
-        },
-        currency: {
-            type: Sequelize.STRING
-        },
-        type: {
-            type: Sequelize.STRING
-        },
-        vendor: {
-            type: Sequelize.STRING
-        },
-        filename: {
-            type: Sequelize.STRING
-        },
-        uap: {
-            type: Sequelize.INTEGER
-        },
-        spin: {
-            type: Sequelize.INTEGER
-        },
-        betAmount: {
-            type: Sequelize.DECIMAL(24, 2)
-        },
-        winloss: {
-            type: Sequelize.DECIMAL(24, 2)
-        },
-        rtp: {
-            type: Sequelize.DECIMAL(24, 2)
-        },
-        uapSpin: {
-            type: Sequelize.DECIMAL(24, 2)
-        },
-        uapBet: {
-            type: Sequelize.DECIMAL(24, 2)
-        },
-        betSpin: {
-            type: Sequelize.DECIMAL(24, 2)
-        }
-    }, {
-            indexes: [
-                {
-                    unique: true,
-                    fields: ['date', 'currency', 'source', 'type']
-                },
-                {
-                    name: 'source_date',
-                    fields: ['date', 'source']
-                }
-            ]
-        });
+const Model = require('../vendorModel');
 
-    return GEN;
+class GEN extends Model {
+    static initial(sequelize, Datatypes) {
+        this.sequelize = sequelize;
+        this.Datatypes = Datatypes;
+        this.attributes = ['id', 'source', 'date', 'currency', 'spin', 'betAmount', 'winloss'];
+        this.structure = {
+            source: {
+                type: this.Datatypes.STRING
+            },
+            date: {
+                type: this.Datatypes.DATEONLY
+            },
+            currency: {
+                type: this.Datatypes.STRING
+            },
+            type: {
+                type: this.Datatypes.STRING
+            },
+            vendor: {
+                type: this.Datatypes.STRING
+            },
+            filename: {
+                type: this.Datatypes.STRING
+            },
+            uap: {
+                type: this.Datatypes.INTEGER
+            },
+            spin: {
+                type: this.Datatypes.INTEGER
+            },
+            betAmount: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            winloss: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            rtp: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            uapSpin: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            uapBet: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            betSpin: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            }
+        };
+        this.indexes = [
+            {
+                unique: true,
+                fields: ['date', 'currency', 'source', 'type']
+            },
+            {
+                name: 'source_date',
+                fields: ['date', 'source']
+            }
+        ];
+        return super.setup();
+    }
 }
+
+module.exports = GEN;
