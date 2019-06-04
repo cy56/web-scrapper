@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const auth = require('./app/services/auth');
+const auth = require('./app/services/system/auth');
 
 //Database
 const db = require('./app/config/db.js');

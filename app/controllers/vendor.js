@@ -1,5 +1,5 @@
 //const db = require('../config/db');
-const resolver = require('./libs/resolver');
+const resolver = require('./extensions/resolver');
 
 class Vendor
 {

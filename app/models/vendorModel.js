@@ -5,7 +5,7 @@ class VendorModel extends Sequelize.Model {
         return super.init(this.structure, { indexes: this.indexes, sequelize: this.sequelize });
     }
 
-    static async findByParams(params = {}) {
+    static async searchByParams(params = {}) {
         try {
             const wheres = params.body || params;
             return await this.findAll({ attributes: this.attributes, where: wheres });
@@ -14,7 +14,7 @@ class VendorModel extends Sequelize.Model {
         }
     }
 
-    static async findById(params = {}) {
+    static async searchById(params = {}) {
         try {
             const { id } = params.body || params
             return await this.findById({id});
@@ -23,16 +23,17 @@ class VendorModel extends Sequelize.Model {
         }
     }
 
-    static async create(params = {}) {
+    static async createOne(params = {}) {
         try {
             let obj = params.body || params;
-            return await this.create(obj);
+            console.log(obj);
+            return this.create(obj);
         } catch (err) {
             console.error('Database Error: ', err.message);
         }
     }
 
-    static async bulkCreate(objects = []) {
+    static async createMany(objects = []) {
         try {
             return await this.bulkCreate(objects);
         } catch (err) {

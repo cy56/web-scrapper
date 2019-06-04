@@ -741,4 +741,9 @@ resolveData = async() => {
     return data;
 }
 
-test();
+testCase1 = () => {
+    const resolver = require('./app/services/system/resolver');
+    console.log(resolver.resolvePath('products', 'cmd'));
+}
+
+testCase1();

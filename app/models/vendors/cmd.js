@@ -4,9 +4,12 @@ class CMD extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
-        this.attributes = ['id', 'source', 'date', 'tickets', 'turnover', 'winloss', 'commission', 'totalWinloss', 'licenseeWinloss', 'providerWinloss'];
+        this.attributes = ['id', 'source', 'tickets', 'turnover', 'winloss', 'commission', 'totalWinloss', 'licenseeWinloss', 'providerWinloss'];
         this.structure = {
             source: {
+                type: this.Datatypes.STRING
+            },
+            brand: {
                 type: this.Datatypes.STRING
             },
             vendor: {
@@ -21,36 +24,35 @@ class CMD extends Model {
             currency: {
                 type: this.Datatypes.STRING
             },
-            tickets: {
+            players: {
                 type: this.Datatypes.INTEGER
             },
-            turnover: {
-                type: this.Datatypes.DECIMAL(24, 2)
+            bets: {
+                type: this.Datatypes.INTEGER
             },
-            winloss: {
-                type: this.Datatypes.DECIMAL(24, 2)
+            stake: {
+                type: this.Datatypes.DECIMAL(24, 4)
             },
-            commission: {
-                type: this.Datatypes.DECIMAL(24, 2)
+            stakeSold: {
+                type: this.Datatypes.DECIMAL(24, 4)
             },
-            totalWinloss: {
-                type: this.Datatypes.DECIMAL(24, 2)
+            takeBackAmount: {
+                type: this.Datatypes.DECIMAL(24, 4)
             },
-            licenseeWinloss: {
-                type: this.Datatypes.DECIMAL(24, 2)
+            memberComission: {
+                type: this.Datatypes.DECIMAL(24, 4)
             },
-            providerWinloss: {
+            playerWinloss: {
+                type: this.Datatypes.DECIMAL(24, 4)
+            },
+            winningPercent: {
                 type: this.Datatypes.DECIMAL(24, 2)
             }
         };
         this.indexes = [
             {
                 unique: true,
-                fields: ['date', 'currency', 'source']
-            },
-            {
-                name: 'source_date',
-                fields: ['date', 'source']
+                fields: ['date', 'currency', 'source', 'brand']
             }
         ];
         return super.setup();

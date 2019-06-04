@@ -1,5 +1,5 @@
 const db = require('../config/db.js');
-const auth = require('../services/auth');
+const auth = require('../services/system/auth');
 const bcrypt = require('bcryptjs');
 const model = db.user;
 

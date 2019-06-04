@@ -1,4 +1,4 @@
-const PuppeteerClient = require('../services/puppeteer');
+const PuppeteerClient = require('../base');
 
 class CMD extends PuppeteerClient
 {

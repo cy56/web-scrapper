@@ -1,4 +1,4 @@
-const dbc = require('../../exts/deathbycaptcha');
+const dbc = require('../../libraries/deathbycaptcha');
 const creds = require('./configs/dbc');
 
 class CaptchaResolver
