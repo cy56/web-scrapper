@@ -21,7 +21,7 @@ db.sequelize = sequelize;
 //Models/tables
 db.user = require('../models/auth/user').init(sequelize, Sequelize);
 db.cmd = require('../models/vendors/cmd.js').initial(sequelize, Sequelize);
-// db.gd = require('../models/vendors/gd.js')(sequelize, Sequelize);
+db.gd = require('../models/vendors/gd.js').initial(sequelize, Sequelize);
 // db.gen = require('../models/vendors/gen.js')(sequelize, Sequelize);
 // db.pt = require('../models/vendors/pt.js')(sequelize, Sequelize);
 // db.bsg = require('../models/vendors/bsg.js')(sequelize, Sequelize);

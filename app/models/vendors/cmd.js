@@ -4,15 +4,14 @@ class CMD extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
-        this.attributes = ['id', 'source', 'tickets', 'turnover', 'winloss', 'commission', 'totalWinloss', 'licenseeWinloss', 'providerWinloss'];
+        this.attributes = ['id', 'source', 'currency', 'players', 'bets', 'stake', 'stakeSold', 'takeBackAmount', 'memberComission', 'playerWinloss', 'winningPercent'];
+        this.groupAttr = ['source', 'brand', 'currency', 'players', 'bets', 'stake', 'playerWinloss'];
+        this.group = ['source', 'brand', 'currency'];
         this.structure = {
             source: {
                 type: this.Datatypes.STRING
             },
             brand: {
-                type: this.Datatypes.STRING
-            },
-            vendor: {
                 type: this.Datatypes.STRING
             },
             filename: {
@@ -53,6 +52,10 @@ class CMD extends Model {
             {
                 unique: true,
                 fields: ['date', 'currency', 'source', 'brand']
+            },
+            {
+                name: 'default_indexes',
+                fields: ['source', 'brand', 'currency']
             }
         ];
         return super.setup();

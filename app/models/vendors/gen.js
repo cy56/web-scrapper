@@ -4,9 +4,16 @@ class GEN extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
-        this.attributes = ['id', 'source', 'date', 'currency', 'spin', 'betAmount', 'winloss'];
+        this.attributes = ['id', 'source', 'brand', 'type', 'date', 'currency', 'players', 'bets', 'turnover', 
+            'validTurnover', 'playerWinloss', 'jackpotWinloss', 'jackpotContribution', 'playerWinlossJP'];
+        this.groupAttr = ['source', 'brand', 'type', 'currency', 'players', 'bets', 'turnover',
+            'validTurnover', 'playerWinloss', 'jackpotWinloss', 'jackpotContribution', 'playerWinlossJP'];
+        this.group = ['source', 'brand', 'currency', 'type'];
         this.structure = {
             source: {
+                type: this.Datatypes.STRING
+            },
+            brand: {
                 type: this.Datatypes.STRING
             },
             date: {
@@ -15,38 +22,35 @@ class GEN extends Model {
             currency: {
                 type: this.Datatypes.STRING
             },
-            type: {
-                type: this.Datatypes.STRING
-            },
-            vendor: {
-                type: this.Datatypes.STRING
-            },
             filename: {
                 type: this.Datatypes.STRING
             },
-            uap: {
+            type: {
+                type: this.Datatypes.STRING
+            },
+            players: {
                 type: this.Datatypes.INTEGER
             },
-            spin: {
+            bets : {
                 type: this.Datatypes.INTEGER
             },
-            betAmount: {
-                type: this.Datatypes.DECIMAL(24, 2)
+            turnover: {
+                type: this.Datatypes.DECIMAL(24, 4)
             },
-            winloss: {
-                type: this.Datatypes.DECIMAL(24, 2)
+            validTurnover: {
+                type: this.Datatypes.DECIMAL(24, 4)
             },
-            rtp: {
-                type: this.Datatypes.DECIMAL(24, 2)
+            playerWinloss: {
+                type: this.Datatypes.DECIMAL(24, 4)
             },
-            uapSpin: {
-                type: this.Datatypes.DECIMAL(24, 2)
+            jackpotWinloss: {
+                type: this.Datatypes.DECIMAL(24, 4)
             },
-            uapBet: {
-                type: this.Datatypes.DECIMAL(24, 2)
+            jackpotContribution: {
+                type: this.Datatypes.DECIMAL(24, 4)
             },
-            betSpin: {
-                type: this.Datatypes.DECIMAL(24, 2)
+            playerWinlossJP: {
+                type: this.Datatypes.DECIMAL(24, 4)
             }
         };
         this.indexes = [
@@ -55,8 +59,8 @@ class GEN extends Model {
                 fields: ['date', 'currency', 'source', 'type']
             },
             {
-                name: 'source_date',
-                fields: ['date', 'source']
+                name: 'default_indexes',
+                fields: ['source', 'brand', 'currency', 'type']
             }
         ];
         return super.setup();
