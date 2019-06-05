@@ -4,17 +4,11 @@ const dateService = require('date-and-time');
 
 class ResolverService
 {
-    static async resolveParser(params = { source:null, brand:null, vendor:null, filename:null, date:null}, data) {
+    static resolveParser(params = { source:null, brand:null, vendor:null, filename:null, date:null}, data) {
         try {
-            let items = [];
-            const { source, brand, vendor, filename } = params;
-            const parser = require(`../puppeteer/jobs/parsers/${vendor.toLowerCase()}`);
-            for (let index = 0; index < data.length; index++) {
-                const date = dateService.format(new Date(params.date), 'YYYY-MM-DD');
-                const newParser = new parser({ source, vendor, brand, filename, date }, data[index]);
-                items.push(newParser.getResults());
-            }
-            return items;
+            const parser = require(`../puppeteer/jobs/parsers/${params.vendor.toLowerCase()}`);
+            const resolved = new parser(params, data);
+            return resolved.getResults();
         } catch(err) {
             throw err.message;
         }
@@ -37,14 +31,6 @@ class ResolverService
         } catch(err) {
             throw err.message;
         }
-    }
-
-    static resolveTimer() {
-
-    }
-
-    static resolveDate() {
-
     }
 
     static resolveVendorDates(params = { vendor: null, start: null, end: null }) {

@@ -1,4 +1,5 @@
 const libcur = require('../../../../system/currency');
+const dateService = require('date-and-time');
 
 class BaseParser
 {
@@ -8,12 +9,16 @@ class BaseParser
         this.brand = brand;
         this.vendor = vendor;
         this.filename = filename;
-        this.date = date;
+        this.date = dateService.format(new Date(date), 'YYYY-MM-DD');
         this.datas = [];
     }
 
     resolveValue(value, precision=2) {
         return libcur.convert(value, precision);
+    }
+
+    getResults() {
+        return this.datas;
     }
 }
 

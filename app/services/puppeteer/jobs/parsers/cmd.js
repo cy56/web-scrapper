@@ -8,7 +8,7 @@ class CMD extends BaseParser {
 
 	cleanData(items) {
 		for (let index = 0; index < items.length; index++) {
-			this.datas.push(items[index]);
+			this.datas.push(this.resolveData(items[index]));
 		}
 	}
 
@@ -21,13 +21,9 @@ class CMD extends BaseParser {
 		let takeBackAmount = (this.source !== 'hydra') ? 0 : this.resolveValue(data[6], 4);
 		let memberComission = (this.source !== 'hydra') ? 0 : this.resolveValue(data[7], 4);
 		let playerWinloss = (this.source !== 'hydra') ? 0 : this.resolveValue(data[8], 4);
-		let winningPercent = (this.source !== 'hydra') ? 0 : this.resolveValue(data[9], 4);
+		let winningPercent = (this.source !== 'hydra') ? 0 : this.resolveValue(data[9], 2);
 
 		return {currency, players, bets, stake, stakeSold, takeBackAmount, memberComission, playerWinloss, winningPercent};
-	}
-
-	getResults() {
-		return this.datas;
 	}
 }
 
