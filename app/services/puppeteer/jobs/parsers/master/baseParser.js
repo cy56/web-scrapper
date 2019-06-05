@@ -9,6 +9,7 @@ class BaseParser
         this.vendor = vendor;
         this.filename = filename;
         this.date = date;
+        this.datas = [];
     }
 
     resolveValue(value, precision=2) {
