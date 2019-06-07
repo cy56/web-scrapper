@@ -6,7 +6,7 @@ class GEN extends Model {
         this.Datatypes = Datatypes;
         this.attributes = ['id', 'source', 'brand', 'type', 'date', 'currency', 'players', 'bets', 'turnover', 
             'validTurnover', 'playerWinloss', 'jackpotWinloss', 'jackpotContribution', 'playerWinlossJP'];
-        this.groupAttr = ['source', 'brand', 'type', 'currency', 'players', 'bets', 'turnover',
+        this.groupAttr = ['source', 'type', 'currency', 'players', 'bets', 'turnover',
             'validTurnover', 'playerWinloss', 'jackpotWinloss', 'jackpotContribution', 'playerWinlossJP'];
         this.group = ['source', 'brand', 'currency', 'type'];
         this.structure = {

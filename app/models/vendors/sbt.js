@@ -4,12 +4,16 @@ class SBT extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
-        this.attributes = ['id', 'source', 'date', 'currency', 'bets', 'turnover', 'ggr'];
+        this.attributes = ['id', 'source', 'date', 'currency', 'players', 'bets', 'turnover', 'freeBet', 
+        'actualTurnover', 'playerWinloss', 'totalComboBonus', 'winningPercent'];
+        this.groupAttr = ['source', 'currency', 'players', 'bets', 'turnover', 'freeBet',
+            'actualTurnover', 'playerWinloss', 'totalComboBonus', 'winningPercent'];
+        this.group = ['source', 'brand', 'currency'];
         this.structure = {
             source: {
                 type: this.Datatypes.STRING
             },
-            vendor: {
+            brand: {
                 type: this.Datatypes.STRING
             },
             filename: {
@@ -21,30 +25,39 @@ class SBT extends Model {
             currency: {
                 type: this.Datatypes.STRING
             },
+            players: {
+                type: this.Datatypes.INTEGER
+            },
             bets: {
                 type: this.Datatypes.INTEGER
             },
             turnover: {
                 type: this.Datatypes.DECIMAL(24, 2)
             },
-            avgBetAmount: {
+            freeBet: {
                 type: this.Datatypes.DECIMAL(24, 2)
             },
-            ggr: {
+            actualTurnover: {
                 type: this.Datatypes.DECIMAL(24, 2)
             },
-            margin: {
+            playerWinloss: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            totalComboBonus: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            winningPercent: {
                 type: this.Datatypes.DECIMAL(24, 2)
             }
         };
         this.indexes = [
             {
                 unique: true,
-                fields: ['date', 'currency', 'source']
+                fields: ['date', 'currency', 'source', 'brand']
             },
             {
-                name: 'source_date',
-                fields: ['date', 'source']
+                name: 'default_indexes',
+                fields: ['source', 'brand', 'currency']
             }
         ];
         return super.setup();

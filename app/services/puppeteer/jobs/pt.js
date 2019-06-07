@@ -1,17 +1,17 @@
-const PuppeteerClient = require('../services/puppeteer');
+const PuppeteerClient = require('../base');
 
 class PT extends PuppeteerClient {
     constructor(options = {}) {
         super(options);
     }
 
-    async loginProcess() {
-        await this.page.goto(this.vendor.pages.login);
+    async login(currency) {
+        await this.page.goto(this.vendor.pages.login[currency]);
         await this.page.waitFor(this.vendor.selectors.login, { visible: true });
         await this.page.focus(this.vendor.selectors.username);
-        await this.page.type(this.vendor.selectors.username, creds.username, { delay: 100 });
+        await this.page.type(this.vendor.selectors.username, creds[currency].username, { delay: 100 });
         await this.page.focus(this.vendor.selectors.password);
-        await this.page.type(this.vendor.selectors.password, creds.password, { delay: 100 });
+        await this.page.type(this.vendor.selectors.password, creds[currency].password, { delay: 100 });
         await this.page.click(this.vendor.selectors.login);
     }
 
@@ -54,22 +54,24 @@ class PT extends PuppeteerClient {
 }
 
 module.exports = async function run(start, end) {
+    const currencies = ['cny', 'thb'];
     const worker = new PT({ headless: false });
     const dateResolver = worker.resolveDateTime(start, end);
     try {
-        await worker.init();
-        await worker.login();
-        await worker.gotoReport();
-        for (let index = 0; index < dateResolver.dates.length; index++) {
-            const start = dateResolver.dates[index].start;
-            const end = dateResolver.dates[index].end;
-            await worker.filterConditions(start, end);
-            await worker.extractHtmlTable();
-            await worker.resolveSource(start);
-            await worker.insertIntoDB();
-        }
-        await worker.logout();
-        return 'Task Done!!!';
+        currencies.forEach((currency) => {
+            await worker.init();
+            await worker.login(currency);
+            await worker.gotoReport();
+            dateResolver.forEach((dates) => {
+                const start = dates.start;
+                const end = dates.end;
+                await worker.filterConditions(start, end);
+                await worker.extractHtmlTable();
+                await worker.resolveSource(start);
+                await worker.insertIntoDB();
+            });
+            await worker.logout();
+        });
     } catch (err) {
         console.error(err.message);
     }

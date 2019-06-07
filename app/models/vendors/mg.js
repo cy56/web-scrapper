@@ -4,13 +4,16 @@ class MG extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
-        this.attributes = ['id', 'source', 'date', 'sessionCasino', 'currency', 'players', 'games', 'wagers',
-            'wagerAmount', 'payouts', 'payoutAmount', 'progressive', 'grossGameRevenue', 'grossMargin'];
+        this.attributes = ['id', 'source', 'date', 'currency', 'type', 'players', 'bets', 
+        'turnover', 'playerWinloss', 'winningPercent', 'jpContribution', 'jpWins', 'playerWinlossJP'];
+        this.groupAttr = ['source', 'currency', 'type', 'players', 'bets',
+            'turnover', 'playerWinloss', 'winningPercent', 'jpContribution', 'jpWins', 'playerWinlossJP'];
+        this.group = ['source', 'brand', 'currency', 'type'];
         this.structure = {
             source: {
                 type: this.Datatypes.STRING
             },
-            vendor: {
+            brand: {
                 type: this.Datatypes.STRING
             },
             filename: {
@@ -19,48 +22,45 @@ class MG extends Model {
             date: {
                 type: this.Datatypes.DATEONLY
             },
-            sessionCasino: {
+            currency: {
                 type: this.Datatypes.STRING
             },
-            currency: {
+            type: {
                 type: this.Datatypes.STRING
             },
             players: {
                 type: this.Datatypes.INTEGER
             },
-            games: {
+            bets: {
                 type: this.Datatypes.INTEGER
             },
-            wagers: {
+            turnover: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            playerWinloss: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            winningPercent: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            jpContribution: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            jpWins: {
                 type: this.Datatypes.INTEGER
             },
-            wagerAmount: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            payouts: {
-                type: this.Datatypes.INTEGER
-            },
-            payoutAmount: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            progressive: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            grossGameRevenue: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            grossMargin: {
+            playerWinlossJP: {
                 type: this.Datatypes.DECIMAL(24, 2)
             }
         };
         this.indexes = [
             {
                 unique: true,
-                fields: ['date', 'currency', 'source']
+                fields: ['date', 'currency', 'source', 'brand', 'type']
             },
             {
-                name: 'source_date',
-                fields: ['date', 'source']
+                name: 'default_indexes',
+                fields: ['source', 'brand', 'currency', 'type']
             }
         ];
         return super.setup();

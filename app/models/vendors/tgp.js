@@ -4,7 +4,9 @@ class TGP extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
-        this.attributes = ['id', 'source', 'date', 'currency', 'players', 'rounds', 'betAmount', 'turnover', 'companyWinloss', 'commission'];
+        this.attributes = ['id', 'source', 'date', 'currency', 'type'];
+        this.groupAttr = ['source', 'currency', 'type', 'players', 'bets', 'turnover', 'playerWinloss', 'winningPercent']
+        this.group = ['source', 'currency', 'type'];
         this.structure = {
             source: {
                 type: this.Datatypes.STRING
@@ -21,39 +23,33 @@ class TGP extends Model {
             currency: {
                 type: this.Datatypes.STRING
             },
+            type: {
+                type: this.Datatypes.STRING
+            },
             players: {
                 type: this.Datatypes.INTEGER
             },
-            rounds: {
+            bets: {
                 type: this.Datatypes.INTEGER
-            },
-            betAmount: {
-                type: this.Datatypes.DECIMAL(24, 2)
             },
             turnover: {
                 type: this.Datatypes.DECIMAL(24, 2)
             },
-            validBet: {
+            playerWinloss: {
                 type: this.Datatypes.DECIMAL(24, 2)
             },
-            companyWinloss: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            commission: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            percentComWinloss: {
+            winningPercent: {
                 type: this.Datatypes.DECIMAL(24, 2)
             }
         };
         this.indexes = [
             {
                 unique: true,
-                fields: ['date', 'currency', 'source']
+                fields: ['date', 'currency', 'source', 'type']
             },
             {
-                name: 'source_date',
-                fields: ['date', 'source']
+                name: 'default_indexes',
+                fields: ['source', 'currency', 'type']
             }
         ];
         return super.setup();

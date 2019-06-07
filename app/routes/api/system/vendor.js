@@ -3,6 +3,8 @@ const router = express.Router();
 const controller = require('../../../controllers/vendor');
 
 // Search by Params
-router.post('/search', controller.findByParams);
+router.post('/rawsource', controller.getRawSource);
+
+router.post('/datatable', controller.getDataTable);
 
 module.exports = router;

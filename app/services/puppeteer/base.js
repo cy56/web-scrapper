@@ -15,12 +15,10 @@ class PuppeteerClient {
         this.model = require(`../../models/vendors/${this.toString()}`);
         
         // Setup Services
-        this.services = {
-            dbc: require('../system/dbc'),
-            mailer: require('../system/mailer'),
-            resolver: require('../system/resolver'),
-            reporter: require('../system/reporter')
-        }
+        this._dbc =require('../system/dbc'),
+        this._mailer =require('../system/mailer'),
+        this._resolver = require('../system/resolver'),
+        this._reporter = require('../system/reporter')
     }
 
     async init() {
@@ -107,6 +105,10 @@ class PuppeteerClient {
         await this.page.waitFor(2000);
         await this.browser.close();
         this.endProcess();
+    }
+
+    resolveDateTime() {
+        return this._resolver.resolveVendorDates({ vendor: this.toString(), start: start, end: end });
     }
 
     clearItems() {

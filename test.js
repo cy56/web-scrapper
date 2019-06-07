@@ -741,9 +741,95 @@ resolveData = async() => {
     return data;
 }
 
-testCase1 = () => {
+test1 = () => {
     const resolver = require('./app/services/system/resolver');
     console.log(resolver.resolvePath('products', 'cmd'));
 }
 
-testCase1();
+test2 = () => {
+    let hash = Object.create(null);
+    let grouped = [];
+    const keys = ['currency', 'type'];
+    const values = ['uap', 'spin', 'betAmount', 'winloss', 'rtp', 'uapSpin', 'uapBet', 'betSpin'];
+
+    data.forEach((obj) => {
+        let key = keys.map(function (k) { return obj[k]; }).join('|');
+        if(!hash[key]) {
+            hash[key] = { currency: obj.currency, type: obj.type, uap: 0, spin: 0, betAmount: 0, winloss: 0, rtp: 0, uapSpin: 0, uapBet: 0, betSpin: 0 };
+            grouped.push(hash[key]);
+        }
+        values.forEach(function (k) { hash[key][k] += obj[k]; });
+    });
+    console.log(grouped);
+};
+
+test3 = () => {
+    var array = [
+        { shape: 'square', color: 'red', edge:5, used: 1, instances: 1, percent:10 }, 
+        { shape: 'square', color: 'red', edge: 4, used: 2, instances: 1, percent: 10 }, 
+        { shape: 'circle', color: 'blue', edge: 4, used: 0, instances: 0, percent: 10 }, 
+        { shape: 'square', color: 'blue', edge: 4, used: 4, instances: 4, percent: 10}, 
+        { shape: 'circle', color: 'red', edge: 4, used: 1, instances: 1, percent: 10}, 
+        { shape: 'circle', color: 'red', edge: 4, used: 1, instances: 0, percent: 10}, 
+        { shape: 'square', color: 'blue', edge: 4, used: 4, instances: 5, percent: 10}, 
+        { shape: 'square', color: 'red', edge: 4, used: 2, instances: 1, percent: 10}],
+        hash = Object.create(null),
+        grouped = [];
+
+    array.forEach(function (o) {
+        var key = ['shape', 'color', 'edge'].map(function (k) { return o[k]; }).join('|');
+        if (!hash[key]) {
+            hash[key] = { shape: o.shape, color: o.color, edge:o.edge, used: 0, instances: 0, percent:0 };
+            grouped.push(hash[key]);
+        }
+        ['used', 'instances', 'percent'].forEach(function (k) { hash[key][k] += o[k]; });
+    });
+
+    console.log(grouped);
+}
+
+test4 = () => {
+    const data = [
+        ['1', 'THB', '2060', '27216', '16116913', '1137441', '1008379.8', '31933.4541', '-485329.1045', '-3.01', 'ALL'],
+        ['2', 'CNY', '3000', '30000', '26116913', '1137441', '1008379.8', '31933.4541', '-485329.1045', '-3.01', 'ALL'],
+        ['3', 'USD', '2000', '28000', '16116913', '1137441', '1008379.8', '31933.4541', '-485329.1045', '-3.01', 'ALL'],
+    ];
+    const source = 'hydra';
+    const vendor = 'cmd';
+    const brand = 'rb88';
+    const filename = '';
+    const date = '2019-05-01';
+    const resolver = require('./app/services/system/resolver');
+    //resolver.resolveParser({ source, vendor, brand, filename, date }, data)
+    console.log(resolver.resolveParser({source, vendor, brand, filename, date}, data));
+}
+
+test5 = () => {
+    const data = [
+        [ '1', 'THB', 'FISHING GAME', '1', '1', '0', '0', '0', '0', '0', '0'],
+        ['2', 'THB', 'RNG', '79', '50539', '481914.9', '481914.9', '-8922.78', '0', '158.61', '-8922.78'],
+        ['3', 'CNY', 'FISHING GAME', '7', '17', '660', '3034.3', '-195.3', '0', '0', '-195.3'],
+        ['4', 'CNY', 'RNG', '4', '649', '1026', '1026', '-203.25', '0', '0', '-203.25']
+    ];
+
+    const source = 'hydra';
+    const vendor = 'gen';
+    const brand = 'rb88';
+    const filename = '';
+    const date = '2019-05-01';
+    const resolver = require('./app/services/system/resolver');
+    console.log(resolver.resolveParser({ source, vendor, brand, filename, date }, data));
+}
+
+test6 = () => {
+    const currency = ['cny', 'thb'];
+    const dates = [
+        {start:'2019-05-01', end:'2019-05-01'},
+        { start: '2019-05-02', end: '2019-05-02' },
+    ]
+    dates.forEach((value, key) => {
+        console.log(value.start);
+    });
+};
+
+test6();

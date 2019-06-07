@@ -4,12 +4,14 @@ class AB extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
-        this.attributes = ['id', 'source', 'date', 'username', 'game', 'type', 'betAmount', 'winloss'];
+        this.attributes = ['id', 'date', 'source', 'currency', 'players', 'bets', 'turnover', 'playerWinloss', 'winningPercent'];
+        this.groupAttr = ['source', 'currency', 'players', 'bets', 'turnover', 'playerWinloss', 'winningPercent'];
+        this.group = ['source', 'brand', 'currency'];
         this.structure = {
             source: {
                 type: this.Datatypes.STRING
             },
-            vendor: {
+            brand: {
                 type: this.Datatypes.STRING
             },
             filename: {
@@ -18,59 +20,33 @@ class AB extends Model {
             date: {
                 type: this.Datatypes.DATEONLY
             },
-            class: {
+            currency: {
                 type: this.Datatypes.STRING
             },
-            username: {
-                type: this.Datatypes.STRING
+            players: {
+                type: this.Datatypes.INTEGER
             },
-            game: {
-                type: this.Datatypes.STRING
+            bets: {
+                type: this.Datatypes.INTEGER
             },
-            betAmount: {
+            turnover: {
                 type: this.Datatypes.DECIMAL(24, 2)
             },
-            winloss: {
+            playerWinloss: {
                 type: this.Datatypes.DECIMAL(24, 2)
             },
-            validBetAmount: {
+            winningPercent: {
                 type: this.Datatypes.DECIMAL(24, 2)
-            },
-            type: {
-                type: this.Datatypes.STRING
-            },
-            rebate: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            rebateAmount: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            netProfitLoss: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            sharePercent: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            shareBetAmount: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            shareWinloss: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            shareValidBet: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            actualSettlement: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            shareWinPercent: {
-                type: this.Datatypes.DECIMAL(24, 7)
             }
         };
         this.indexes = [
             {
                 unique: true,
-                fields: ['date', 'source']
+                fields: ['date', 'source', 'brand', 'currency']
+            },
+            {
+                name: 'default_indexes',
+                fields: ['source', 'brand', 'currency']
             }
         ];
         return super.setup();

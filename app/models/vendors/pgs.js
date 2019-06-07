@@ -4,59 +4,55 @@ class PGS extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
-        this.attributes = ['id', 'source', 'date', 'currency', 'playerCT', 'rounds', 'stakes', 'playerWinloss', 'jpContribution', 'jpWin'];
+        this.attributes = ['id', 'source', 'date', 'currency', 'players', 'bets', 'turnover', 'playerWinloss', 'jpContribution', 'jpWin', 'winningPercent'];
+        this.groupAttr = ['source', 'currency', 'players', 'bets', 'turnover', 'playerWinloss', 'jpContribution', 'jpWin', 'winningPercent' ];
+        this.group = ['source', 'brand', 'currency'];
         this.structure = {
             source: {
-                type: Sequelize.STRING
+                type: this.Datatypes.STRING
             },
-            vendor: {
-                type: Sequelize.STRING
+            brand: {
+                type: this.Datatypes.STRING
             },
             filename: {
-                type: Sequelize.STRING
+                type: this.Datatypes.STRING
             },
             date: {
-                type: Sequelize.DATEONLY
+                type: this.Datatypes.DATEONLY
             },
             currency: {
-                type: Sequelize.STRING
+                type: this.Datatypes.STRING
             },
-            playerCT: {
-                type: Sequelize.INTEGER
+            players: {
+                type: this.Datatypes.INTEGER
             },
-            playerNew: {
-                type: Sequelize.INTEGER
+            bets: {
+                type: this.Datatypes.INTEGER
             },
-            hands: {
-                type: Sequelize.INTEGER
-            },
-            rounds: {
-                type: Sequelize.INTEGER
-            },
-            stakes: {
-                type: Sequelize.DECIMAL(24, 2)
+            turnover: {
+                type: this.Datatypes.DECIMAL(24, 2)
             },
             playerWinloss: {
-                type: Sequelize.DECIMAL(24, 2)
-            },
-            companyWinloss: {
-                type: Sequelize.DECIMAL(24, 2)
+                type: this.Datatypes.DECIMAL(24, 2)
             },
             jpContribution: {
-                type: Sequelize.DECIMAL(24, 2)
+                type: this.Datatypes.DECIMAL(24, 2)
             },
             jpWin: {
-                type: Sequelize.DECIMAL(24, 2)
+                type: this.Datatypes.INTEGER
+            },
+            winningPercent: {
+                type: this.Datatypes.DECIMAL(24, 2)
             }
         };
         this.indexes = [
             {
                 unique: true,
-                fields: ['date', 'currency', 'source']
+                fields: ['date', 'currency', 'source', 'brand']
             },
             {
-                name: 'source_date',
-                fields: ['date', 'source']
+                name: 'default_indexes',
+                fields: ['source', 'brand', 'currency']
             }
         ];
         return super.setup();

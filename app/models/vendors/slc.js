@@ -4,12 +4,14 @@ class SLC extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
-        this.attributes = ['id', 'source', 'date', 'currency', 'betAmount', 'winloss'];
+        this.attributes = ['id', 'source', 'date', 'currency', 'players', 'bets', 'turnover', 'actualTurnover', 'commission', 'playerWinloss', 'winningPercent'];
+        this.groupAttr = ['source', 'currency', 'players', 'bets', 'turnover', 'actualTurnover', 'commission', 'playerWinloss', 'winningPercent'];
+        this.group = ['source', 'currency'];
         this.structure = {
             source: {
                 type: this.Datatypes.STRING
             },
-            vendor: {
+            brand: {
                 type: this.Datatypes.STRING
             },
             filename: {
@@ -21,37 +23,25 @@ class SLC extends Model {
             currency: {
                 type: this.Datatypes.STRING
             },
-            betAmount: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            winloss: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            comm: {
+            players: {
                 type: this.Datatypes.INTEGER
             },
-            commAmount: {
+            bets: {
+                type: this.Datatypes.INTEGER
+            },
+            turnover: {
                 type: this.Datatypes.DECIMAL(24, 2)
             },
-            totalAmount: {
+            actualTurnover: {
                 type: this.Datatypes.DECIMAL(24, 2)
             },
-            shareComm: {
+            commission: {
                 type: this.Datatypes.DECIMAL(24, 2)
             },
-            totalShare: {
+            playerWinloss: {
                 type: this.Datatypes.DECIMAL(24, 2)
             },
-            subTotal: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            vshareComm: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            vshareTotal: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            vsubTotal: {
+            winningPercent: {
                 type: this.Datatypes.DECIMAL(24, 2)
             }
         };
@@ -61,8 +51,8 @@ class SLC extends Model {
                 fields: ['date', 'currency', 'source']
             },
             {
-                name: 'source_date',
-                fields: ['date', 'source']
+                name: 'default_indexes',
+                fields: ['source', 'currency']
             }
         ];
         return super.setup();
