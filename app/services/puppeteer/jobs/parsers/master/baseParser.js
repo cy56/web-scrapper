@@ -4,7 +4,7 @@ const _ = require('lodash');
 
 class BaseParser
 {
-    constructor(params = { source: null, brand: null, vendor: null, filename: null, date: null }) {
+    constructor(params = { source: null, brand: null, vendor: null, filename: null, date: null, currency:null }) {
         const { source, brand, vendor, filename, date } = params;
         this.source = source;
         this.brand = brand;

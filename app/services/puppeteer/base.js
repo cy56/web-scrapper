@@ -15,8 +15,8 @@ class PuppeteerClient {
         this.model = require(`../../models/vendors/${this.toString()}`);
         
         // Setup Services
-        this._dbc =require('../system/dbc'),
-        this._mailer =require('../system/mailer'),
+        this._dbc = require('../system/dbc'),
+        this._mailer = require('../system/mailer'),
         this._resolver = require('../system/resolver'),
         this._reporter = require('../system/reporter')
     }
@@ -72,8 +72,10 @@ class PuppeteerClient {
         try {
             const source = (this.toString() !== 'hydra') ? 'vendor' : 'hydra';
             const vendor = this.toString();
+            const brand = this.brand.toUpperCase() || 'RB88';
+            const currency = this.currency || null;
             const filename = this.filename;
-            this.resolved = await this.services.resolver.resolveParser({source, vendor, filename, date}, this.unresolved);
+            this.resolved = await this._resolver.resolveParser({source, brand, vendor, filename, date, currency}, this.unresolved);
         } catch (err) {
             this.reportError('resolveSource', err);
         }
@@ -107,8 +109,8 @@ class PuppeteerClient {
         this.endProcess();
     }
 
-    resolveDateTime() {
-        return this._resolver.resolveVendorDates({ vendor: this.toString(), start: start, end: end });
+    resolveDateTime(start, end) {
+        return this._resolver.resolveVendorDates({ vendor: this.toString(), start, end});
     }
 
     clearItems() {

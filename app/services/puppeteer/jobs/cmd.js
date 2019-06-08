@@ -2,8 +2,9 @@ const PuppeteerClient = require('../base');
 
 class CMD extends PuppeteerClient
 {
-    constructor(options = {}) {
+    constructor(options = {}, brand='rb88') {
         super(options);
+        this.brand = brand;
     }
 
     async loginProcess() {
@@ -61,21 +62,21 @@ class CMD extends PuppeteerClient
     }
 }
 
-module.exports = async function run(start, end) {
-    const worker = new CMD({ headless: false });
+module.exports = async function run(start, end, brand) {
+    const worker = new CMD({ headless: false }, brand);
     const dateResolver = worker.resolveDateTime(start, end);
     try {
         await worker.init();
         await worker.login();
         await worker.gotoReport();
-        for (let index = 0; index < dateResolver.dates.length; index++) {
-            const start = dateResolver.dates[index].start;
-            const end = dateResolver.dates[index].end;
+        dateResolver.forEach((date) => {
+            const start = date.start;
+            const end = date.end;
             await worker.filterConditions(start, end);
             await worker.extractHtmlTable();
             await worker.resolveSource(start);
             await worker.insertIntoDB();
-        }
+        });
         await worker.logout();
     } catch (err) {
         console.error(err.message);

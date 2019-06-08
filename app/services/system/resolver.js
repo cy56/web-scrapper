@@ -4,13 +4,21 @@ const dateService = require('date-and-time');
 
 class ResolverService
 {
-    static resolveParser(params = { source:null, brand:null, vendor:null, filename:null, date:null}, data) {
+    static resolveParser(params = { source:null, brand:null, vendor:null, filename:null, date:null, currency:null }, data) {
         try {
             const parser = require(`../puppeteer/jobs/parsers/${params.vendor.toLowerCase()}`);
             const resolved = new parser(params, data);
             return resolved.getResults();
         } catch(err) {
             throw err.message;
+        }
+    }
+
+    static resolveDatatable(keys={}, data=[]) {
+        try {
+            
+        } catch(err) {
+
         }
     }
 
@@ -89,7 +97,7 @@ class ResolverService
         let dates = [];
         items.forEach((item) => {
             let start = dateService.format(item.start, 'YYYY-MM-DD');
-            let end = dateService.format(date.addDays(item.end, 1), 'YYYY-MM-DD');
+            let end = dateService.format(dateService.addDays(item.end, 1), 'YYYY-MM-DD');
             dates.push({ start: start, end: end });
         });
         return dates;

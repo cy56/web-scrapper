@@ -5,7 +5,9 @@ class CMD extends Model {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
         this.attributes = ['id', 'source', 'currency', 'players', 'bets', 'stake', 'stakeSold', 'takeBackAmount', 'memberComission', 'playerWinloss', 'winningPercent'];
-        this.groupAttr = ['source', 'brand', 'currency', 'players', 'bets', 'stake', 'playerWinloss'];
+        this.groupAttr = ['source', 'brand', 'currency', [sequelize.fn('sum', sequelize.col('players')), 'players'], 
+        [sequelize.fn('sum', sequelize.col('bets')), 'bets'], [sequelize.fn('sum', sequelize.col('stake')), 'stake'], 
+        [sequelize.fn('sum', sequelize.col('playerWinloss')), 'playerWinloss']];
         this.group = ['source', 'brand', 'currency'];
         this.structure = {
             source: {
