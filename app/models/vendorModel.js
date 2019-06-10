@@ -1,14 +1,15 @@
 const Sequelize = require('sequelize');
+const Resolver = require('../services/system/resolver');
 
 class VendorModel extends Sequelize.Model {
     static setup() {
-        return super.init(this.structure, { indexes: this.indexes, sequelize: this.sequelize });
+        return super.init(this.getModelStructure(), { indexes: this.getModelIndex(), sequelize: this.sequelize });
     }
 
     static async getRawSource(params = {}) {
         try {
             const wheres = params.body || params;
-            return await this.findAll({ attributes: this.attributes, where: wheres });
+            return await this.findAll({ attributes: this.getModelDefaultAttributes(), where: wheres, raw:true });
         } catch (err) {
             console.error('Database Error: ', err.message);
         }
@@ -16,8 +17,26 @@ class VendorModel extends Sequelize.Model {
 
     static async getDatatable(params = {}) {
         try {
-            const wheres = params.body || params;
-            return await this.findAll({ attributes: this.groupAttr, where: wheres, group: this.group, raw: true });
+            let { brand, startDate, endDate } = params.body || params;
+
+            if(!brand || !startDate) {
+                throw 'missing parameters';
+            }
+
+            if(!endDate) {
+                endDate = startDate;
+            }
+
+            const wheres = {
+                brand, date: {
+                    $between: Resolver.resolveDates(startDate, endDate)
+                }
+            }
+
+            console.log(wheres);
+
+            return await this.findAll({ attributes: this.getDatatableGroupBy().attributes, group: this.getDatatableGroupBy().groupBy, where: wheres, raw: true });
+
         } catch (err) {
             console.error('Database Error: ', err.message);
         }

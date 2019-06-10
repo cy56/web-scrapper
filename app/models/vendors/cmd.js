@@ -4,12 +4,11 @@ class CMD extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
-        this.attributes = ['id', 'source', 'currency', 'players', 'bets', 'stake', 'stakeSold', 'takeBackAmount', 'memberComission', 'playerWinloss', 'winningPercent'];
-        this.groupAttr = ['source', 'brand', 'currency', [sequelize.fn('sum', sequelize.col('players')), 'players'], 
-        [sequelize.fn('sum', sequelize.col('bets')), 'bets'], [sequelize.fn('sum', sequelize.col('stake')), 'stake'], 
-        [sequelize.fn('sum', sequelize.col('playerWinloss')), 'playerWinloss']];
-        this.group = ['source', 'brand', 'currency'];
-        this.structure = {
+        return super.setup();
+    }
+
+    static getModelStructure() {
+        return {
             source: {
                 type: this.Datatypes.STRING
             },
@@ -50,7 +49,10 @@ class CMD extends Model {
                 type: this.Datatypes.DECIMAL(24, 2)
             }
         };
-        this.indexes = [
+    }
+
+    static getModelIndex() {
+        return [
             {
                 unique: true,
                 fields: ['date', 'currency', 'source', 'brand']
@@ -60,7 +62,34 @@ class CMD extends Model {
                 fields: ['source', 'brand', 'currency']
             }
         ];
-        return super.setup();
+    }
+
+    static getModelDefaultAttributes() {
+        return ['id', 'source', 'currency', 'players', 'bets', 'stake', 'stakeSold', 'takeBackAmount', 'memberComission', 'playerWinloss', 'winningPercent'];
+    }
+
+    static getDatatableGroupBy() {
+        return {
+            attributes: ['source', 'currency', [this.sequelize.fn('sum', this.sequelize.col('players')), 'players'],
+                [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'], [this.sequelize.fn('sum', this.sequelize.col('stake')), 'stake'],
+                [this.sequelize.fn('sum', this.sequelize.col('playerWinloss')), 'playerWinloss']],
+            groupBy: ['source', 'brand', 'currency']
+        }
+    }
+
+    static getDatatableFilter() {
+        return ['source', 'currency'];
+    }
+
+    static getDatatableHeader() {
+        return [
+            { text: 'Source', value: 'source' },
+            { text: 'Currency', value: 'currency' },
+            { text: 'No of Players', value: 'players' },
+            { text: 'No of Bets', value: 'bets' },
+            { text: 'Stake Amount', value: 'stake' },
+            { text: 'Winloss Amount', value: 'playerWinloss' },
+        ];
     }
 }
 

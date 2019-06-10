@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const dateService = require('date-and-time');
+const _ = require('lodash');
 
 class ResolverService
 {
@@ -14,11 +15,42 @@ class ResolverService
         }
     }
 
-    static resolveDatatable(keys={}, data=[]) {
+    static resolveDatatable(keys=null, data=null) {
         try {
-            
-        } catch(err) {
+            if(!keys || !data) {
+                throw 'no keys or dataset';
+            }
 
+            let datas = _.orderBy(data, ['currency'], ['asc']);
+            let items = [];
+            let lastItem = null;
+
+            datas.forEach((obj) => {
+                if(lastItem === null) {
+                    lastItem = obj;
+                    return;
+                }
+
+                if(lastItem.currency === obj.currency) {
+                    if(lastItem.source !== obj.source) {
+                        if(_.isEqual(_.omit(lastItem, keys), _.omit(obj, keys))) {
+                            lastItem.diff = false;
+                            obj.diff = false;
+                            items.push(lastItem);
+                            items.push(obj);
+                        } else {
+                            lastItem.diff = true;
+                            obj.diff = true;
+                            items.push(lastItem);
+                            items.push(obj);
+                        }
+                        lastItem = null;
+                    }
+                }
+            });
+            return items;
+        } catch(err) {
+            throw err.message;
         }
     }
 
@@ -39,6 +71,10 @@ class ResolverService
         } catch(err) {
             throw err.message;
         }
+    }
+
+    static resolveDates(start, end) {
+        return [dateService.format(new Date(start), 'YYYY-MM-DD'), dateService.format(new Date(end), 'YYYY-MM-DD')];
     }
 
     static resolveVendorDates(params = { vendor: null, start: null, end: null }) {
