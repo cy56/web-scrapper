@@ -60,6 +60,19 @@ exports.register = async (req, res) => {
     }
 };
 
+exports.verifyToken = async(req, res) => {
+    const bearerHeader = req.headers['authorization'];
+
+    if(typeof bearerHeader === 'undefined') {
+        return res.sendStatus(403);
+    }
+
+    const bearer = bearerHeader.split(' ');
+    const bearerToken = bearer[1];
+    req.token = bearerToken;
+    next();
+}
+
 verifyLogin = (params) => {
     let { email, password } = params.body;
     let errors = [];
@@ -84,8 +97,9 @@ verifyRegister = (params) => {
 
 getUser = async (params)  => {
     const { email, password } = params.body;
-    user = await model.getUser({ email });
     
+    user = await model.getUser({ email });
+
     if (!user) {
         return { code: CODE_USER_NOT_EXISTS, message: 'User does not exists' };
     }

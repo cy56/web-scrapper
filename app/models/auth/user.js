@@ -28,7 +28,7 @@ class User extends Sequelize.Model {
     static async getUser(params = {}) {
         try {
             let attributes = ['id', 'firstname', 'lastname', 'email', 'password'];
-            return await this.findOne({ where: params, attributes });
+            return await this.findOne({ where: params, attributes, raw:true });
         } catch(err) {
             console.error('user table: ', err.message);
         }
