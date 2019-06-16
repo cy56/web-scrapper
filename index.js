@@ -1,7 +1,6 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const auth = require('./app/services/system/auth');
-
 //Database
 const db = require('./app/config/db.js');
 // Database Authenticate
@@ -9,8 +8,6 @@ const db = require('./app/config/db.js');
 
 //Express
 const app = express();
-// Passport
-app.use(auth.passport.initialize());
 // Body Parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
