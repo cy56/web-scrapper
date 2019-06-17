@@ -8,7 +8,7 @@ class CaptchaResolver
         this.username = this.creds.username;
         this.password = this.creds.password;
         this.client = null;
-        this.init();
+        return this.init();
     }
 
     init() {

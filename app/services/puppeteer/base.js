@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer');
+const db = require('../../config/db');
 
 class PuppeteerClient {
     constructor(options = {}) {
@@ -7,18 +8,17 @@ class PuppeteerClient {
         this.args = options.args || [];
         this.slowMo = this.headless === false ? 100 : 500;
 
-        // Setup Properties
+        // // Setup Properties
         this.browser = null;
         this.page = null;
         this.vendor = require(`./jobs/extensions/${this.toString()}`);
         this.creds = require(`./jobs/credentials/${this.toString()}`);
-        this.model = require(`../../models/vendors/${this.toString()}`);
+        this.model = db[this.toString().toLowerCase()];
         
-        // Setup Services
-        this._dbc = require('../system/dbc'),
-        this._mailer = require('../system/mailer'),
-        this._resolver = require('../system/resolver'),
-        this._reporter = require('../system/reporter')
+        // // Setup Services
+        this._dbc = require('../system/dbc');
+        this._mailer = require('../system/mailer');
+        this._resolver = require('../system/resolver');
     }
 
     async init() {
@@ -83,10 +83,11 @@ class PuppeteerClient {
 
     async insertIntoDB() {
         try {
+            this.page.waitFor(5000);
             if (Array.isArray(this.resolved)) {
-                await this.model.bulkCreate(this.resolved);
+                await this.model.createMany(this.resolved);
             } else {
-                await this.model.create(this.resolved);
+                await this.model.createOne(this.resolved);
             }
             this.clearItems();
         } catch (err) {
@@ -120,6 +121,46 @@ class PuppeteerClient {
 
     endProcess() {
         process.exit(1);
+    }
+
+    async reportError(func, err) {
+        let errMsg = `${func}: ${err.message}`;
+        console.error(errMsg);
+        //await this.reportByEmail(errMsg);
+        await this.takeScreenshot('error');
+        if (func === 'login') {
+            await this.endProcess();
+        } else {
+            await this.logout();
+        }
+    }
+
+    async resolveCaptcha(b64Captcha, timeout = 60, type = null) {
+        return new Promise((resolve, reject) => {
+            const result = this._dbc.decode({ captcha: b64Captcha, timeout: timeout });
+            if (!result) {
+                reject(result);
+            } else {
+                resolve(result);
+            }
+        });
+    }
+
+    async reportCaptcha(captcha) {
+        return new Promise((resolve, reject) => {
+            const result = this._dbc.report(captcha);
+            resolve(result);
+        });
+    }
+
+    async takeScreenshot(used = 'products') {
+        const screenshot = this._resolver.resolvePath({ type: used, vendor: this.toString() });
+        //await this.page.screenshot({ file: screenshot.tmpPath, fullPage: true });
+        return screenshot.filename;
+    }
+
+    async reportByEmail(err) {
+        await this._mailer.send({ mail: 'lim.cy@nettium.net', subject: 'WebScrapper System Error', text: err });
     }
 
     toString() {

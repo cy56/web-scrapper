@@ -129,6 +129,16 @@ class ResolverService
         return dates;
     }
 
+    static resolveForPT(items) {
+        let dates = [];
+        items.forEach((item) => {
+            let start = dateService.format(item.start, 'YYYY-MM-DD');
+            let end = dateService.format(item.end, 'YYYY-MM-DD');
+            dates.push({ start: start, end: end });
+        });
+        return dates;
+    }
+
     static resolveForGD(items) {
         let dates = [];
         items.forEach((item) => {

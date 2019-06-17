@@ -1,44 +1,43 @@
-const libcur = require('../services/currency');
-const SOURCE = 'vendor';
+const BaseParser = require('./master/baseParser');
 
-class PT {
-    constructor(params = { vendor: null, filename: null, date: null }, data) {
-        this.source = SOURCE;
-        this.vendor = params.vendor;
-        this.filename = params.filename;
-        this.date = params.date;
-        this.players = libcur.convert(data[1]);
-        this.games = libcur.convert(data[2]);
-        this.betAmount = libcur.convert(data[3]);
-        this.realBetAmount = libcur.convert(data[4]);
-        this.realBetWin = libcur.convert(data[5]);
-        this.realMoneyPayout = libcur.convert(data[6]);
-        this.totalWin = libcur.convert(data[7]);
-        this.gameIncomeShare = libcur.convert(data[8]);
-        this.gamePayout = libcur.convert(data[9]);
-        this.progressiveShare = libcur.convert(data[18]);
-        this.progressiveWin = libcur.convert(data[19]);
+class PT extends BaseParser {
+    constructor(params , items) {
+        super(params);
+        this.cleanData(items);
     }
 
-    getResults() {
-        return {
-            source: this.source,
-            vendor: this.vendor,
-            filename: this.filename,
-            date: this.date,
-            players: this.players,
-            games: this.games,
-            betAmount: this.betAmount,
-            realBetAmount: this.realBetAmount,
-            realBetWin: this.realBetWin,
-            realMoneyPayout: this.realMoneyPayout,
-            totalWin: this.totalWin,
-            gameIncomeShare: this.gameIncomeShare,
-            gamePayout: this.gamePayout,
-            progressiveShare: this.progressiveShare,
-            progressiveWin: this.progressiveWin
-        }
+    resolveForVendor(data) {
+        let type = 'rng';
+        let players = this.resolveValue(data[1]);
+        let bets = this.resolveValue(data[2]);
+        let turnover = this.resolveValue(data[3], 4);
+        let totalWin = this.resolveValue(data[7], 4);
+        let gameIncomeShare = this.resolveValue(data[8], 4);
+        let winningPercent = null;
+        let jpContribution = this.resolveValue(data[15], 4);
+        let jpWins = this.resolveValue(data[16], 4);
+        let playerWinloss = this.resolveValue(totalWin - turnover - jpContribution, 4);
+        let playerWinlossJP = this.resolveValue(playerWinloss + jpWins, 4);
+
+        return this.autoWireData({ type, players, bets, turnover, totalWin, gameIncomeShare, playerWinloss, winningPercent, jpContribution, jpWins, playerWinlossJP });
     }
+
+    resolveForHydra(data) {
+        let type = 'rng';
+        let players = this.resolveValue(data[1]);
+        let bets = this.resolveValue(data[2]);
+        let turnover = this.resolveValue(data[3], 4);
+        let totalWin = this.resolveValue(data[4], 4);
+        let gameIncomeShare = this.resolveValue(data[6], 4);
+        let playerWinloss = this.resolveValue(data);
+        let winningPercent = null;
+        let jpContribution = this.resolveValue(data);
+        let jpWins = this.resolveValue(data);
+        let playerWinlossJP = this.resolveValue(data);
+        
+        return this.autoWireData({ type, players, bets, turnover, totalWin, gameIncomeShare, playerWinloss, winningPercent, jpContribution, jpWins, playerWinlossJP });
+    }
+
 }
 
 module.exports = PT;

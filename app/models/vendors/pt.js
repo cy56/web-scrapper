@@ -4,14 +4,11 @@ class PT extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
-        this.attributes = ['id', 'source', 'brand', 'date', 'currency', 'players',
-            'bets', 'type', 'turnover', 'totalWin', 'gameIncomeShare', 'playerWinloss',
-            'winningPercent', 'jpContribution', 'jpWins', 'playerWinlossJP'
-        ];
-        this.groupAttr = ['source', 'currency', 'players', 'bets', 'type', 'turnover', 'totalWin', 
-            'gameIncomeShare', 'playerWinloss','winningPercent', 'jpContribution', 'jpWins', 'playerWinlossJP'];
-        this.group = ['source', 'brand', 'currency', 'type'];
-        this.structure = {
+        return super.setup();
+    }
+
+    static getModelStructure() {
+        return {
             source: {
                 type: this.Datatypes.STRING
             },
@@ -37,31 +34,34 @@ class PT extends Model {
                 type: this.Datatypes.STRING
             },
             turnover: {
-                type: this.Datatypes.DECIMAL(24, 7)
+                type: this.Datatypes.DECIMAL(24, 4)
             },
             totalWin: {
-                type: this.Datatypes.DECIMAL(24, 7)
+                type: this.Datatypes.DECIMAL(24, 4)
             },
             gameIncomeShare: {
-                type: this.Datatypes.DECIMAL(24, 7)
+                type: this.Datatypes.DECIMAL(24, 4)
             },
             playerWinloss: {
-                type: this.Datatypes.DECIMAL(24, 7)
+                type: this.Datatypes.DECIMAL(24, 4)
             },
             winningPercent: {
                 type: this.Datatypes.DECIMAL(24, 2)
             },
             jpContribution: {
-                type: this.Datatypes.DECIMAL(24, 7)
+                type: this.Datatypes.DECIMAL(24, 4)
             },
             jpWins: {
-                type: this.Datatypes.DECIMAL(24, 7)
+                type: this.Datatypes.DECIMAL(24, 4)
             },
             playerWinlossJP: {
-                type: this.Datatypes.DECIMAL(24, 7)
+                type: this.Datatypes.DECIMAL(24, 4)
             }
         };
-        this.indexes = [
+    }
+
+    static getModelIndex() {
+        return [
             {
                 unique: true,
                 fields: ['date', 'source', 'brand', 'currency', 'type']
@@ -71,7 +71,32 @@ class PT extends Model {
                 fields: ['source', 'brand', 'currency', 'type']
             }
         ];
-        return super.setup();
+    }
+
+    static getModelDefaultAttributes() {
+        return ['id', 'source', 'brand', 'date', 'currency', 'players',
+            'bets', 'type', 'turnover', 'totalWin', 'gameIncomeShare', 'playerWinloss',
+            'winningPercent', 'jpContribution', 'jpWins', 'playerWinlossJP'
+        ];
+    }
+
+    static getDatatableGroupBy() {
+        return {
+            attributes: ['source', 'currency', 'type', [this.sequelize.fn('sum', this.sequelize.col('players')), 'players'], [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'], 
+                [this.sequelize.fn('sum', this.sequelize.col('turnover')), 'turnover'], [this.sequelize.fn('sum', this.sequelize.col('totalWin')), 'totalWin'], 
+                [this.sequelize.fn('sum', this.sequelize.col('gameIncomeShare')), 'gameIncomeShare'], [this.sequelize.fn('sum', this.sequelize.col('playerWinloss')), 'playerWinloss'], 
+                [this.sequelize.fn('sum', this.sequelize.col('winningPercent')), 'winningPercent'], [this.sequelize.fn('sum', this.sequelize.col('jpContribution')), 'jpContribution'], 
+                [this.sequelize.fn('sum', this.sequelize.col('jpWins')), 'jpWins'], [this.sequelize.fn('sum', this.sequelize.col('playerWinlossJP')), 'playerWinlossJP']],
+            groupBy: ['source', 'brand', 'currency', 'type']
+        }
+    }
+
+    static getDatatableFilter() {
+
+    }
+
+    static getDatatableHeader() {
+
     }
 }
 
