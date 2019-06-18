@@ -42,7 +42,7 @@ class CMD extends PuppeteerClient
 
     async extractHtmlTableProcess() {
         const sources = this.vendor.sources;
-        this.page.waitFor(3000);
+        this.page.waitFor(10000);
         return await this.page.evaluate((sources) => {
             let items = [];
             let grayItems = document.querySelectorAll(sources.tableGray);
@@ -69,14 +69,14 @@ module.exports = async function run(start, end, brand) {
         await worker.init();
         await worker.login();
         await worker.gotoReport();
-        dateResolver.forEach((date) => {
-            const start = date.start;
-            const end = date.end;
+        for (let i = 0; i < dateResolver.length; i++) {
+            let start = dateResolver[i].start;
+            let end = dateResolver[i].end;
             await worker.filterConditions(start, end);
             await worker.extractHtmlTable();
             await worker.resolveSource(start);
             await worker.insertIntoDB();
-        });
+        }
         await worker.logout();
     } catch (err) {
         console.error(err.message);

@@ -31,19 +31,19 @@ class CMD extends Model {
                 type: this.Datatypes.INTEGER
             },
             stake: {
-                type: this.Datatypes.DECIMAL(24, 4)
+                type: this.Datatypes.DECIMAL(24, 2)
             },
             stakeSold: {
-                type: this.Datatypes.DECIMAL(24, 4)
+                type: this.Datatypes.DECIMAL(24, 2)
             },
             takeBackAmount: {
-                type: this.Datatypes.DECIMAL(24, 4)
+                type: this.Datatypes.DECIMAL(24, 2)
             },
             memberComission: {
-                type: this.Datatypes.DECIMAL(24, 4)
+                type: this.Datatypes.DECIMAL(24, 2)
             },
             playerWinloss: {
-                type: this.Datatypes.DECIMAL(24, 4)
+                type: this.Datatypes.DECIMAL(24, 2)
             },
             winningPercent: {
                 type: this.Datatypes.DECIMAL(24, 2)
@@ -66,6 +66,12 @@ class CMD extends Model {
 
     static getModelDefaultAttributes() {
         return ['id', 'source', 'currency', 'players', 'bets', 'stake', 'stakeSold', 'takeBackAmount', 'memberComission', 'playerWinloss', 'winningPercent'];
+    }
+
+    static getOnDuplicateValues() {
+        return [
+            'players', 'bets', 'stake', 'stakeSold', 'takeBackAmount', 'memberComission', 'playerWinloss', 'winningPercent'
+        ];
     }
 
     static getDatatableGroupBy() {
