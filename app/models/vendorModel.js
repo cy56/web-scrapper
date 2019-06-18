@@ -63,7 +63,7 @@ class VendorModel extends Sequelize.Model {
 
     static async createMany(objects = []) {
         try {
-            return await this.bulkCreate(objects);
+            return await this.bulkCreate(objects, { updateOnDuplicate: this.getOnDuplicateValues() });
         } catch (err) {
             console.error('Database Error: ', err.message);
         }

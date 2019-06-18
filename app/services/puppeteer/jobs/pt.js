@@ -63,7 +63,7 @@ class PT extends PuppeteerClient {
 }
 
 module.exports = async function run(start, end, brand) {
-    const currencies = ['cny'];
+    const currencies = ['cny', 'thb'];
     try {
         for(let index=0; index < currencies.length; index++) {
             let worker = await new PT({ headless: false }, currencies[index], brand);

@@ -107,7 +107,6 @@ class PuppeteerClient {
     async close() {
         await this.page.waitFor(2000);
         await this.browser.close();
-        this.endProcess();
     }
 
     resolveDateTime(start, end) {

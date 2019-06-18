@@ -80,6 +80,13 @@ class PT extends Model {
         ];
     }
 
+    static getOnDuplicateValues() {
+        return [
+            'players', 'bets', 'turnover', 'totalWin', 'gameIncomeShare', 'playerWinloss',
+            'winningPercent', 'jpContribution', 'jpWins', 'playerWinlossJP'
+        ];
+    }
+
     static getDatatableGroupBy() {
         return {
             attributes: ['source', 'currency', 'type', [this.sequelize.fn('sum', this.sequelize.col('players')), 'players'], [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'], 
