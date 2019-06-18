@@ -4,12 +4,13 @@ class GEN extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
-        this.attributes = ['id', 'source', 'brand', 'type', 'date', 'currency', 'players', 'bets', 'turnover', 
-            'validTurnover', 'playerWinloss', 'jackpotWinloss', 'jackpotContribution', 'playerWinlossJP'];
         this.groupAttr = ['source', 'type', 'currency', 'players', 'bets', 'turnover',
             'validTurnover', 'playerWinloss', 'jackpotWinloss', 'jackpotContribution', 'playerWinlossJP'];
-        this.group = ['source', 'brand', 'currency', 'type'];
-        this.structure = {
+        return super.setup();
+    }
+
+    static getModelStructure() {
+        return {
             source: {
                 type: this.Datatypes.STRING
             },
@@ -31,7 +32,7 @@ class GEN extends Model {
             players: {
                 type: this.Datatypes.INTEGER
             },
-            bets : {
+            bets: {
                 type: this.Datatypes.INTEGER
             },
             turnover: {
@@ -53,18 +54,41 @@ class GEN extends Model {
                 type: this.Datatypes.DECIMAL(24, 4)
             }
         };
-        this.indexes = [
+    }
+
+    static getModelIndex() { 
+        return [
             {
                 unique: true,
-                fields: ['date', 'currency', 'source', 'type']
+                fields: ['date', 'currency', 'brand', 'source', 'type']
             },
             {
                 name: 'default_indexes',
                 fields: ['source', 'brand', 'currency', 'type']
             }
         ];
-        return super.setup();
     }
+
+    static getModelDefaultAttributes() {
+        return ['id', 'source', 'brand', 'type', 'date', 'currency', 'players', 'bets', 'turnover',
+            'validTurnover', 'playerWinloss', 'jackpotWinloss', 'jackpotContribution', 'playerWinlossJP'];
+    }
+
+    static getOnDuplicateValues() {
+        return ['players', 'bets', 'turnover', 'validTurnover', 'playerWinloss', 'jackpotWinloss', 'jackpotContribution', 'playerWinlossJP'];
+    }
+
+    static getDatatableGroupBy() {
+        return {
+            attributes: ['source', 'currency', 'type', [this.sequelize.fn('sum', this.sequelize.col('players')), 'players'],
+                [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'], [this.sequelize.fn('sum', this.sequelize.col('turnover')), 'turnover'],
+                [this.sequelize.fn('sum', this.sequelize.col('validTurnover')), 'validTurnover'], [this.sequelize.fn('sum', this.sequelize.col('playerWinloss')), 'playerWinloss'],
+                [this.sequelize.fn('sum', this.sequelize.col('jackpotWinloss')), 'jackpotWinloss'], [this.sequelize.fn('sum', this.sequelize.col('jackpotContribution')), 'jackpotContribution'],
+                [this.sequelize.fn('sum', this.sequelize.col('playerWinlossJP')), 'playerWinlossJP']],
+            groupBy: ['source', 'brand', 'currency', 'type']
+        }
+    }
+
 }
 
 module.exports = GEN;

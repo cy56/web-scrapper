@@ -1,8 +1,9 @@
-const PuppeteerClient = require('../services/puppeteer');
+const PuppeteerClient = require('../base');
 
 class GEN extends PuppeteerClient {
-    constructor(options = {}) {
+    constructor(options = {}, brand) {
         super(options);
+        this.brand = brand;
     }
 
     async loginProcess() {
@@ -20,12 +21,13 @@ class GEN extends PuppeteerClient {
         await this.page.click(this.vendor.selectors.gameReport);
     }
 
-    async filterConditionsProcess(start, end) {
+    async filterConditions(start, end, fCurrency) {
         const filters = {
             currency: this.vendor.selectors.filterCurrency,
+            betCurrency: this.vendor.selectors.filterBetCurrency,
             viewBy: this.vendor.selectors.filterViewBy,
             list: this.vendor.selectors.filterList,
-            vCurrency: 'CNY',
+            fCurrency: fCurrency,
             vView: 'Currency',
             report: this.vendor.selectors.runReport
         }
@@ -33,9 +35,17 @@ class GEN extends PuppeteerClient {
         await this.page.evaluate((filters) => {
             document.querySelector(filters.currency).click();
             document.querySelector(filters.viewBy).click();
-            const lists = document.querySelectorAll(filters.list);
+            let lists = document.querySelectorAll(filters.list);
             for (let index = 0; index < lists.length; index++) {
-                if (lists[index].outerText === filters.vCurrency || lists[index].outerText === filters.vView) {
+                if (lists[index].outerText === filters.vView) {
+                    lists[index].click();
+                }
+            }
+            lists = [];
+            document.querySelector(filters.betCurrency).click();
+            lists = document.querySelectorAll(filters.list);
+            for (let index = 0; index < lists.length; index++) {
+                if (lists[index].outerText === filters.fCurrency) {
                     lists[index].click();
                 }
             }
@@ -48,14 +58,14 @@ class GEN extends PuppeteerClient {
         await this.page.waitFor(this.vendor.selectors.dateValue);
         await this.page.click(this.vendor.selectors.dateValue, { clickCount: 3 });
         await this.page.type(this.vendor.selectors.dateValue, end);
-        await this.page.waitFor(1000);
+        await this.page.waitFor(2000);
         await this.page.evaluate((filters) => { 
             document.querySelector(filters.report).click();
         }, filters);
     }
 
     async extractHtmlTableProcess() {
-        await this.page.waitFor(3000);
+        await this.page.waitFor(5000);
         const htmlTable = this.vendor.selectors.table;
 
         return await this.page.evaluate((htmlTable) => {
@@ -78,24 +88,27 @@ class GEN extends PuppeteerClient {
     }
 }
 
-module.exports = async function run(start, end) {
-    const worker = new GEN({ headless: false });
-    const dateResolver = worker.resolveDateTime(start, end);
+module.exports = async function run(start, end, brand) {
+    const currencies = ['CNY', 'THB'];
+    const worker = new GEN({ headless: false }, brand);
+    const dateResolver = worker.resolveDateTime(start, end); 
+    
     try {
         await worker.init();
         await worker.login();
         await worker.gotoReport();
-        for (let index = 0; index < dateResolver.dates.length; index++) {
-            const start = dateResolver.dates[index].start;
-            const end = dateResolver.dates[index].end;
-            await worker.filterConditions(start, end);
-            await worker.extractHtmlTable();
-            await worker.resolveSource(start);
-            console.log(worker.resolved);
-            await worker.insertIntoDB();
+        for (let i = 0; i < dateResolver.length; i++) {
+            let start = dateResolver[i].start;
+            let end = dateResolver[i].end;
+            for(let index=0; index < currencies.length; index++) {
+                let currency = currencies[index];
+                await worker.filterConditions(start, end, currency);
+                await worker.extractHtmlTable();
+                await worker.resolveSource(start);
+                await worker.insertIntoDB();
+            }
         }
         await worker.logout();
-        return 'Task Done!!!';
     } catch (err) {
         console.error(err.message);
     }

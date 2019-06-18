@@ -18,11 +18,12 @@ class GEN extends BaseParser {
 
         if (tmp.length !== 0) {
             const keys = ['currency', 'type'];
-            const values = ['players', 'bets', 'turnover', 'validTurnover', 'playerWinloss', 'jackpotWinloss', 'jackpotContribution', 'playerWinlossJP'];
-            data.forEach((obj) => {
+            const values = ['players', 'bets', 'turnover', 'validTurnover', 'playerWinloss'];
+            let hash = Object.create(null);
+            tmp.forEach((obj) => {
                 let key = keys.map(function (k) { return obj[k]; }).join('|');
                 if (!hash[key]) {
-                    hash[key] = { currency: obj.currency, type: obj.type, players: 0, bets: 0, turnover: 0, validTurnover: 0, playerWinloss: 0, jackpotWinloss: 0, jackpotContribution: 0, playerWinlossJP: 0 };
+                    hash[key] = { currency: obj.currency, type: obj.type, date:obj.date, filename:obj.filename, brand:obj.brand, source:obj.source, players: 0, bets: 0, turnover: 0, validTurnover: 0, playerWinloss: 0, jackpotWinloss: null, jackpotContribution: null, playerWinlossJP: null };
                     this.datas.push(hash[key]);
                 }
                 values.forEach(function (k) { hash[key][k] += obj[k]; });
@@ -33,16 +34,16 @@ class GEN extends BaseParser {
     resolveForVendor(data) {
         let currency = data[0];
         let type = (data[1] !== 'Sea Raider') ? 'rng' : 'fish';
-        let players = 0;
-        let bets = 0;
-        let turnover = 0;
-        let validTurnover = 0;
-        let playerWinloss = 0;
-        let jackpotWinloss = 0;
-        let jackpotContribution = 0;
-        let playerWinlossJP = 0;
+        let players = this.resolveValue(data[2]);
+        let bets = this.resolveValue(data[3]);
+        let turnover = this.resolveValue(data[5], 2);
+        let validTurnover = this.resolveValue(data[5], 2);
+        let playerWinloss = (this.resolveValue(data[7], 2)) * (-1);
+        let jackpotWinloss = null;
+        let jackpotContribution = null;
+        let playerWinlossJP = null;
 
-        return { currency, type, players, bets, turnover, validTurnover, playerWinloss, jackpotWinloss, jackpotContribution, playerWinlossJP };
+        return this.autoWireData({ currency, type, players, bets, turnover, validTurnover, playerWinloss, jackpotWinloss, jackpotContribution, playerWinlossJP });
     }
 
     resolveForHydra(data) {
@@ -57,7 +58,7 @@ class GEN extends BaseParser {
         let jackpotContribution = this.resolveValue(data[9]);
         let playerWinlossJP = this.resolveValue(data[10]);
 
-        return { currency, type, players, bets, turnover, validTurnover, playerWinloss, jackpotWinloss, jackpotContribution, playerWinlossJP };
+        return this.autoWireData({ currency, type, players, bets, turnover, validTurnover, playerWinloss, jackpotWinloss, jackpotContribution, playerWinlossJP });
     }
 }
 

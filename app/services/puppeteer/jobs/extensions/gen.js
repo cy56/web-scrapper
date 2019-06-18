@@ -15,6 +15,7 @@ const DATE_VAL = '.ant-calendar > .ant-calendar-panel > .ant-calendar-input-wrap
 const DATE_PICKER = 'tbody.ant-calendar-tbody tr td';
 const FILTER_CURRENCY = '#reportCurrency';
 const FILTER_VIEWBY = '#viewBy';
+const FILTER_BET_CURRENCY = '#betCurrency';
 const FILTER_LIST = 'ul[role="listbox"] li';
 const RUN_REPORT = '.content-wrapper > .sc-htpNat > .clearfix > .mt-lg > .btn-primary';
 const TABLE_SELECTOR = 'table.ant-table-fixed tr.ant-table-row';
@@ -37,6 +38,7 @@ const SELECTORS = {
     datepicker: DATE_PICKER,
     filterCurrency: FILTER_CURRENCY,
     filterViewBy: FILTER_VIEWBY,
+    filterBetCurrency: FILTER_BET_CURRENCY,
     filterList: FILTER_LIST,
     runReport: RUN_REPORT,
     table: TABLE_SELECTOR
