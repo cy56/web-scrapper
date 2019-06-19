@@ -5,7 +5,7 @@ class PuppeteerClient {
     constructor(options = {}) {
         // Setup
         this.headless = options.headless;
-        this.args = options.args || [];
+        this.args = options.args || ['--window-size=1920,1080'];
         this.slowMo = this.headless === false ? 100 : 500;
 
         // // Setup Properties
@@ -26,6 +26,7 @@ class PuppeteerClient {
             this.browser = await puppeteer.launch({
                 headless: this.headless,
                 ignoreHTTPSErrors: true,
+                defaultViewport: { height: 900, width: 1440 },
                 slowMo: this.slowMo,
                 args: this.args
             })
@@ -66,6 +67,7 @@ class PuppeteerClient {
             await this.page.waitFor(10000);
             this.filename = await this.takeScreenshot();
             this.unresolved = await this.extractHtmlTableProcess();
+            console.log(this.unresolved);
         } catch (err) {
             this.reportError('extractHtmlTable', err);
         }
