@@ -89,11 +89,19 @@ class PT extends Model {
 
     static getDatatableGroupBy() {
         return {
-            attributes: ['source', 'currency', 'type', [this.sequelize.fn('sum', this.sequelize.col('players')), 'players'], [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'], 
-                [this.sequelize.fn('sum', this.sequelize.col('turnover')), 'turnover'], [this.sequelize.fn('sum', this.sequelize.col('totalWin')), 'totalWin'], 
-                [this.sequelize.fn('sum', this.sequelize.col('gameIncomeShare')), 'gameIncomeShare'], [this.sequelize.fn('sum', this.sequelize.col('playerWinloss')), 'playerWinloss'], 
-                [this.sequelize.fn('sum', this.sequelize.col('winningPercent')), 'winningPercent'], [this.sequelize.fn('sum', this.sequelize.col('jpContribution')), 'jpContribution'], 
-                [this.sequelize.fn('sum', this.sequelize.col('jpWins')), 'jpWins'], [this.sequelize.fn('sum', this.sequelize.col('playerWinlossJP')), 'playerWinlossJP']],
+            attributes: [
+                'source', 'currency', 'type', 
+                [this.sequelize.fn('sum', this.sequelize.col('players')), 'players'], 
+                [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'], 
+                [this.sequelize.fn('sum', this.sequelize.col('turnover')), 'turnover'], 
+                [this.sequelize.fn('sum', this.sequelize.col('totalWin')), 'totalWin'], 
+                [this.sequelize.fn('sum', this.sequelize.col('gameIncomeShare')), 'gameIncomeShare'], 
+                [this.sequelize.fn('sum', this.sequelize.col('playerWinloss')), 'playerWinloss'], 
+                [this.sequelize.fn('sum', this.sequelize.col('winningPercent')), 'winningPercent'], 
+                [this.sequelize.fn('sum', this.sequelize.col('jpContribution')), 'jpContribution'], 
+                [this.sequelize.fn('sum', this.sequelize.col('jpWins')), 'jpWins'], 
+                [this.sequelize.fn('sum', this.sequelize.col('playerWinlossJP')), 'playerWinlossJP']
+            ],
             groupBy: ['source', 'brand', 'currency', 'type']
         }
     }

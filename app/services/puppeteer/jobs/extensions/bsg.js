@@ -12,6 +12,7 @@ const END_DATE = 'input[name="dateTo"]';
 const FILTER_CURRENCY = 'select[name="CurrencyId"]';
 const FILTER_CASINO = '#subcasinoids';
 const FILTER_BANK = '#bankids';
+const FILTER_ACCOUNT = 'select[name="testers"]';
 const RUN_REPORT = 'input[name="show"]';
 const TABLE_SELECTOR = 'body > table > tbody > tr:nth-child(2) > td:nth-child(3) > form > table > tbody > tr:nth-child(3) > td > table > tbody > tr:nth-child(3) > td > table tr';
 
@@ -30,6 +31,7 @@ const SELECTORS = {
     filterCurrency: FILTER_CURRENCY,
     filterCasino: FILTER_CASINO,
     filterBank: FILTER_BANK,
+    filterAccount: FILTER_ACCOUNT,
     runReport: RUN_REPORT,
     table: TABLE_SELECTOR
 };

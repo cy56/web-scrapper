@@ -42,7 +42,6 @@ class CMD extends PuppeteerClient
 
     async extractHtmlTableProcess() {
         const sources = this.vendor.sources;
-        this.page.waitFor(10000);
         return await this.page.evaluate((sources) => {
             let items = [];
             let grayItems = document.querySelectorAll(sources.tableGray);

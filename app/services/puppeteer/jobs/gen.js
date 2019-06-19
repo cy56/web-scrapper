@@ -65,9 +65,7 @@ class GEN extends PuppeteerClient {
     }
 
     async extractHtmlTableProcess() {
-        await this.page.waitFor(5000);
         const htmlTable = this.vendor.selectors.table;
-
         return await this.page.evaluate((htmlTable) => {
                 let items = [];
                 const table = document.querySelectorAll(htmlTable);

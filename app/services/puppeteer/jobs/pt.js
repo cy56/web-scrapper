@@ -40,7 +40,6 @@ class PT extends PuppeteerClient {
 
     async extractHtmlTableProcess() {
         const htmlTable = this.vendor.selectors.table;
-        await this.page.waitFor(5000);
         return await this.page.evaluate((htmlTable) => {
             let items = [];
             const table = document.querySelectorAll(htmlTable);

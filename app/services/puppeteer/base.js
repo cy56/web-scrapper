@@ -61,6 +61,7 @@ class PuppeteerClient {
 
     async extractHtmlTable() {
         try {
+            await this.page.waitFor(10000);
             this.filename = await this.takeScreenshot();
             this.unresolved = await this.extractHtmlTableProcess();
         } catch (err) {
@@ -70,10 +71,11 @@ class PuppeteerClient {
 
     async resolveSource(date) {
         try {
+            this.page.waitFor(3000);
             const source = (this.toString() !== 'hydra') ? 'vendor' : 'hydra';
             const vendor = this.toString();
             const brand = this.brand.toUpperCase() || 'RB88';
-            const currency = this.currency || null;
+            const currency = this.currency.toUpperCase() || null;
             const filename = this.filename;
             this.resolved = await this._resolver.resolveParser({source, brand, vendor, filename, date, currency}, this.unresolved);
         } catch (err) {

@@ -76,9 +76,17 @@ class CMD extends Model {
 
     static getDatatableGroupBy() {
         return {
-            attributes: ['source', 'currency', [this.sequelize.fn('sum', this.sequelize.col('players')), 'players'],
-                [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'], [this.sequelize.fn('sum', this.sequelize.col('stake')), 'stake'],
-                [this.sequelize.fn('sum', this.sequelize.col('playerWinloss')), 'playerWinloss']],
+            attributes: [
+                'source', 'currency', 
+                [this.sequelize.fn('sum', this.sequelize.col('players')), 'players'], 
+                [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'], 
+                [this.sequelize.fn('sum', this.sequelize.col('stake')), 'stake'], 
+                [this.sequelize.fn('sum', this.sequelize.col('stakeSold')), 'stakeSold'], 
+                [this.sequelize.fn('sum', this.sequelize.col('takeBackAmount')), 'takeBackAmount'], 
+                [this.sequelize.fn('sum', this.sequelize.col('memberComission')), 'memberComission'],
+                [this.sequelize.fn('sum', this.sequelize.col('playerWinloss')), 'playerWinloss'], 
+                [this.sequelize.fn('sum', this.sequelize.col('winningPercent')), 'winningPercent']
+            ],
             groupBy: ['source', 'brand', 'currency']
         }
     }

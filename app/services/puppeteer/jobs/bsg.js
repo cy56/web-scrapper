@@ -1,9 +1,11 @@
-const PuppeteerClient = require('../services/puppeteer');
+const PuppeteerClient = require('../base');
 
 class BSG extends PuppeteerClient
 {
-    constructor(options = {}) {
+    constructor(options = {}, brand, currency) {
         super(options);
+        this.brand = brand;
+        this.currency = currency;
     }
 
     async loginProcess() {
@@ -38,41 +40,42 @@ class BSG extends PuppeteerClient
         await this.page.select(this.vendor.selectors.filterCurrency, "34");
         await this.page.select(this.vendor.selectors.filterCasino, "65");
         await this.page.select(this.vendor.selectors.filterBank, "305");
+        await this.page.select(this.vendor.selectors.filterAccount, "2");
         await this.page.click(this.vendor.selectors.runReport);
     }
 
-    async extractHtmlTable() {
-        const htmlTable = this.vendors.selectors.table;
-        await this.pages.waitFor(3000);
+    async extractHtmlTableProcess() {
+        const htmlTable = this.vendor.selectors.table;
         return this.page.evaluate((htmlTable) => {
+            let items = [];
             const table = document.querySelectorAll(htmlTable);
-            return table[1].outerText.split('\t');
+            items.push(table[1].outerText.split('\t'))
+            return items;
         }, htmlTable);
     }
     
     async logoutProcess() {
-        await this.page.waitFor(this.vendor.selectors.logout);
+        await this.page.waitFor(this.vendor.selectors.logout, {visible: true});
         await this.page.click(this.vendor.selectors.logout);
     }
 }
 
-module.exports = async function run(start, end) {
-    const worker = new BSG({ headless: false });
+module.exports = async function run(start, end, brand) {
+    const worker = new BSG({ headless: false }, brand, 'cny');
     const dateResolver = worker.resolveDateTime(start, end);
     try {
         await worker.init();
         await worker.login();
         await worker.gotoReport();
-        for (let index = 0; index < dateResolver.dates.length; index++) {
-            const start = dateResolver.dates[index].start;
-            const end = dateResolver.dates[index].end;
+        for (let index = 0; index < dateResolver.length; index++) {
+            const start = dateResolver[index].start;
+            const end = dateResolver[index].end;
             await worker.filterConditions(start, end);
             await worker.extractHtmlTable();
             await worker.resolveSource(start);
             await worker.insertIntoDB();
         }
         await worker.logout();
-        return 'Task Done!!!';
     } catch (err) {
         console.error(err.message);
     }
