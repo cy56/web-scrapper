@@ -62,6 +62,7 @@ db.cmd = require('../models/vendors/cmd.js').initial(sequelize, Sequelize);
 db.pt = require('../models/vendors/pt.js').initial(sequelize, Sequelize);
 db.gen = require('../models/vendors/gen.js').initial(sequelize, Sequelize);
 db.bsg = require('../models/vendors/bsg.js').initial(sequelize, Sequelize);
+db.pgs = require('../models/vendors/pgs.js').initial(sequelize, Sequelize);
 //db.gd = require('../models/vendors/gd.js').initial(sequelize, Sequelize);
 // db.mg = require('../models/vendors/mg.js')(sequelize, Sequelize);
 // db.sbt = require('../models/vendors/sbt.js')(sequelize, Sequelize);

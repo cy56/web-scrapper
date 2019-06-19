@@ -45,6 +45,7 @@ class PuppeteerClient {
 
     async gotoReport() {
         try {
+            this.page.waitFor(10000);
             await this.gotoReportProcess();
         } catch (err) {
             this.reportError('gotoReport', err);
@@ -53,6 +54,7 @@ class PuppeteerClient {
 
     async filterConditions(start, end) {
         try {
+            this.page.waitFor(5000);
             await this.filterConditionsProcess(start, end);
         } catch (err) {
             this.reportError('filterConditions', err);
@@ -75,9 +77,9 @@ class PuppeteerClient {
             const source = (this.toString() !== 'hydra') ? 'vendor' : 'hydra';
             const vendor = this.toString();
             const brand = this.brand.toUpperCase() || 'RB88';
-            const currency = this.currency.toUpperCase() || null;
+            const currency = this.currency || null;
             const filename = this.filename;
-            this.resolved = await this._resolver.resolveParser({source, brand, vendor, filename, date, currency}, this.unresolved);
+            this.resolved = await this._resolver.resolveParser({ source, brand, vendor, filename, date, currency }, this.unresolved);
         } catch (err) {
             this.reportError('resolveSource', err);
         }
@@ -133,6 +135,7 @@ class PuppeteerClient {
             await this.endProcess();
         } else {
             await this.logout();
+            await this.endProcess();
         }
     }
 

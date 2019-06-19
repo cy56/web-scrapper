@@ -4,10 +4,11 @@ class PGS extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
-        this.attributes = ['id', 'source', 'date', 'currency', 'players', 'bets', 'turnover', 'playerWinloss', 'jpContribution', 'jpWin', 'winningPercent'];
-        this.groupAttr = ['source', 'currency', 'players', 'bets', 'turnover', 'playerWinloss', 'jpContribution', 'jpWin', 'winningPercent' ];
-        this.group = ['source', 'brand', 'currency'];
-        this.structure = {
+        return super.setup();
+    }
+
+    static getModelStructure() {
+        return {
             source: {
                 type: this.Datatypes.STRING
             },
@@ -45,7 +46,10 @@ class PGS extends Model {
                 type: this.Datatypes.DECIMAL(24, 2)
             }
         };
-        this.indexes = [
+    }
+
+    static getModelIndex() {
+        return [
             {
                 unique: true,
                 fields: ['date', 'currency', 'source', 'brand']
@@ -55,7 +59,30 @@ class PGS extends Model {
                 fields: ['source', 'brand', 'currency']
             }
         ];
-        return super.setup();
+    }
+
+    static getModelDefaultAttributes() {
+        return ['id', 'source', 'date', 'currency', 'players', 'bets', 'turnover', 'playerWinloss', 'jpContribution', 'jpWin', 'winningPercent'];
+    }
+
+    static getOnDuplicateValues() {
+        return ['players', 'bets', 'turnover', 'playerWinloss', 'jpContribution', 'jpWin', 'winningPercent'];
+    }
+
+    static getDatatableGroupBy() {
+        return {
+            attributes: [
+                'source', 'currency',
+                [this.sequelize.fn('sum', this.sequelize.col('players')), 'players'],
+                [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'],
+                [this.sequelize.fn('sum', this.sequelize.col('turnover')), 'turnover'],
+                [this.sequelize.fn('sum', this.sequelize.col('playerWinloss')), 'playerWinloss'],
+                [this.sequelize.fn('sum', this.sequelize.col('jpContribution')), 'jpContribution'],
+                [this.sequelize.fn('sum', this.sequelize.col('jpWin')), 'jpWin'],
+                [this.sequelize.fn('sum', this.sequelize.col('winningPercent')), 'winningPercent']
+            ],
+            groupBy: ['source', 'brand', 'currency']
+        }
     }
 }
 
