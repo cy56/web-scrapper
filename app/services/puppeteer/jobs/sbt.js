@@ -1,8 +1,9 @@
-const PuppeteerClient = require('../services/puppeteer');
+const PuppeteerClient = require('../base');
 
 class SBT extends PuppeteerClient {
-    constructor(options = {}) {
+    constructor(options = {}, brand) {
         super(options);
+        this.brand = brand;
     }
 
     async loginProcess() {
@@ -16,21 +17,20 @@ class SBT extends PuppeteerClient {
     }
 
     async gotoReportProcess() {
-        const report = this.vendor.selectors.report;
-        await this.page.waitFor(this.vendor.selectors.logout, { visible: true });
-        await this.page.evaluate((report) => {
-            document.querySelector(report).click();
-        }, report);
+        await this.page.waitFor(5000);
+        await this.page.goto(this.vendor.pages.report, { timeout: 0, waitUntil:'load'});
     }
 
     async filterConditionsProcess(start, end) {
         const filters = {
             dateRange: this.vendor.selectors.filterDateRange,
+            operator: this.vendor.selectors.filterOperator,
             currency: this.vendor.selectors.filterCurrency,
             groupByType: this.vendor.selectors.filterGroupByType,
-            groupBy: this.vendor.selectors.filterGroupBy
+            groupBy: this.vendor.selectors.filterGroupBy,
+            groupByOperator: this.vendor.selectors.filterGroupByOperator
         }
-        await this.page.waitFor(this.vendor.selectors.filterDateRange, {visible:true});
+        await this.page.waitFor(this.vendor.selectors.runReport, {visible:true});
         await this.page.evaluate((filters) => {
             document.querySelector(filters.dateRange).click();
         }, filters);
@@ -39,6 +39,10 @@ class SBT extends PuppeteerClient {
         await this.page.type(this.vendor.selectors.filterStartDate, start);
         await this.page.click(this.vendor.selectors.filterEndDate, { clickCount: 3 });
         await this.page.type(this.vendor.selectors.filterEndDate, end);
+        await this.page.evaluate((filters) => {
+            document.querySelector(filters.operator).click();
+        }, filters);
+        await this.page.waitFor(3000);
         await this.page.evaluate((filters) => {
             document.querySelector(filters.currency).click();
             document.querySelector(filters.groupByType).click();
@@ -49,14 +53,16 @@ class SBT extends PuppeteerClient {
                 }
             }
         }, filters);
+        await this.page.evaluate((filters) => {
+            document.querySelector(filters.groupByOperator).click();
+        }, filters);
+        await this.page.click(this.vendor.selectors.filterUniquePlayer);
         await this.page.waitFor(3000);
-        // Run Report
         await this.page.click(this.vendor.selectors.runReport);
     }
 
     async extractHtmlTableProcess() {
         const htmlTable = this.vendor.selectors.table;
-        await this.page.waitFor(5000);
         return await this.page.evaluate((htmlTable) => {
             let items = [];
             const table = document.querySelectorAll(htmlTable);
@@ -74,23 +80,22 @@ class SBT extends PuppeteerClient {
     }
 }
 
-module.exports = async function run(start, end) {
-    const worker = new SBT({ headless: false });
+module.exports = async function run(start, end, brand) {
+    const worker = new SBT({ headless: false }, brand);
     const dateResolver = worker.resolveDateTime(start, end);
     try {
         await worker.init();
         await worker.login();
         await worker.gotoReport();
-        for (let index = 0; index < dateResolver.dates.length; index++) {
-            const start = dateResolver.dates[index].start;
-            const end = dateResolver.dates[index].end;
+        for (let index = 0; index < dateResolver.length; index++) {
+            const start = dateResolver[index].start;
+            const end = dateResolver[index].end;
             await worker.filterConditions(start, end);
             await worker.extractHtmlTable();
             await worker.resolveSource(start);
             await worker.insertIntoDB();
         }
         await worker.logout();
-        return 'Task Done!!!';
     } catch (err) {
         console.error(err.message);
     }
