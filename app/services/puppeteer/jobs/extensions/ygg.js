@@ -1,5 +1,5 @@
 // Pages
-const LOGIN_PAGE = 'https://bo-prod-sg.ygg-7ehd83n.com:8443/backoffice/login.xhtml';
+const LOGIN_PAGE = 'https://bo-prod-sg.ygg-7ehd83n.com/backoffice/login.xhtml';
 // Elements
 const USERNAME_SELECTOR = 'input[name="login:uid"]';
 const PASSWORD_SELECTOR = 'input[name="login:pwd"]';

@@ -1,37 +1,33 @@
-const libcur = require('../services/currency');
-const SOURCE = 'vendor';
+const BaseParser = require('./master/baseParser');
 
-class YGG {
-    constructor(params = { vendor: null, filename: null, date: null }, data) {
-        this.source = SOURCE;
-        this.vendor = params.vendor;
-        this.filename = params.filename;
-        this.date = params.date;
-        this.type = data[1];
-        this.betCount = libcur.convert(data[2]);
-        this.userCount = libcur.convert(data[3]);
-        this.currency = data[5];
-        this.betAmount = libcur.convert(data[6]);
-        this.wonAmount = libcur.convert(data[7]);
-        this.rtp = libcur.convert(data[8]);
-        this.profit = libcur.convert(data[9]);
+class YGG extends BaseParser {
+    constructor(params, items) {
+        super(params);
+        this.cleanData(items);
     }
 
-    getResults() {
-        return {
-            source: this.source,
-            vendor: this.vendor,
-            filename: this.filename,
-            date: this.date,
-            type: this.type,
-            betCount: this.betCount,
-            userCount: this.userCount,
-            currency: this.currency,
-            betAmount: this.betAmount,
-            wonAmount: this.wonAmount,
-            rtp: this.rtp,
-            profit: this.profit
-        }
+    resolveForVendor(data) {
+        let type = 'real';
+        let currency = data[5].toLowerCase();
+        let players = this.resolveValue(data[3]);
+        let bets = this.resolveValue(data[2]);
+        let turnover = this.resolveValue(data[6], 2);
+        let playerWinloss = this.resolveValue(this.resolveValue(data[7], 2) - this.resolveValue(data[6], 2), 2);
+        let winningPercent = this.resolveValue((playerWinloss / turnover) * 100, 2);
+
+        return this.autoWireData({ type, currency, players, bets, turnover, playerWinloss, winningPercent });
+    }
+
+    resolveForHydra(data) {
+        let type = 'real';
+        let currency = data[5].toLowerCase();
+        let players = this.resolveValue(data[1]);
+        let bets = this.resolveValue(data[2]);
+        let turnover = this.resolveValue(data[3], 4);
+        let playerWinloss = this.resolveValue(totalWin - turnover - jpContribution, 4);
+        let winningPercent = null;
+
+        return this.autoWireData({ type, currency, players, bets, turnover, playerWinloss, winningPercent });
     }
 }
 

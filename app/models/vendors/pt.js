@@ -107,7 +107,7 @@ class PT extends Model {
     }
 
     static getDatatableFilter() {
-
+        
     }
 
     static getDatatableHeader() {

@@ -4,12 +4,15 @@ class YGG extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
-        this.attributes = ['id', 'source', 'date', 'currency', 'type', 'betCount', 'userCount', 'betAmount', 'wonAmount', 'rtp', 'profit'];
-        this.structure = {
+        return super.setup();
+    }
+
+    static getModelStructure() {
+        return {
             source: {
                 type: this.Datatypes.STRING
             },
-            vendor: {
+            brand: {
                 type: this.Datatypes.STRING
             },
             filename: {
@@ -24,36 +27,65 @@ class YGG extends Model {
             type: {
                 type: this.Datatypes.STRING
             },
-            betCount: {
+            players: {
                 type: this.Datatypes.INTEGER
             },
-            userCount: {
+            bets: {
                 type: this.Datatypes.INTEGER
             },
-            betAmount: {
+            turnover: {
                 type: this.Datatypes.DECIMAL(24, 2)
             },
-            wonAmount: {
+            playerWinloss: {
                 type: this.Datatypes.DECIMAL(24, 2)
             },
-            rtp: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            profit: {
+            winningPercent: {
                 type: this.Datatypes.DECIMAL(24, 2)
             }
         };
-        this.indexes = [
+    }
+
+    static getModelIndex() {
+        return [
             {
                 unique: true,
-                fields: ['date', 'currency', 'source']
+                fields: ['date', 'currency', 'source', 'brand', 'type']
             },
             {
                 name: 'source_date',
-                fields: ['date', 'source']
+                fields: ['date', 'source', 'brand', 'type']
             }
         ];
-        return super.setup();
+    }
+
+    static getModelDefaultAttributes() {
+        return ['id', 'source', 'date', 'currency', 'type', 'players', 'bets', 'turnover', 'playerWinloss', 'winningPercent'];
+    }
+
+    static getOnDuplicateValues() {
+        return ['players', 'bets', 'turnover', 'playerWinloss', 'winningPercent'];
+    }
+
+    static getDatatableGroupBy() {
+        return {
+            attributes: [
+                'source', 'currency', 'type',
+                [this.sequelize.fn('sum', this.sequelize.col('players')), 'players'],
+                [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'],
+                [this.sequelize.fn('sum', this.sequelize.col('turnover')), 'turnover'],
+                [this.sequelize.fn('sum', this.sequelize.col('playerWinloss')), 'playerWinloss'],
+                [this.sequelize.fn('sum', this.sequelize.col('winningPercent')), 'winningPercent'],
+            ],
+            groupBy: ['source', 'brand', 'currency', 'type']
+        }
+    }
+
+    static getDatatableFilter() {
+
+    }
+
+    static getDatatableHeader() {
+
     }
 }
 
