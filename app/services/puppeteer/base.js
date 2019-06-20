@@ -46,7 +46,7 @@ class PuppeteerClient {
 
     async gotoReport() {
         try {
-            this.page.waitFor(10000);
+            await this.page.waitFor(10000);
             await this.gotoReportProcess();
         } catch (err) {
             this.reportError('gotoReport', err);
@@ -55,7 +55,7 @@ class PuppeteerClient {
 
     async filterConditions(start, end) {
         try {
-            this.page.waitFor(5000);
+            await this.page.waitFor(5000);
             await this.filterConditionsProcess(start, end);
         } catch (err) {
             this.reportError('filterConditions', err);

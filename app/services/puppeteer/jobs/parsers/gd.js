@@ -1,37 +1,43 @@
-const libcur = require('../services/currency');
-const SOURCE = 'vendor';
+const BaseParser = require('./master/baseParser');
 
-class GD
-{
-    constructor(params = {vendor:null, filename:null, date:null}, data) {
-        this.source = SOURCE;
-        this.vendor = params.vendor;
-        this.filename = params.filename;
-        this.date = params.date;
-        this.provider = data[0];
-        this.currency = data[1];
-        this.activePlayer = libcur.convert(data[2]);
-        this.betCount = libcur.convert(data[9]);
-        this.betAmount = libcur.convert(data[10]);
-        this.validBetAmount = libcur.convert(data[11]);
-        this.playerWinLoss = libcur.convert(data[12]);
+class GD extends BaseParser {
+    constructor(params, items) {
+        super(params);
+        this.cleanData(items);
     }
 
-    getResults() {
-        return {
-            source: this.source,
-            vendor: this.vendor,
-            provider: this.provider,
-            date: this.date,
-            currency: this.currency,
-            activePlayer: this.activePlayer,
-            betCount: this.betCount,
-            betAmount: this.betAmount,
-            validBetAmount: this.validBetAmount,
-            playerWinLoss: this.playerWinLoss,
-            filename: this.filename
-        }
+    resolveForVendor(data) {
+        let type = 'live';
+        let currency = data[1].toLowerCase();
+        let players = this.resolveValue(data[2]);
+        let bets = this.resolveValue(data[3]);
+        let turnover = this.resolveValue(data[4], 2);
+        let tipsAmount = this.resolveValue(data[7], 2);
+        let jpContribution = null;
+        let jpWins = null
+        let playerWinloss = this.resolveValue(data[6], 2);
+        let playerWinlossJP = null;
+        let winningPercent = this.resolveValue((playerWinloss / turnover) * 100, 2);
+
+        return this.autoWireData({ type, currency, players, bets, turnover, tipsAmount, playerWinloss, winningPercent, jpContribution, jpWins, playerWinlossJP });
     }
+
+    resolveForHydra(data) {
+        let type = 'live';
+        let currency = data[1].toLowerCase();
+        let players = this.resolveValue(data[2]);
+        let bets = this.resolveValue(data[3]);
+        let turnover = this.resolveValue(data[4], 2);
+        let tipsAmount = null;
+        let jpContribution = null;
+        let jpWins = this.resolveValue(data[7], 2);
+        let playerWinloss = this.resolveValue(data[6], 4);
+        let playerWinlossJP = this.resolveValue(playerWinloss + jpWins, 4);
+        let winningPercent = this.resolveValue((playerWinloss / turnover) * 100, 2);
+
+        return this.autoWireData({ type, currency, players, bets, turnover, tipsAmount, playerWinloss, winningPercent, jpContribution, jpWins, playerWinlossJP });
+    }
+
 }
 
 module.exports = GD;

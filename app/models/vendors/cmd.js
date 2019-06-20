@@ -65,7 +65,7 @@ class CMD extends Model {
     }
 
     static getModelDefaultAttributes() {
-        return ['id', 'source', 'currency', 'players', 'bets', 'stake', 'stakeSold', 'takeBackAmount', 'memberComission', 'playerWinloss', 'winningPercent'];
+        return ['id', 'source', 'date', 'currency', 'players', 'bets', 'stake', 'stakeSold', 'takeBackAmount', 'memberComission', 'playerWinloss', 'winningPercent'];
     }
 
     static getOnDuplicateValues() {

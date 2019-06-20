@@ -6,10 +6,9 @@ const MERCHANT_SELECTOR = '#merchantCode';
 const ACCOUNT_SELECTOR = 'body > div > div.Div1b > div > label:nth-child(4) > div.Div1b1_TxtBox > input.textField';
 const PASSWORD_SELECTOR = '#psw';
 const LOGIN_SELECTOR = '#loginBtn';
-const REPORT_SELECTOR ='a[onclick="createPNLReport()"]';
+const REPORT_SELECTOR ='a[onclick="openNewPNLReport();"]';
 const LOGOUT_SELECTOR ='#topMenu > div > div > a:nth-child(1) > font > u';
 const RECORD_SELECTOR = '#dataDisplay > div:nth-child(3)';
-const SPEED_FILTER = '#speedSearch';
 const START_DATE = '#fromdatepicker';
 const END_DATE = '#todatepicker';
 const RUN_REPORT = '#searchBtn';
@@ -31,7 +30,6 @@ const SELECTORS = {
     report: REPORT_SELECTOR,
     record: RECORD_SELECTOR,
     table: TABLE_SELECTOR,
-    filterSpeed: SPEED_FILTER,
     start: START_DATE,
     end: END_DATE,
     runReport: RUN_REPORT

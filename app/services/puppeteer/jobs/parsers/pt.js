@@ -13,11 +13,11 @@ class PT extends BaseParser {
         let turnover = this.resolveValue(data[3], 4);
         let totalWin = this.resolveValue(data[7], 4);
         let gameIncomeShare = this.resolveValue(data[8], 4);
-        let winningPercent = null;
         let jpContribution = this.resolveValue(data[15], 4);
         let jpWins = this.resolveValue(data[16], 4);
         let playerWinloss = this.resolveValue(totalWin - turnover - jpContribution, 4);
         let playerWinlossJP = this.resolveValue(playerWinloss + jpWins, 4);
+        let winningPercent = this.resolveValue((playerWinloss/turnover) * 100, 2);
 
         return this.autoWireData({ type, players, bets, turnover, totalWin, gameIncomeShare, playerWinloss, winningPercent, jpContribution, jpWins, playerWinlossJP });
     }
