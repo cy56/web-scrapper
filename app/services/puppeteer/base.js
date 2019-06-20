@@ -67,7 +67,6 @@ class PuppeteerClient {
             await this.page.waitFor(10000);
             this.filename = await this.takeScreenshot();
             this.unresolved = await this.extractHtmlTableProcess();
-            console.log(this.unresolved);
         } catch (err) {
             this.reportError('extractHtmlTable', err);
         }

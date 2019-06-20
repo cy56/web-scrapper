@@ -163,7 +163,7 @@ class ResolverService
         let dates = [];
         items.forEach((item) => {
             let start = dateService.format(item.start, 'YYYY/MM/DD');
-            let end = dateService.format(item.end, 'YYYY/MM/DD');
+            let end = dateService.format(dateService.addDays(item.end, 1), 'YYYY/MM/DD');
             dates.push({ start: start, end: end });
         });
         return dates;

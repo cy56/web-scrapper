@@ -10,7 +10,7 @@ class BaseParser
         this.brand = brand;
         this.vendor = vendor;
         this.filename = filename;
-        this.currency = (currency) ? currency.toUpperCase() : null;
+        this.currency = (currency) ? currency.toLowerCase() : null;
         this.date = dateService.format(new Date(date), 'YYYY-MM-DD');
         this.datas = [];
         this._ = _;

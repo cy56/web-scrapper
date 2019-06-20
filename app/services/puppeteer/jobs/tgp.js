@@ -1,8 +1,9 @@
-const PuppeteerClient = require('../services/puppeteer');
+const PuppeteerClient = require('../base');
 
 class TGP extends PuppeteerClient {
-    constructor(options = {}) {
+    constructor(options = {}, brand) {
         super(options);
+        this.brand = brand;
     }
 
     async loginProcess() {
@@ -38,19 +39,18 @@ class TGP extends PuppeteerClient {
         await this.page.type(this.vendor.selectors.startDate, start, { delay: 10 });
         await this.page.focus(this.vendor.selectors.endDate);
         await this.page.type(this.vendor.selectors.endDate, end, { delay: 10 });
-        await this.page.select(this.vendor.selectors.endTime, 'string:23')
+        await this.page.select(this.vendor.selectors.endTime, 'string:00');
         await this.page.click(this.vendor.selectors.search);
     }
 
     async extractHtmlTableProcess() {
         const htmlTable = this.vendor.selectors.table;
-        await this.page.waitFor(10000);
         return await this.page.evaluate((htmlTable) => {
             let items = [];
             const table = document.querySelectorAll(htmlTable);
             for (let index = 0; index < table.length; index++) {
                 const item = table[index].outerText.split('\t');
-                if(item[1] == 'Fun88Prod') {
+                if(item[0] !== '') {
                     items.push(item);
                 }
             }
@@ -59,34 +59,29 @@ class TGP extends PuppeteerClient {
     }
 
     async logoutProcess() {
-        const logout = {
-            profile: this.vendor.selectors.profile,
-            logout: this.vendor.selectors.logout
-        }
-        await this.page.evaluate((logout) => {
-            document.querySelector(logout.profile).click();
-            document.querySelector(logout.logout).click();
-        }, logout);
+        await this.page.waitFor(this.vendor.selectors.profile, { visible: true });
+        await this.page.click(this.vendor.selectors.profile);
+        await this.page.waitFor(this.vendor.selectors.logout, { visible: true });
+        await this.page.click(this.vendor.selectors.logout);
     }
 }
 
-module.exports = async function run(start, end) {
-    const worker = new TGP({ headless: false });
+module.exports = async function run(start, end, brand) {
+    const worker = new TGP({ headless: false }, brand);
     const dateResolver = worker.resolveDateTime(start, end);
     try {
         await worker.init();
         await worker.login();
         await worker.gotoReport();
-        for (let index = 0; index < dateResolver.dates.length; index++) {
-            const start = dateResolver.dates[index].start;
-            const end = dateResolver.dates[index].end;
+        for (let index = 0; index < dateResolver.length; index++) {
+            const start = dateResolver[index].start;
+            const end = dateResolver[index].end;
             await worker.filterConditions(start, end);
             await worker.extractHtmlTable();
             await worker.resolveSource(start);
             await worker.insertIntoDB();
         }
         await worker.logout();
-        return 'Task Done!!!';
     } catch (err) {
         console.error(err.message);
     }
