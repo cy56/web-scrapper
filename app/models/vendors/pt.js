@@ -107,11 +107,25 @@ class PT extends Model {
     }
 
     static getDatatableFilter() {
-        
+        return ['source', 'currency', 'type'];
     }
 
     static getDatatableHeader() {
-
+        return [
+            { text: 'Source', value: 'source' },
+            { text: 'Currency', value: 'currency' },
+            { text: 'Game Type', value: 'type' },
+            { text: 'No of Players', value: 'players' },
+            { text: 'No of Bets', value: 'bets' },
+            { text: 'Turnover', value: 'turnover' },
+            { text: 'Total Win', value: 'totalWin' },
+            { text: 'Game Income Share', value: 'gameIncomeShare' },
+            { text: 'Player Winloss (exc. Jackpot)', value: 'playerWinloss' },
+            { text: 'Winning (%)', value: 'winningPercent' },
+            { text: 'Jackpot Contribution', value: 'jpContribution' },
+            { text: 'Jackpot Wins', value: 'jpWins' },
+            { text: 'Player Winloss (inc. Jackpot)', value: 'turnover' },
+        ];
     }
 }
 
