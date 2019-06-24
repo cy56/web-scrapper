@@ -93,6 +93,26 @@ class GEN extends Model {
         }
     }
 
+    static getDatatableFilter() {
+        return ['source', 'currency', 'type'];
+    }
+
+    static getDatatableHeader() {
+        return [
+            { text: 'Source', value: 'source' },
+            { text: 'Currency', value: 'currency' },
+            { text: 'Game Type', value: 'type' },
+            { text: 'No of Players', value: 'players' },
+            { text: 'No of Bets', value: 'bets' },
+            { text: 'Turnover', value: 'turnover' },
+            { text: 'Valid Turnover', value: 'validTurnover' },
+            { text: 'Player Winloss (exc. Jackpot)', value: 'playerWinloss' },
+            { text: 'Jackpot Winloss', value: 'jackpotWinloss' },
+            { text: 'Jackpot Contribution', value: 'jpContribution' },
+            { text: 'Player Winloss (inc. Jackpot)', value: 'playerWinlossJP' },
+        ];
+    }
+
 }
 
 module.exports = GEN;

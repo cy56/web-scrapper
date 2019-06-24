@@ -82,7 +82,7 @@ class MG extends Model {
     static getDatatableGroupBy() {
         return {
             attributes: [
-                'source', 'currency',
+                'source', 'currency', 'type',
                 [this.sequelize.fn('sum', this.sequelize.col('players')), 'players'],
                 [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'],
                 [this.sequelize.fn('sum', this.sequelize.col('turnover')), 'turnover'],
@@ -97,11 +97,23 @@ class MG extends Model {
     }
 
     static getDatatableFilter() {
-
+        return ['source', 'currency', 'type'];
     }
 
     static getDatatableHeader() {
-
+        return [
+            { text: 'Source', value: 'source' },
+            { text: 'Currency', value: 'currency' },
+            { text: 'Game Type', value: 'type' },
+            { text: 'No of Players', value: 'players' },
+            { text: 'No of Bets', value: 'bets' },
+            { text: 'Turnover', value: 'turnover' },
+            { text: 'Player Winloss (exc. Jackpot)', value: 'playerWinloss' },
+            { text: 'Winning (%)', value: 'winningPercent' },
+            { text: 'Jackpot Contribution', value: 'jpContribution' },
+            { text: 'Jackpot Wins', value: 'jpWins' },
+            { text: 'Player Winloss (inc. Jackpot)', value: 'playerWinlossJP' }
+        ];
     }
 }
 

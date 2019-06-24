@@ -84,6 +84,24 @@ class PGS extends Model {
             groupBy: ['source', 'brand', 'currency']
         }
     }
+
+    static getDatatableFilter() {
+        return ['source', 'currency'];
+    }
+
+    static getDatatableHeader() {
+        return [
+            { text: 'Source', value: 'source' },
+            { text: 'Currency', value: 'currency' },
+            { text: 'No of Players', value: 'players' },
+            { text: 'No of Bets', value: 'bets' },
+            { text: 'Turnover', value: 'turnover' },
+            { text: 'Player Winloss (exc. Jackpot)', value: 'playerWinloss' },
+            { text: 'Jackpot Contribution', value: 'jpContribution' },
+            { text: 'Jackpot Wins', value: 'jpWins' },
+            { text: 'Winning (%)', value: 'winningPercent' }
+        ];
+    }
 }
 
 module.exports = PGS;
