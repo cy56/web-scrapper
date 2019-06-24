@@ -32,9 +32,7 @@ class VendorModel extends Sequelize.Model {
                     $between: Resolver.resolveDates(startDate, endDate)
                 }
             }
-
-            console.log(wheres);
-
+            
             return await this.findAll({ attributes: this.getDatatableGroupBy().attributes, group: this.getDatatableGroupBy().groupBy, where: wheres, raw: true });
 
         } catch (err) {

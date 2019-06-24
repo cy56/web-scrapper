@@ -76,17 +76,36 @@ class BSG extends Model {
     static getDatatableGroupBy() {
         return {
             attributes: [
-                'source', 'currency', 
+                'source', 'currency', 'type',
                 [this.sequelize.fn('sum', this.sequelize.col('players')), 'players'],
                 [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'], 
                 [this.sequelize.fn('sum', this.sequelize.col('turnover')), 'turnover'],
                 [this.sequelize.fn('sum', this.sequelize.col('playerWinloss')), 'playerWinloss'],
-                [this.sequelize.fn('sum', this.sequelize.col('playerWinloss')), 'jpContribution'],
-                [this.sequelize.fn('sum', this.sequelize.col('playerWinloss')), 'jpWins'],
-                [this.sequelize.fn('sum', this.sequelize.col('playerWinloss')), 'playerWinlossJP']
+                [this.sequelize.fn('sum', this.sequelize.col('jpContribution')), 'jpContribution'],
+                [this.sequelize.fn('sum', this.sequelize.col('jpWins')), 'jpWins'],
+                [this.sequelize.fn('sum', this.sequelize.col('playerWinlossJP')), 'playerWinlossJP']
             ],
             groupBy: ['source', 'brand', 'currency', 'type']
         }
+    }
+
+    static getDatatableFilter() {
+        return ['source', 'currency', 'type'];
+    }
+
+    static getDatatableHeader() {
+        return [
+            { text: 'Source', value: 'source' },
+            { text: 'Currency', value: 'currency' },
+            { text: 'Game Type', value: 'type' },
+            { text: 'No of Players', value: 'players' },
+            { text: 'No of Bets', value: 'bets' },
+            { text: 'Turnover', value: 'turnover' },
+            { text: 'Player Winloss (exc. Jackpot)', value: 'playerWinloss' },
+            { text: 'Jackpot Contribution', value: 'jpContribution' },
+            { text: 'Jackpot Wins', value: 'jpWins' },
+            { text: 'Player Winloss (inc. Jackpot)', value: 'playerWinlossJP' },
+        ];
     }
 }
 

@@ -124,7 +124,7 @@ class PT extends Model {
             { text: 'Winning (%)', value: 'winningPercent' },
             { text: 'Jackpot Contribution', value: 'jpContribution' },
             { text: 'Jackpot Wins', value: 'jpWins' },
-            { text: 'Player Winloss (inc. Jackpot)', value: 'turnover' },
+            { text: 'Player Winloss (inc. Jackpot)', value: 'playerWinlossJP' },
         ];
     }
 }

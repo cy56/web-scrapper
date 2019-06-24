@@ -24,11 +24,17 @@ class ResolverService
             let datas = _.orderBy(data, ['currency'], ['asc']);
             let items = [];
             let lastItem = null;
+
             datas.forEach((obj) => {
                 if(lastItem === null) {
                     lastItem = obj;
+                    if(datas.length === 1) {
+                        lastItem.diff = false;
+                        items.push(lastItem);
+                    }
                     return;
                 }
+
                 if(lastItem.currency === obj.currency) {
                     if(_.isEqual(_.omit(lastItem, keys), _.omit(obj, keys))) {
                         lastItem.diff = false;
@@ -44,6 +50,7 @@ class ResolverService
                     lastItem = null;
                     return;
                 }
+
                 if(lastItem.source === obj.source) {
                     lastItem.diff = false;
                     obj.diff = false;
@@ -53,6 +60,7 @@ class ResolverService
                     return;
                 }
             });
+
             return items;
         } catch(err) {
             throw err.message;
