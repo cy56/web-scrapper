@@ -76,7 +76,7 @@ class SBT extends Model {
     static getDatatableGroupBy() {
         return {
             attributes: [
-                'source', 'currency', 'type',
+                'source', 'currency',
                 [this.sequelize.fn('sum', this.sequelize.col('players')), 'players'],
                 [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'],
                 [this.sequelize.fn('sum', this.sequelize.col('turnover')), 'turnover'],
@@ -86,16 +86,27 @@ class SBT extends Model {
                 [this.sequelize.fn('sum', this.sequelize.col('totalComboBonus')), 'totalComboBonus'],
                 [this.sequelize.fn('sum', this.sequelize.col('winningPercent')), 'winningPercent']
             ],
-            groupBy: ['source', 'brand', 'currency', 'type']
+            groupBy: ['source', 'brand', 'currency']
         }
     }
 
     static getDatatableFilter() {
-        
+        return ['source', 'currency'];
     }
 
     static getDatatableHeader() {
-
+        return [
+            { text: 'Source', value: 'source' },
+            { text: 'Currency', value: 'currency' },
+            { text: 'No of Players', value: 'players' },
+            { text: 'No of Bets', value: 'bets' },
+            { text: 'Turnover', value: 'turnover' },
+            { text: 'Free Bet', value: 'freeBet' },
+            { text: 'Actual Turnover', value: 'actualTurnover' },
+            { text: 'Player Winloss', value: 'playerWinloss' },
+            { text: 'Total Combo Bonus', value: 'totalComboBonus' },
+            { text: 'Winning (%)', value: 'winningPercent' }
+        ];
     }
 }
 
