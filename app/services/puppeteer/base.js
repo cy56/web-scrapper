@@ -8,17 +8,18 @@ class PuppeteerClient {
         this.args = options.args || ['--window-size=1920,1080'];
         this.slowMo = this.headless === false ? 100 : 500;
 
-        // // Setup Properties
-        this.browser = null;
-        this.page = null;
-        this.vendor = require(`./jobs/extensions/${this.toString()}`);
-        this.creds = require(`./jobs/credentials/${this.toString()}`);
-        this.model = db[this.toString().toLowerCase()];
-        
-        // // Setup Services
+        // Setup Services
         this._dbc = require('../system/dbc');
         this._mailer = require('../system/mailer');
         this._resolver = require('../system/resolver');
+
+        // Setup Properties
+        this.browser = null;
+        this.page = null;
+        this.source = (this.toString() !== 'hydra') ? 'vendor' : 'hydra';
+        this.platform = this.toString();
+        this.vendor = require(`./jobs/extensions/${this.toString()}`);
+        this.creds = require(`./jobs/credentials/${this.toString()}`);
     }
 
     async init() {
@@ -75,8 +76,8 @@ class PuppeteerClient {
     async resolveSource(date) {
         try {
             this.page.waitFor(3000);
-            const source = (this.toString() !== 'hydra') ? 'vendor' : 'hydra';
-            const vendor = this.toString();
+            const source = this.source;
+            const vendor = this.platform;
             const brand = this.brand.toUpperCase() || 'RB88';
             const currency = this.currency || null;
             const filename = this.filename;
@@ -88,11 +89,12 @@ class PuppeteerClient {
 
     async insertIntoDB() {
         try {
+            const model = db[this.platform.toLowerCase()];
             this.page.waitFor(5000);
             if (Array.isArray(this.resolved)) {
-                await this.model.createMany(this.resolved);
+                await model.createMany(this.resolved);
             } else {
-                await this.model.createOne(this.resolved);
+                await model.createOne(this.resolved);
             }
             this.clearItems();
         } catch (err) {

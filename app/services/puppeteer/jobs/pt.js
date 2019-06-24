@@ -49,7 +49,6 @@ class PT extends PuppeteerClient {
     }
 
     async logoutProcess() {
-        console.log('logout...');
         await this.page.waitFor(5000);
         await this.page.goto(this.vendor.pages.logout[this.currency]);
         await this.page.waitFor(this.vendor.selectors.logout, { visible: true });

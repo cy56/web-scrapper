@@ -1,41 +1,44 @@
 // Pages
-const LOGIN_PAGE = 'https://data.agingames.com/';
+const LOGIN_PAGE = 'https://data.agingames.com/login?lang=en_US';
+const REPORT_PAGE = 'https://data.agingames.com/agent/report';
 
 // Elements
-const USERNAME_SELECTOR = '#loginname';
-const PASSWORD_SELECTOR = '#passwordSecurity';
-const CAPTCHA_SELECTOR = '#login-content > table > tbody > tr:nth-child(6) > td:nth-child(2) > img';
-const VALIDATE_SELECTOR = '#captchaCode';
+const USERNAME_SELECTOR = '#inputAccount';
+const PASSWORD_SELECTOR = '#inputPassword';
 const LOGIN_SELECTOR = '#loginButton';
-const LOGOUT_SELECTOR = '#account_contact_top > div.glossymenu > div > ul > li:nth-child(16) > a';
-const REPORT_SELECTOR = '#account_contact_top > div.glossymenu > div > ul > li:nth-child(5) > a';
+const LOGOUT_SELECTOR = '#logoutBtn';
+const LOGOUT_CONFIRM_SELECTOR = '#logoutTipModal > div > div > div.modal-footer > button.sui-btn.btn-danger.btn-large';
+const HUNTER_REPORT_SELECTOR ='a[href="#tab2"]';
 
-const LIVE_START_DATE = '#FromTime';
-const LIVE_END_DATE = '#ToTime';
-const LIVE_RUN_REPORT = '#ext-gen915';
-const LIVE_TABLE_SELECTOR = 'table.x-grid3-row-table';
-const HUNTER_START_DATE = '#FromTime_hunt2';
-const HUNTER_END_DATE = '#ToTime_hunt2';
-const HUNTER_RUN_REPORT = '#ext-gen1090';
-const HUNTER_TABLE_SELECTOR = 'div#grid123_total table.x-grid3-row-table tr';
+const LIVE_START_DATE = 'input[name="beginTime"]';
+const LIVE_END_DATE = 'input[name="endTime"]';
+const LIVE_RUN_REPORT = '#submitBtn';
+const LIVE_TABLE_SELECTOR = '#totalTb tr[ng-repeat="row in totalRecord"]';
 
-const PAGES = {login:LOGIN_PAGE}
+const HUNTER_START_DATE = 'input[ng-model="hunterForm.beginTime"]';
+const HUNTER_END_DATE = 'input[ng-model="hunterForm.endTime"]';
+const HUNTER_RUN_REPORT = '#hunterSubmit';
+const HUNTER_TABLE_SELECTOR = '#hunterTb tr[ng-repeat="row in hunterRecord"]';
+
+const PAGES = {
+    login:LOGIN_PAGE,
+    report: REPORT_PAGE
+}
 
 const SELECTORS = {
     username: USERNAME_SELECTOR,
     password: PASSWORD_SELECTOR,
-    captcha: CAPTCHA_SELECTOR,
-    validation: VALIDATE_SELECTOR,
     login: LOGIN_SELECTOR,
     logout: LOGOUT_SELECTOR,
-    report: REPORT_SELECTOR,
-    live: {
+    logoutConfirm: LOGOUT_CONFIRM_SELECTOR,
+    hunter: HUNTER_REPORT_SELECTOR,
+    agl: {
         start: LIVE_START_DATE,
         end: LIVE_END_DATE,
         runReport: LIVE_RUN_REPORT,
         table: LIVE_TABLE_SELECTOR,
     },
-    hunter: {
+    ag: {
         start: HUNTER_START_DATE,
         end: HUNTER_END_DATE,
         runReport: HUNTER_RUN_REPORT,

@@ -1,6 +1,6 @@
 const Model = require('../vendorModel');
 
-class YGG extends Model {
+class AGL extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
@@ -52,8 +52,8 @@ class YGG extends Model {
                 fields: ['date', 'currency', 'source', 'brand', 'type']
             },
             {
-                name: 'source_date',
-                fields: ['date', 'source', 'brand', 'type']
+                name: 'default_indexes',
+                fields: ['source', 'brand', 'currency', 'type']
             }
         ];
     }
@@ -63,18 +63,20 @@ class YGG extends Model {
     }
 
     static getOnDuplicateValues() {
-        return ['players', 'bets', 'turnover', 'playerWinloss', 'winningPercent'];
+        return [
+            'players', 'bets', 'turnover', 'playerWinloss', 'winningPercent'
+        ];
     }
 
     static getDatatableGroupBy() {
         return {
             attributes: [
-                'source', 'currency', 'type',
+                'source', 'currency',
                 [this.sequelize.fn('sum', this.sequelize.col('players')), 'players'],
                 [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'],
                 [this.sequelize.fn('sum', this.sequelize.col('turnover')), 'turnover'],
                 [this.sequelize.fn('sum', this.sequelize.col('playerWinloss')), 'playerWinloss'],
-                [this.sequelize.fn('sum', this.sequelize.col('winningPercent')), 'winningPercent'],
+                [this.sequelize.fn('sum', this.sequelize.col('winningPercent')), 'winningPercent']
             ],
             groupBy: ['source', 'brand', 'currency', 'type']
         }
@@ -89,4 +91,4 @@ class YGG extends Model {
     }
 }
 
-module.exports = YGG;
+module.exports = AGL;
