@@ -9,8 +9,8 @@ class AG extends BaseParser {
     resolveForVendor(data) {
         let currency = 'cny';
         let type = 'fish';
-        let players = this.resolveValue(data[1], 2);
-        let bets = this.resolveValue(data[2], 2);
+        let players = this.resolveValue(data[1]);
+        let bets = this.resolveValue(data[2]);
         let turnover = this.resolveValue(data[3], 2);
         let validTurnover = this.resolveValue(data[4], 2);
         let grossWinAmount = this.resolveValue(data[5], 2);
@@ -22,8 +22,8 @@ class AG extends BaseParser {
     resolveForHydra(data) {
         let currency = 'cny';
         let type = 'fish';
-        let players = this.resolveValue(data[1], 2);
-        let bets = this.resolveValue(data[2], 2);
+        let players = this.resolveValue(data[1]);
+        let bets = this.resolveValue(data[2]);
         let turnover = this.resolveValue(data[3], 2);
         let validTurnover = this.resolveValue(data[4], 2);
         let grossWinAmount = this.resolveValue(data[5], 2);
@@ -31,7 +31,6 @@ class AG extends BaseParser {
 
         return this.autoWireData({ currency, type, players, bets, turnover, validTurnover, grossWinAmount, jpSettlemnent });
     }
-
 }
 
 module.exports = AG;

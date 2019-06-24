@@ -71,7 +71,7 @@ db.sbt = require('../models/vendors/sbt.js').initial(sequelize, Sequelize);
 db.agl = require('../models/vendors/agl.js').initial(sequelize, Sequelize);
 db.ag = require('../models/vendors/ag.js').initial(sequelize, Sequelize);
 
-// db.ab = require('../models/vendors/ab.js')(sequelize, Sequelize);
+db.ab = require('../models/vendors/ab.js').initial(sequelize, Sequelize);
 // db.bettrade = require('../models/vendors/bettrade.js')(sequelize, Sequelize);
 // db.ipsb = require('../models/vendors/ipsb.js')(sequelize, Sequelize);
 // db.nle = require('../models/vendors/nle.js')(sequelize, Sequelize);

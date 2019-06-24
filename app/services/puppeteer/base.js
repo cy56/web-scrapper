@@ -1,5 +1,8 @@
 const puppeteer = require('puppeteer');
 const db = require('../../config/db');
+const dbc = require('../system/dbc');
+const mailer = require('../system/mailer');
+const resolver = require('../system/resolver');
 
 class PuppeteerClient {
     constructor(options = {}) {
@@ -9,9 +12,9 @@ class PuppeteerClient {
         this.slowMo = this.headless === false ? 100 : 500;
 
         // Setup Services
-        this._dbc = require('../system/dbc');
-        this._mailer = require('../system/mailer');
-        this._resolver = require('../system/resolver');
+        this._dbc = new dbc();
+        this._mailer = new mailer();
+        this._resolver = resolver;
 
         // Setup Properties
         this.browser = null;
@@ -117,7 +120,7 @@ class PuppeteerClient {
     }
 
     resolveDateTime(start, end) {
-        return this._resolver.resolveVendorDates({ vendor: this.toString(), start, end});
+        return this._resolver.resolveVendorDates({ vendor: this.toString(), start, end });
     }
 
     clearItems() {
