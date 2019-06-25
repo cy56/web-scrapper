@@ -5,6 +5,7 @@ class PT extends PuppeteerClient {
         super(options);
         this.currency = currency;
         this.brand = brand;
+        this.first = true;
     }
 
     async login() {
@@ -24,17 +25,19 @@ class PT extends PuppeteerClient {
 
     async filterConditionsProcess(start, end) {
         await this.page.waitFor(10000);
-        await this.page.waitFor(this.vendor.selectors.reportBoth, {visible:true});
-        await this.page.click(this.vendor.selectors.reportBoth);
+        if(this.first) {
+            await this.page.waitFor(this.vendor.selectors.reportBoth, { visible: true });
+            await this.page.click(this.vendor.selectors.reportBoth);
+            await this.page.select(this.vendor.selectors.endTime, "23");
+            await this.page.click(this.vendor.selectors.showProgressive);
+            await this.page.click(this.vendor.selectors.showRealMoney);
+            await this.page.click(this.vendor.selectors.showLiveGames);
+            await this.page.click(this.vendor.selectors.reportByMonthly);
+        }
         await this.page.focus(this.vendor.selectors.startDate);
         await this.page.type(this.vendor.selectors.startDate, start);
         await this.page.focus(this.vendor.selectors.endDate);
         await this.page.type(this.vendor.selectors.endDate, end);
-        await this.page.select(this.vendor.selectors.endTime, "23");
-        await this.page.click(this.vendor.selectors.showProgressive);
-        await this.page.click(this.vendor.selectors.showRealMoney);
-        await this.page.click(this.vendor.selectors.showLiveGames);
-        await this.page.click(this.vendor.selectors.reportByMonthly);
         await this.page.click(this.vendor.selectors.runReport);
     }
 

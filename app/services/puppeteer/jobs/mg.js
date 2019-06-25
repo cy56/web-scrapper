@@ -5,6 +5,7 @@ class MG extends PuppeteerClient {
     constructor(options = {}, brand) {
         super(options);
         this.brand = brand;
+        this.first = true;
     }
 
     async loginProcess() {
@@ -23,33 +24,30 @@ class MG extends PuppeteerClient {
     }
 
     async filterConditionsProcess(start, end) {
-        const filters = {
-            start: this.vendor.selectors.dateStart,
-            end: this.vendor.selectors.dateEnd
+        if(this.first) {
+            await this.page.waitFor(this.vendor.selectors.reportCasinoProfit, {visible:true});
+            await this.page.click(this.vendor.selectors.reportCasinoProfit);
+            await this.page.waitFor(5000);
+            await this.page.click(this.vendor.selectors.dateFilter);
+            await this.page.click(this.vendor.selectors.dateBetween);
+            await this.page.click(this.vendor.selectors.extraFilter);
+            await this.page.click(this.vendor.selectors.registerCasino);
+            await this.page.click(this.vendor.selectors.base);
+            await this.page.click(this.vendor.selectors.filRegister);
+            await this.page.waitFor(2000);
+            await this.page.click(this.vendor.selectors.filRegisterVal);
+            await this.page.click(this.vendor.selectors.base);
+            await this.page.click(this.vendor.selectors.colCustomize);
+            await this.page.click(this.vendor.selectors.colCountry);
+            await this.page.click(this.vendor.selectors.colLanguage);
         }
-        await this.page.waitFor(this.vendor.selectors.reportCasinoProfit, {visible:true});
-        await this.page.click(this.vendor.selectors.reportCasinoProfit);
-        await this.page.waitFor(5000);
-        await this.page.click(this.vendor.selectors.dateFilter);
-        await this.page.click(this.vendor.selectors.dateBetween);
-        await this.page.evaluate((filters) => {
-            document.querySelector(filters.start).value = '';
-            document.querySelector(filters.end).value = '';
-        }, filters);
+        this.first = false;
         await this.page.focus(this.vendor.selectors.dateStart);
+        await this.page.click(this.vendor.selectors.dateStart, { clickCount: 3 });
         await this.page.type(this.vendor.selectors.dateStart, start);
         await this.page.focus(this.vendor.selectors.dateEnd);
+        await this.page.click(this.vendor.selectors.dateEnd, { clickCount: 3 });
         await this.page.type(this.vendor.selectors.dateEnd, end);
-        await this.page.click(this.vendor.selectors.extraFilter);
-        await this.page.click(this.vendor.selectors.registerCasino);
-        await this.page.click(this.vendor.selectors.base);
-        await this.page.click(this.vendor.selectors.filRegister);
-        await this.page.waitFor(2000);
-        await this.page.click(this.vendor.selectors.filRegisterVal);
-        await this.page.click(this.vendor.selectors.base);
-        await this.page.click(this.vendor.selectors.colCustomize);
-        await this.page.click(this.vendor.selectors.colCountry);
-        await this.page.click(this.vendor.selectors.colLanguage);
         await this.page.click(this.vendor.selectors.runReport);
     }
 

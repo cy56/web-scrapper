@@ -4,6 +4,7 @@ class GEN extends PuppeteerClient {
     constructor(options = {}, brand) {
         super(options);
         this.brand = brand;
+        this.first = true;
     }
 
     async loginProcess() {
@@ -32,25 +33,27 @@ class GEN extends PuppeteerClient {
             report: this.vendor.selectors.runReport
         }
         await this.page.waitFor(filters.currency, { visible: true });
-        await this.page.evaluate((filters) => {
-            document.querySelector(filters.currency).click();
-            document.querySelector(filters.viewBy).click();
-            let lists = document.querySelectorAll(filters.list);
-            for (let index = 0; index < lists.length; index++) {
-                if (lists[index].outerText === filters.vView) {
-                    lists[index].click();
+        if(this.first) {
+            await this.page.evaluate((filters) => {
+                document.querySelector(filters.currency).click();
+                document.querySelector(filters.viewBy).click();
+                let lists = document.querySelectorAll(filters.list);
+                for (let index = 0; index < lists.length; index++) {
+                    if (lists[index].outerText === filters.vView) {
+                        lists[index].click();
+                    }
                 }
-            }
-            lists = [];
-            document.querySelector(filters.betCurrency).click();
-            lists = document.querySelectorAll(filters.list);
-            for (let index = 0; index < lists.length; index++) {
-                if (lists[index].outerText === filters.fCurrency) {
-                    lists[index].click();
+                lists = [];
+                document.querySelector(filters.betCurrency).click();
+                lists = document.querySelectorAll(filters.list);
+                for (let index = 0; index < lists.length; index++) {
+                    if (lists[index].outerText === filters.fCurrency) {
+                        lists[index].click();
+                    }
                 }
-            }
-        }, filters);
-
+            }, filters);
+        }
+        this.first = false;
         await this.page.click(this.vendor.selectors.startDate);
         await this.page.click(this.vendor.selectors.dateValue, { clickCount : 3 });
         await this.page.type(this.vendor.selectors.dateValue, start);

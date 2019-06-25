@@ -4,6 +4,7 @@ class SBT extends PuppeteerClient {
     constructor(options = {}, brand) {
         super(options);
         this.brand = brand;
+        this.first = true;
     }
 
     async loginProcess() {
@@ -18,7 +19,7 @@ class SBT extends PuppeteerClient {
 
     async gotoReportProcess() {
         await this.page.waitFor(5000);
-        await this.page.goto(this.vendor.pages.report, { timeout: 0, waitUntil:'load'});
+        await this.page.goto(this.vendor.pages.report, { timeout: 0, waitUntil: 'load' });
     }
 
     async filterConditionsProcess(start, end) {
@@ -30,34 +31,36 @@ class SBT extends PuppeteerClient {
             groupBy: this.vendor.selectors.filterGroupBy,
             groupByOperator: this.vendor.selectors.filterGroupByOperator
         }
-        await this.page.waitFor(this.vendor.selectors.runReport, {visible:true});
-        await this.page.evaluate((filters) => {
-            document.querySelector(filters.dateRange).click();
-        }, filters);
-        await this.page.waitFor(3000);
+        await this.page.waitFor(this.vendor.selectors.runReport, { visible: true });
+        if(this.first) {
+            await this.page.evaluate((filters) => {
+                document.querySelector(filters.dateRange).click();
+            }, filters);
+            await this.page.waitFor(1000);
+            await this.page.evaluate((filters) => {
+                document.querySelector(filters.operator).click();
+            }, filters);
+            await this.page.waitFor(1000);
+            await this.page.evaluate((filters) => {
+                document.querySelector(filters.currency).click();
+                document.querySelector(filters.groupByType).click();
+                let tmp = document.querySelectorAll(filters.groupBy);
+                for (let index = 0; index < tmp.length; index++) {
+                    if (tmp[index].innerText === 'Currency') {
+                        tmp[index].click();
+                    }
+                }
+            }, filters);
+            await this.page.evaluate((filters) => {
+                document.querySelector(filters.groupByOperator).click();
+            }, filters);
+            await this.page.click(this.vendor.selectors.filterUniquePlayer);
+            await this.page.waitFor(3000);
+        }  
         await this.page.click(this.vendor.selectors.filterStartDate, { clickCount: 3 });
         await this.page.type(this.vendor.selectors.filterStartDate, start);
         await this.page.click(this.vendor.selectors.filterEndDate, { clickCount: 3 });
         await this.page.type(this.vendor.selectors.filterEndDate, end);
-        await this.page.evaluate((filters) => {
-            document.querySelector(filters.operator).click();
-        }, filters);
-        await this.page.waitFor(3000);
-        await this.page.evaluate((filters) => {
-            document.querySelector(filters.currency).click();
-            document.querySelector(filters.groupByType).click();
-            let tmp = document.querySelectorAll(filters.groupBy);
-            for (let index = 0; index < tmp.length; index++) {
-                if (tmp[index].innerText === 'Currency') {
-                    tmp[index].click();
-                }
-            }
-        }, filters);
-        await this.page.evaluate((filters) => {
-            document.querySelector(filters.groupByOperator).click();
-        }, filters);
-        await this.page.click(this.vendor.selectors.filterUniquePlayer);
-        await this.page.waitFor(3000);
         await this.page.click(this.vendor.selectors.runReport);
     }
 
