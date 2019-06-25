@@ -1,37 +1,37 @@
-const libcur = require('../services/currency');
-const SOURCE = 'vendor';
+const BaseParser = require('./master/baseParser');
 
-class BETTRADE {
-    constructor(params = { vendor: null, filename: null, date: null }, data) {
-        this.source = SOURCE;
-        this.vendor = params.vendor;
-        this.filename = params.filename;
-        this.date = params.date;
-        this.currency = data[1];
-        this.ticket = libcur.convert(data[2]),
-        this.stake = libcur.convert(data[3]),
-        this.buyBackAmount = libcur.convert(data[4]),
-        this.clientComm = libcur.convert(data[5]),
-        this.betWinloss = libcur.convert(data[6]),
-        this.clientWinloss = libcur.convert(data[7]),
-        this.memberWinloss = libcur.convert(data[8])
+class BETTRADE extends BaseParser {
+    constructor(params, items) {
+        super(params);
+        this.cleanData(items);
     }
 
-    getResults() {
-        return {
-            source: this.source, 
-            vendor: this.vendor,
-            filename: this.filename,
-            date: this.date, 
-            currency: this.currency, 
-            ticket: this.ticket, 
-            stake: this.stake, 
-            buyBackAmount: this.buyBackAmount, 
-            clientComm: this.clientComm, 
-            betWinloss: this.betWinloss, 
-            clientWinloss: this.clientWinloss, 
-            memberWinloss: this.memberWinloss
-        }
+    resolveForVendor(data) {
+        let currency = data[1];
+        let players = this.resolveValue(data[2]);
+        let bets = this.resolveValue(data[3]);
+        let stake = null;
+        let actualStake = this.resolveValue(data[4], 2);
+        let bbAmount = this.resolveValue(data[5], 2);
+        let betWinloss = this.resolveValue(data[7], 2);
+        let commission = this.resolveValue(data[6], 2);
+        let settlementAmount = this.resolveValue(data[8], 2);
+
+        return this.autoWireData({ currency, players, bets, stake, actualStake, bbAmount, betWinloss, commission, settlementAmount });
+    }
+
+    resolveForHydra(data) {
+        let currency = data[1];
+        let players = this.resolveValue(data[2]);
+        let bets = this.resolveValue(data[3]);
+        let stake = this.resolveValue(data[4], 2);
+        let actualStake = this.resolveValue(data[5], 2);
+        let bbAmount = this.resolveValue(data[6], 2);
+        let betWinloss = this.resolveValue(data[7], 2);
+        let commission = this.resolveValue(data[8], 2);
+        let settlementAmount = this.resolveValue(data[9], 2);
+
+        return this.autoWireData({ currency, players, bets, stake, actualStake, bbAmount, betWinloss, commission, settlementAmount });
     }
 }
 

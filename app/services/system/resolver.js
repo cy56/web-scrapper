@@ -120,10 +120,10 @@ class ResolverService
         } else {
             items.push({ start: new Date(start), end: new Date(start) });
             for (let index = 0; index < diff; index++) {
-                items.push(this.incrementDays(new Date(start)));
+                let date = items[items.length-1].start || start;
+                items.push(this.incrementDays(new Date(date)));
             }
         }
-
         return items;
     }
 

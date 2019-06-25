@@ -7,6 +7,8 @@ const PASSWORD_SELECTOR = '#Password';
 const CAPTCHA_SELECTOR = 'body > div > div.login_box > form > table > tbody > tr:nth-child(4) > td:nth-child(3) > img';
 const VALIDATION_SELECTOR = '#SecurityCode';
 const LOGIN_SELECTOR = 'body > div > div.login_box > form > table > tbody > tr:nth-child(5) > td:nth-child(3) > button';
+const FILTER_MEMBER_COUNT = '#ShowMember';
+const FILTER_CURRENCY = '#ShowCurrencyGroup';
 const LOGOUT_SELECTOR = 'a[href="/Account/LogOff"]';
 const REPORT_SELECTOR = 'a[href="/RptLedger?View=Monthly"]';
 const START_DATE = '#BTMDateF';
@@ -24,6 +26,8 @@ const SELECTORS = {
     login: LOGIN_SELECTOR,
     logout: LOGOUT_SELECTOR,
     report: REPORT_SELECTOR,
+    member: FILTER_MEMBER_COUNT,
+    currency: FILTER_CURRENCY,
     start: START_DATE,
     end: END_DATE,
     runReport: RUN_REPORT,

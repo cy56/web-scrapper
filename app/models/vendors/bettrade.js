@@ -4,12 +4,15 @@ class BETTRADE extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
-        this.attributes = ['id', 'source', 'date', 'currency', 'ticket', 'stake', 'buyBackAmount', 'clientComm', 'betWinloss', 'clientWinloss', 'memberWinloss'];
-        this.structure = {
+        return super.setup();
+    }
+
+    static getModelStructure() {
+        return {
             source: {
                 type: this.Datatypes.STRING
             },
-            vendor: {
+            brand: {
                 type: this.Datatypes.STRING
             },
             filename: {
@@ -21,39 +24,91 @@ class BETTRADE extends Model {
             currency: {
                 type: this.Datatypes.STRING
             },
-            ticket: {
+            players: {
+                type: this.Datatypes.INTEGER
+            },
+            bets: {
                 type: this.Datatypes.INTEGER
             },
             stake: {
-                type: this.Datatypes.DECIMAL(24, 4)
-            },
-            buyBackAmount: {
                 type: this.Datatypes.DECIMAL(24, 2)
             },
-            clientComm: {
+            actualStake: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            bbAmount: {
                 type: this.Datatypes.DECIMAL(24, 2)
             },
             betWinloss: {
-                type: this.Datatypes.DECIMAL(24, 4)
+                type: this.Datatypes.DECIMAL(24, 2)
             },
-            clientWinloss: {
-                type: this.Datatypes.DECIMAL(24, 4)
+            commission: {
+                type: this.Datatypes.DECIMAL(24, 2)
             },
-            memberWinloss: {
-                type: this.Datatypes.DECIMAL(24, 4)
+            settlementAmount: {
+                type: this.Datatypes.DECIMAL(24, 2)
             }
         };
-        this.indexes = [
+    }
+
+    static getModelIndex() {
+        return [
             {
                 unique: true,
-                fields: ['date', 'currency', 'source']
+                fields: ['date', 'source', 'brand', 'currency']
             },
             {
-                name: 'source_date',
-                fields: ['date', 'source']
+                name: 'default_indexes',
+                fields: ['source', 'brand', 'currency']
             }
         ];
-        return super.setup();
+    }
+
+    static getModelDefaultAttributes() {
+        return [
+            'id', 'source', 'date', 'currency', 'type', 'players', 'bets', 'stake',
+            'actualStake', 'bbAmount', 'betWinloss', 'commission', 'settlementAmount'
+        ];
+    }
+
+    static getOnDuplicateValues() {
+        return ['players', 'bets', 'stake', 'actualStake', 'bbAmount', 'betWinloss', 'commission', 'settlementAmount'];
+    }
+
+    static getDatatableGroupBy() {
+        return {
+            attributes: [
+                'source', 'currency',
+                [this.sequelize.fn('sum', this.sequelize.col('players')), 'players'],
+                [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'],
+                [this.sequelize.fn('sum', this.sequelize.col('stake')), 'stake'],
+                [this.sequelize.fn('sum', this.sequelize.col('actualStake')), 'actualStake'],
+                [this.sequelize.fn('sum', this.sequelize.col('bbAmount')), 'bbAmount'],
+                [this.sequelize.fn('sum', this.sequelize.col('betWinloss')), 'betWinloss'],
+                [this.sequelize.fn('sum', this.sequelize.col('commission')), 'commission'],
+                [this.sequelize.fn('sum', this.sequelize.col('settlementAmount')), 'settlementAmount']
+            ],
+            groupBy: ['source', 'brand', 'currency']
+        }
+    }
+
+    static getDatatableFilter() {
+        return ['source', 'currency'];
+    }
+
+    static getDatatableHeader() {
+        return [
+            { text: 'Source', value: 'source' },
+            { text: 'Currency', value: 'currency' },
+            { text: 'No of Players', value: 'players' },
+            { text: 'No of BuyBack Bets', value: 'bets' },
+            { text: 'Stake', value: 'stake' },
+            { text: 'Actual Stake', value: 'actualStake' },
+            { text: 'BuyBack Amount', value: 'bbAmount' },
+            { text: 'Bet Win/Loss', value: 'betWinloss' },
+            { text: 'Commission', value: 'commission' },
+            { text: 'Settlement Amount', value: 'settlementAmount' },
+        ];
     }
 }
 
