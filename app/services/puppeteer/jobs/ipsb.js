@@ -1,8 +1,9 @@
-const PuppeteerClient = require('../services/puppeteer');
+const PuppeteerClient = require('../base');
 
 class IPSB extends PuppeteerClient {
-    constructor(options = {}) {
+    constructor(options = {}, brand) {
         super(options);
+        this.brand = brand;
     }
 
     async loginProcess() {
@@ -10,17 +11,19 @@ class IPSB extends PuppeteerClient {
         await this.page.waitFor(this.vendor.selectors.login, {visible:true});
         await this.page.type(this.vendor.selectors.username, this.creds.username);
         await this.page.type(this.vendor.selectors.password, this.creds.password);
-        let validate = await this.page.$(this.vendor.selectors.captcha);
-        let b64Captcha = await validate.screenshot({ encoding: 'base64' });
-        await this.resolveCaptcha(b64Captcha).then(async (captcha) => {
-            await this.page.type(this.vendor.selectors.validation, captcha['text']);
-            await this.page.click(this.vendor.selectors.login);
-        });
+        // let validate = await this.page.$(this.vendor.selectors.captcha);
+        // let b64Captcha = await validate.screenshot({ encoding: 'base64' });
+        // await this.resolveCaptcha(b64Captcha).then(async (captcha) => {
+        //     await this.page.type(this.vendor.selectors.validation, captcha['text']);
+        //     await this.page.click(this.vendor.selectors.login);
+        // });
+        await this.page.waitFor(5000);
+        await this.page.click(this.vendor.selectors.login);
     }
 
     async gotoReportProcess() {
         await this.page.waitFor(this.vendor.selectors.logout, { visible: true });
-        await this.page.click(this.vendor.selectors.report);
+        await this.page.goto(this.vendor.pages.report, { waitUntil: 'load', timeout: 60000 });
     }
 
     async filterConditionsProcess(start, end) {
@@ -37,13 +40,14 @@ class IPSB extends PuppeteerClient {
         }, filters);
         await this.page.type(this.vendor.selectors.start, start);
         await this.page.type(this.vendor.selectors.end, end);
-        await this.page.select(this.vendor.selectors.filterShareHouse, 0);
+        await this.page.select(this.vendor.selectors.filterShareHouse, '0');
         await this.page.click(this.vendor.selectors.runReport);
     }
 
     async extractHtmlTableProcess() {
+        await this.page.click(this.vendor.selectors.drillDown);
+        await this.page.waitFor(5000);
         const htmlTable = this.vendor.selectors.table;
-        await this.page.waitFor(3000);
         return this.page.evaluate((htmlTable) => {
             let items = [];
             const table = document.querySelectorAll(htmlTable);
@@ -56,27 +60,26 @@ class IPSB extends PuppeteerClient {
 
     async logoutProcess() {
         await this.page.waitFor(this.vendor.selectors.logout, {visible:true});
-        await this.page.click(vendor.selectors.logout);
+        await this.page.click(this.vendor.selectors.logout);
     }
 }
 
-module.exports = async function run(start, end) {
-    const worker = new IPSB({ headless: false });
+module.exports = async function run(start, end, brand) {
+    const worker = new IPSB({ headless: false }, brand);
     const dateResolver = worker.resolveDateTime(start, end);
     try {
         await worker.init();
         await worker.login();
         await worker.gotoReport();
-        for (let index = 0; index < dateResolver.dates.length; index++) {
-            const start = dateResolver.dates[index].start;
-            const end = dateResolver.dates[index].end;
+        for (let index = 0; index < dateResolver.length; index++) {
+            const start = dateResolver[index].start;
+            const end = dateResolver[index].end;
             await worker.filterConditions(start, end);
             await worker.extractHtmlTable();
             await worker.resolveSource(start);
             await worker.insertIntoDB();
         }
         await worker.logout();
-        return 'Task Done!!!';
     } catch (err) {
         console.error(err.message);
     }
