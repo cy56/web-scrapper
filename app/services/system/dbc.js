@@ -1,12 +1,14 @@
 const dbc = require('../../libraries/deathbycaptcha');
-const creds = require('./configs/dbc');
+
+const USERNAME = "cytest";
+const PASSWORD = "CYP@ssword!";
 
 class CaptchaResolver
 {
     constructor() {
         this.creds = creds;
-        this.username = this.creds.username;
-        this.password = this.creds.password;
+        this.username = USERNAME;
+        this.password = PASSWORD;
         this.client = null;
         return this.init();
     }

@@ -1,5 +1,7 @@
 const nodemailer = require('nodemailer');
-const creds = require('./configs/mailer');
+
+const USERNAME = 'lim.cy@nettium.net'
+const PASSWORD = `r4t5y6;'`
 
 class Mailer
 {
@@ -10,8 +12,8 @@ class Mailer
                 port: 587,
                 secure: false,
                 auth: {
-                    user: creds.username,
-                    pass: creds.password
+                    user: USERNAME,
+                    pass: PASSWORD
                 }
             });
             return this;
@@ -23,7 +25,7 @@ class Mailer
     async send(target={mail:'lim.cy@nettium.net', subject:'System Error from WebScrapper', text:'System Error...'}) {
         try {
             await this.service.sendMail({
-                from: creds.username,
+                from: USERNAME,
                 to: target.mail,
                 subject: target.subject,
                 text: target.text
