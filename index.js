@@ -20,9 +20,10 @@ app.use(function (req, res, next) {
 });
 
 // Registry Routing
-app.use('/api/auth', require('./app/routes/api/auth/authenticate.js'));
-app.use('/api/upload', require('./app/routes/api/system/upload.js'));
-app.use('/api/vendor', require('./app/routes/api/system/vendor.js'));
+app.use('/api/auth', require('./app/routes/api/authenticate.js'));
+app.use('/api/upload', require('./app/routes/api/upload.js'));
+app.use('/api/vendor', require('./app/routes/api/vendor.js'));
+app.use('/api/worker', require('./app/routes/api/worker.js'));
 
 // Create a Server
 const PORT = process.env.PORT || 5000;
