@@ -1,7 +1,7 @@
 const csv = require('papaparse');
 const fs = require('fs');
 const resolver = require('../services/resolver');
-const db = require('../config/db');
+const db = require('../services/database');
 
 const CODE_PERFECT = 0;
 const CODE_MISSING_PARAMETERS = 8;

@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 //Database
-const db = require('./app/config/db.js');
+const db = require('./app/services/database');
 // Database Authenticate
 //db.sequelize.authenticate().then(() => {console.log('Database connected')}).catch((err) => {console.log(err.message)});
 

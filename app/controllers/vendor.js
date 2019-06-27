@@ -1,4 +1,4 @@
-const db = require('../config/db');
+const db = require('../services/database');
 const resolver = require('../services/resolver');
 
 const CODE_PERFECT = 0;

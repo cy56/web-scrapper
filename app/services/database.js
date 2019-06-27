@@ -1,4 +1,4 @@
-const env = require('./env.js');
+const env = require('./configs/dbconfig');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const operatorsAliases = {
