@@ -1,5 +1,5 @@
 const db = require('../config/db');
-const resolver = require('../services/system/resolver');
+const resolver = require('../services/resolver');
 
 const CODE_PERFECT = 0;
 const CODE_MISSING_PARAMETERS = 8;

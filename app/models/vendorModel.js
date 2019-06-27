@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const Resolver = require('../services/system/resolver');
+const Resolver = require('../services/resolver');
 
 class VendorModel extends Sequelize.Model {
     static setup() {

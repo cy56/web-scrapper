@@ -36,7 +36,7 @@ class User extends Sequelize.Model {
 
     static async createUser(params = {}) {
         try {
-            return await this.create(params);
+            return await this.create(params, { raw: true });
         } catch(err) {
             console.error('user table: ', err.message);
         }
