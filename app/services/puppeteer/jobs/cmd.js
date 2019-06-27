@@ -17,7 +17,6 @@ class CMD extends PuppeteerClient
     }
 
     async gotoReportProcess() {
-        await this.page.waitFor(3000);
         await this.page.goto(this.vendor.pages.target);
     }
 

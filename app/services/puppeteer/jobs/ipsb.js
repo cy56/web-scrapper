@@ -11,14 +11,12 @@ class IPSB extends PuppeteerClient {
         await this.page.waitFor(this.vendor.selectors.login, {visible:true});
         await this.page.type(this.vendor.selectors.username, this.creds.username);
         await this.page.type(this.vendor.selectors.password, this.creds.password);
-        // let validate = await this.page.$(this.vendor.selectors.captcha);
-        // let b64Captcha = await validate.screenshot({ encoding: 'base64' });
-        // await this.resolveCaptcha(b64Captcha).then(async (captcha) => {
-        //     await this.page.type(this.vendor.selectors.validation, captcha['text']);
-        //     await this.page.click(this.vendor.selectors.login);
-        // });
-        await this.page.waitFor(5000);
-        await this.page.click(this.vendor.selectors.login);
+        let validate = await this.page.$(this.vendor.selectors.captcha);
+        let b64Captcha = await validate.screenshot({ encoding: 'base64' });
+        await this.resolveCaptcha(b64Captcha).then(async (captcha) => {
+            await this.page.type(this.vendor.selectors.validation, captcha['text']);
+            await this.page.click(this.vendor.selectors.login);
+        });
     }
 
     async gotoReportProcess() {

@@ -3,10 +3,12 @@ const db = require('../../config/db');
 const dbc = require('../system/dbc');
 const mailer = require('../system/mailer');
 const resolver = require('../system/resolver');
+const path = require('path');
+const util = require('util');
 
 class PuppeteerClient {
     constructor(options = {}) {
-        // Setup
+        // Setup Puppeteer
         this.headless = options.headless;
         this.args = options.args || ['--window-size=1920,1080'];
         this.slowMo = this.headless === false ? 100 : 500;
@@ -27,14 +29,8 @@ class PuppeteerClient {
 
     async init() {
         try {
-            this.browser = await puppeteer.launch({
-                headless: this.headless,
-                ignoreHTTPSErrors: true,
-                defaultViewport: { height: 900, width: 1440 },
-                slowMo: this.slowMo,
-                args: this.args
-            })
-            this.page = await this.browser.newPage();
+            this.browser = await this.getBrowser();
+            this.page = await this.getPage();
         } catch (err) {
             this.reportError('init', err);
         }
@@ -66,6 +62,28 @@ class PuppeteerClient {
         }
     }
 
+    async exportFile(f) {
+        const downloadPath = path.join(__dirname, `../../storages/csv`);
+
+        await this.page._client.send('Page.setDownloadBehavior', {
+            behavior: 'allow',
+            downloadPath: downloadPath,
+        });
+
+        await f();
+
+        console.error('Downloading...');
+        let fileName;
+        while (!fileName || fileName.endsWith('.crdownload')) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+            [fileName] = await util.promisify(fs.readdir)(downloadPath);
+        }
+
+        const filePath = path.resolve(downloadPath, fileName);
+        console.error('Downloaded file:', filePath);
+        return filePath;
+    }
+
     async extractHtmlTable() {
         try {
             await this.page.waitFor(10000);
@@ -78,7 +96,7 @@ class PuppeteerClient {
 
     async resolveSource(date) {
         try {
-            this.page.waitFor(3000);
+            this.page.waitFor(5000);
             const source = this.source;
             const vendor = this.platform;
             const brand = this.brand.toUpperCase() || 'RB88';
@@ -107,6 +125,7 @@ class PuppeteerClient {
 
     async logout() {
         try {
+            await this.page.waitFor(3000);
             await this.logoutProcess();
             await this.close();
         } catch (err) {
@@ -115,28 +134,13 @@ class PuppeteerClient {
     }
 
     async close() {
-        await this.page.waitFor(2000);
+        await this.page.waitFor(5000);
         await this.browser.close();
-    }
-
-    resolveDateTime(start, end) {
-        return this._resolver.resolveVendorDates({ vendor: this.toString(), start, end });
-    }
-
-    clearItems() {
-        this.resolved.length = 0;
-        this.unresolved.length = 0;
-    }
-
-    endProcess() {
-        process.exit(1);
     }
 
     async reportError(func, err) {
         let errMsg = `${func}: ${err.message}`;
         console.error(errMsg);
-        //await this.reportByEmail(errMsg);
-        await this.takeScreenshot('error');
         if (func === 'login') {
             await this.endProcess();
         } else {
@@ -163,14 +167,37 @@ class PuppeteerClient {
         });
     }
 
-    async takeScreenshot(used = 'products') {
-        const screenshot = this._resolver.resolvePath({ type: used, vendor: this.toString() });
-        //await this.page.screenshot({ file: screenshot.tmpPath, fullPage: true });
+    async takeScreenshot() {
+        const screenshot = this._resolver.resolvePath({ vendor: this.toString() });
+        await this.page.screenshot({ file: screenshot.tmpPath, fullPage: true });
         return screenshot.filename;
     }
 
-    async reportByEmail(err) {
-        await this._mailer.send({ mail: 'lim.cy@nettium.net', subject: 'WebScrapper System Error', text: err });
+    getBrowser() {
+        return puppeteer.launch({
+            headless: this.headless,
+            ignoreHTTPSErrors: true,
+            defaultViewport: { height: 900, width: 1440 },
+            slowMo: this.slowMo,
+            args: this.args
+        })
+    }
+
+    getPage() {
+        return this.browser.newPage();
+    }
+
+    resolveDateTime(start, end) {
+        return this._resolver.resolveVendorDates({ vendor: this.toString(), start, end });
+    }
+
+    clearItems() {
+        this.resolved.length = 0;
+        this.unresolved.length = 0;
+    }
+
+    endProcess() {
+        process.exit(1);
     }
 
     toString() {

@@ -18,7 +18,6 @@ class SBT extends PuppeteerClient {
     }
 
     async gotoReportProcess() {
-        await this.page.waitFor(5000);
         await this.page.goto(this.vendor.pages.report, { timeout: 0, waitUntil: 'load' });
     }
 

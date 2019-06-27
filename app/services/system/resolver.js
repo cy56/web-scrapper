@@ -56,11 +56,11 @@ class ResolverService
         }
     }
 
-    static resolvePath(params = { type: null, vendor: null}) {
+    static resolvePath(params = {vendor: null}) {
         try {
             const timer = Date.parse(dateService.format(new Date(), 'YYYY-MM-DD HH:mm:ss'));
             const filename = `${timer}.png`;
-            const directory = path.join(__dirname, `../../storages/images/${params.type}/${params.vendor}/`);
+            const directory = path.join(__dirname, `../../storages/images/${params.vendor}/`);
             fs.exists(directory, (exists) => {
                 if (!exists) {
                     fs.mkdir(directory, { recursive: true }, (err) => {

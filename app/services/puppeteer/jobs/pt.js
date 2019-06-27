@@ -19,12 +19,10 @@ class PT extends PuppeteerClient {
     }
 
     async gotoReportProcess() {
-        await this.page.waitFor(10000);
         await this.page.goto(this.vendor.pages.report[this.currency]);
     }
 
     async filterConditionsProcess(start, end) {
-        await this.page.waitFor(10000);
         if(this.first) {
             await this.page.waitFor(this.vendor.selectors.reportBoth, { visible: true });
             await this.page.click(this.vendor.selectors.reportBoth);
@@ -52,14 +50,9 @@ class PT extends PuppeteerClient {
     }
 
     async logoutProcess() {
-        await this.page.waitFor(5000);
         await this.page.goto(this.vendor.pages.logout[this.currency]);
         await this.page.waitFor(this.vendor.selectors.logout, { visible: true });
         await this.page.click(this.vendor.selectors.logout);
-    }
-
-    async test() {
-        
     }
 }
 
