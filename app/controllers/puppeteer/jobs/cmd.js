@@ -2,7 +2,7 @@ const PuppeteerClient = require('../base');
 
 class CMD extends PuppeteerClient
 {
-    constructor(options = {}, brand='rb88') {
+    constructor(options = {}, brand) {
         super(options);
         this.brand = brand;
     }
@@ -60,7 +60,7 @@ class CMD extends PuppeteerClient
     }
 }
 
-module.exports = async function run(start, end, brand) {
+module.exports = async (start, end, brand) => {
     const worker = new CMD({ headless: false }, brand);
     const dateResolver = worker.resolveDateTime(start, end);
     try {

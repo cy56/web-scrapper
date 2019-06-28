@@ -6,7 +6,6 @@ const PASSWORD = "CYP@ssword!";
 class CaptchaResolver
 {
     constructor() {
-        this.creds = creds;
         this.username = USERNAME;
         this.password = PASSWORD;
         this.client = null;

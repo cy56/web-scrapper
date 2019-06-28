@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer');
-const db = require('../../config/db');
+const db = require('../../services/database');
 const dbc = require('../../services/dbc');
 const mailer = require('../../services/mailer');
 const resolver = require('../../services/resolver');
@@ -23,7 +23,7 @@ class PuppeteerClient {
         this.page = null;
         this.source = (this.toString() !== 'hydra') ? 'vendor' : 'hydra';
         this.platform = this.toString();
-        this.vendor = require(`./jobs/extensions/${this.toString()}`);
+        this.vendor = require(`./jobs/extensions/${this.toString().toLowerCase()}`);
         this.creds = this.vendor.auths;
     }
 
