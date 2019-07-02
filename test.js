@@ -733,19 +733,6 @@ test = async() => {
     console.log(test);
 }
 
-resolveData = async() => {
-    const db = require('./app/config/db.js');
-    const model = db.cmd;
-    const result = await model.findByParams({ currency: 'CNY' });
-    const data = result;
-    return data;
-}
-
-test1 = () => {
-    const resolver = require('./app/services/system/resolver');
-    console.log(resolver.resolvePath('products', 'cmd'));
-}
-
 test2 = () => {
     let hash = Object.create(null);
     let grouped = [];
@@ -788,48 +775,42 @@ test3 = () => {
     console.log(grouped);
 }
 
-test4 = () => {
-    const data = [
-        ['1', 'THB', '2060', '27216', '16116913', '1137441', '1008379.8', '31933.4541', '-485329.1045', '-3.01', 'ALL'],
-        ['2', 'CNY', '3000', '30000', '26116913', '1137441', '1008379.8', '31933.4541', '-485329.1045', '-3.01', 'ALL'],
-        ['3', 'USD', '2000', '28000', '16116913', '1137441', '1008379.8', '31933.4541', '-485329.1045', '-3.01', 'ALL'],
-    ];
-    const source = 'hydra';
-    const vendor = 'cmd';
-    const brand = 'rb88';
-    const filename = '';
+test4 = async() => {
+    //let unresolved = [['1', '05/01/2019', 'THB', '27,216', '16,116,913.00', '13,694,604.50', '-485,329.10', '31,933.45', '-453,395.65', '453,395.65', '48,532.91']]; // CMD
+    //let unresolved = [["Totals CNY (0)", "39", "51111", "CNY225,121.4301", "CNY225,121.4301", "CNY223,136.2300", "99.1%", "CNY223,136.2300", "CNY1,985.2001", "99.1%", "0", "CNY0.0000", "CNY0.0000", "CNY0.0000", "0", "CNY891.0999", "CNY94.8500", "0", "CNY0.0000", "CNY0.0000", "CNY0.0000"]]; // PT
+    //let unresolved = [['Slots','30','100.00','2301.50','3.75','100.00','963','36.05','00:06:31','2299.30','0.00','0.00','2.20','0.10','0.00','0.00']]; //gen
+    //let unresolved = [['', '1.', 'THB', '228', '27', '108,262', '120,820', '821,384.95', '-56,007.61', '56,007.61', '6.82', '0.00', '0.00'], ['', '2.', 'CNY', '3', '1', '415', '421', '729.80', '-305.82', '305.82', '41.90', '0.00', '0.00']]; //pgs
+    //let unresolved = [['Welton Holdings Limited-RB88.com', 'Thai Baht', '284', '109,189', '109,279', '488,233.46', '37,182', '445,382.58', '1,962.17', '40,888.71', '8.37'], ['Welton Holdings Limited-RB88.com', 'Yuan Renminbi', '49', '27,854', '27,854', '263,675.01', '9,074', '259,742.09', '1.28', '3,931.64', '1.49']];
+    //let unresolved = [ [ '1', 'LT118', 'RMB', '3', '856', '2,307.00', '2,307.00', '2,307.00', '2,307.00', '-431.80', '0.00', '-18.72%', '\nPlayers\n \nBrand Game Provider\n \nDaily Brand' ], [ '2', 'LT118', 'THB', '438', '261,562', '1,022,170.00', '1,022,170.00', '1,022,170.00', '1,022,170.00', '36,614.95', '0.00', '3.58%', '\nPlayers\n \nBrand Game Provider\n \nDaily Brand' ] ]; //tgp
+    //let unresolved = [['rb88', 'Normal', '3736', '15', 'CN', 'CNY', '16056.20', '11164.09', '69.53%', '4892.11'], ['rb88', 'Normal', '96017', '249', 'CN', 'THB', '2040238.00', '1969525.73', '96.53%', '70712.26']]; //ygg
+    //let unresolved = [['Live Game', 'CNY', '26', '2520', '876,790.00', '792,360.00', '-13,901.00', '0'], ['Live Game', 'THB', '659', '65819', '8,048,825.51', '7,285,958.81', '-189,623.71', '0']]; //GD
+    //let unresolved = [['', 'CNY', '2,517', 'CNY 1,849,465.12', 'CNY 734.78', '257', 'CNY 7,294.42', 'CNY 28.38', '0.39%']]; //sbt
+    //let unresolved = [['人民币', '360', '16,138', '6,475,996.00', '5,789,205.90', '147,034.90', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '-147,034.90'], ['泰珠', '1,148', '116,362', '36,536,811.00', '32,701,900.00', '-435,725.80', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '435,725.80']]; //AGL
+    //let unresolved = [['B70', '15', '79,130', '142,385.6000', '142,385.6000', '-7,609.3171', '572.0229']]; // ag
+    //let unresolved = [['Details\n', 'Client', 'bz8bpy5', 'Real Games', '130,783.00', '-607.25', '115,698.75', 'Live Casino', '0.00', '0.00', '-607.25', '94.00', '7,846.98', '-36.44', '6,941.92', '-36.44', '-0.4643']]; // AB
+    //let unresolved = [['1', 'CNY', '27', '52', '21,454.3000', '20,701.00', '621.0300', '5,856.5900', '5,988.8600', '-753.3000(-753.3000)'], ['2', 'THB', '33', '59', '25,210.1200', '13,927.30', '417.8190', '-9,308.3700', '1,556.6310', '-11,282.8200(-11,282.8200)']]; //bettrade
+    let unresolved = [['1', 'RMB', 'MAY', '1.0000', '447', '4,623', '2,910,316.27', '2,896,315.20', '-350,536.35', '-12.10', '52', '21,464.30', '21,454.30', '20,701.00', '5,856.59', '753.30', '6,609.89', '-357,146.24'], ['2', 'THB', 'MAY', '0.2178', '354', '3,168', '199,946.09', '199,718.13', '-430.93', '-0.21', '59', '5,504.22', '5,490.76', '3,033.36', '-2,027.37', '2,457.39', '430.03', '-860.97']]; //IPSB
+    const _resolver = require('./app/services/system/resolver');
+    const db = require('./app/config/db');
+    const source = 'vendor'
+    const vendor = 'ipsb';
+    const brand = 'RB88';
+    const currency = 'cny';
     const date = '2019-05-01';
-    const resolver = require('./app/services/system/resolver');
-    //resolver.resolveParser({ source, vendor, brand, filename, date }, data)
-    console.log(resolver.resolveParser({source, vendor, brand, filename, date}, data));
+    const filename = '34244434.png';
+    const resolved = await _resolver.resolveParser({ source, brand, vendor, filename, date, currency }, unresolved);
+    console.log(resolved);
 }
 
-test5 = () => {
-    const data = [
-        [ '1', 'THB', 'FISHING GAME', '1', '1', '0', '0', '0', '0', '0', '0'],
-        ['2', 'THB', 'RNG', '79', '50539', '481914.9', '481914.9', '-8922.78', '0', '158.61', '-8922.78'],
-        ['3', 'CNY', 'FISHING GAME', '7', '17', '660', '3034.3', '-195.3', '0', '0', '-195.3'],
-        ['4', 'CNY', 'RNG', '4', '649', '1026', '1026', '-203.25', '0', '0', '-203.25']
-    ];
-
-    const source = 'hydra';
-    const vendor = 'gen';
-    const brand = 'rb88';
-    const filename = '';
-    const date = '2019-05-01';
-    const resolver = require('./app/services/system/resolver');
-    console.log(resolver.resolveParser({ source, vendor, brand, filename, date }, data));
+test5 = async() => {
+    const resolver = require('./app/services/resolver');
+    //const download = { filename: 'dataset.csv', filepath: 'C:\\Users\\admin\\Documents\\projects\\web-scrapper\\app\\storages\\downloads\\dataset.csv', extension: '.csv' };
+    //const download = { filename: '100-Sales-Records.zip', filepath: 'C:\\Users\\admin\\Documents\\projects\\web-scrapper\\app\\storages\\downloads\\100-Sales-Records.zip', extension: '.zip' };
+    //const download = { filename: 'Sales-Records.zip', filepath: 'C:\\Users\\admin\\Documents\\projects\\web-scrapper\\app\\storages\\downloads\\Sales-Records.zip', extension: '.zip' };
+    const download = { filename: 'ProfitAndLossReport.xlsx', filepath: 'C:\\Users\\admin\\Documents\\projects\\web-scrapper\\app\\storages\\downloads\\ProfitAndLossReport.xlsx', extension: '.xlsx' };
+    const results = await resolver.resolveFile(download);
+    
+    console.log(results.length);
 }
-
-test6 = () => {
-    const currency = ['cny', 'thb'];
-    const dates = [
-        {start:'2019-05-01', end:'2019-05-01'},
-        { start: '2019-05-02', end: '2019-05-02' },
-    ]
-    dates.forEach((value, key) => {
-        console.log(value.start);
-    });
-};
-
-test6();
+ProfitAndLossReport.xlsx
+test5();
