@@ -26,14 +26,10 @@ class Zipper {
 
         zipEntries.forEach(async (zipEntry) => {
             zip.extractAllTo(directory, true);
-            items.push({ file: path.join(directory, zipEntry.name) });
+            items.push({ filename: path.join(directory, zipEntry.name) });
         });
 
         return items;
-    }
-
-    static zipAll() {
-        throw 'function not available';
     }
 }
 

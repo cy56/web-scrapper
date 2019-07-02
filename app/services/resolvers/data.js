@@ -1,17 +1,17 @@
+const _ = require('lodash');
 const csv = require('papaparse');
-const xlsx = require('xlsx');
 const path = require('path');
 const fs = require('fs');
 const zipper = require('../zipper');
 
 class dataResolver
 {
-    static async resolve(file = { filename:null, filepath:null, extension:null, buffer:null }) {
+    static async resolve(file = { filename:null, filepath:null, extension:null }) {
         try {
 
             let { extension } = file;
 
-            if(extension === '.zip' || extension === '.7z') {
+            if(extension === '.zip') {
                 return await this.resolveForFile(file);
             }
 
@@ -23,27 +23,47 @@ class dataResolver
     }
 
     static async resolveForFile(file) {
-        return zipper.unzip(file);
+        let unzip = zipper.unzip(file);
 
         return this.resolveForData(unzip);
     }
 
-    static async resolveForData(file = { filename:null, buffer:null }) {
-        let extension = path.extname(file.filename);
+    static resolveForData(files) {
+        let items = [];
 
-        if(extension === '.csv') {
-            return this.resolveForCSV(file);
+        if(Array.isArray(files)) {
+            files.forEach((file) => {
+                let extension = path.extname(file.filename);
+                if (extension === '.csv') {
+                    return items.push(this.resolveForCSV(file));
+                }
+
+                return items.push(this.resolveForExcel(file));
+            });
         }
 
-        return this.resolveForExcel(file);
+        if (_.isPlainObject(files)) {
+            let extension = path.extname(files.filename);
+
+            if (extension === '.csv') {
+                items.push(this.resolveForCSV(files));
+            } else {
+                items.push(this.resolveForExcel(files));
+            }
+        }
+
+        return items;
     }
 
-    static async resolveForExcel() {
+    static resolveForExcel(file = { filename: null, filepath:null }) {
         
     }
 
-    static async resolveForCSV() {
+    static resolveForCSV(file = { filename: null, filepath:null }) {
+        let target = file.filepath || file.filename;
+        let csvFile = fs.readFileSync(target, "utf8");
 
+        return csv.parse(csvFile, { header: true, skipEmptyLines: true }).data;
     }
 }
 
