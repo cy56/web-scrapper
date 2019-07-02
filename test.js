@@ -803,14 +803,18 @@ test4 = async() => {
 }
 
 test5 = async() => {
+    const path = require('path');
+    //const filename = '100-Sales-Records.zip' // zipped with single file
+    //const filename = 'Sales-Records.zip' // zipped with multiple files
+    //const filename = 'dataset.csv' // CSV
+    const filename = 'ProfitAndLossReport.xlsx'; //Excel
+    const filepath = path.join('./app/storages/downloads', filename);
+    const extension = path.extname(filepath);
     const resolver = require('./app/services/resolver');
-    //const download = { filename: 'dataset.csv', filepath: 'C:\\Users\\admin\\Documents\\projects\\web-scrapper\\app\\storages\\downloads\\dataset.csv', extension: '.csv' };
-    //const download = { filename: '100-Sales-Records.zip', filepath: 'C:\\Users\\admin\\Documents\\projects\\web-scrapper\\app\\storages\\downloads\\100-Sales-Records.zip', extension: '.zip' };
-    //const download = { filename: 'Sales-Records.zip', filepath: 'C:\\Users\\admin\\Documents\\projects\\web-scrapper\\app\\storages\\downloads\\Sales-Records.zip', extension: '.zip' };
-    const download = { filename: 'ProfitAndLossReport.xlsx', filepath: 'C:\\Users\\admin\\Documents\\projects\\web-scrapper\\app\\storages\\downloads\\ProfitAndLossReport.xlsx', extension: '.xlsx' };
+    const download = { filepath, filename, extension };
     const results = await resolver.resolveFile(download);
-    
-    console.log(results.length);
+    const sheets = results[0].sheetNames;
+    console.log(results[0].data[sheets[2]]);
+    //console.log(results.result[sheets[1]]);
 }
-ProfitAndLossReport.xlsx
 test5();

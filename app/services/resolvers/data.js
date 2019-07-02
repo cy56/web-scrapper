@@ -3,6 +3,7 @@ const csv = require('papaparse');
 const path = require('path');
 const fs = require('fs');
 const zipper = require('../zipper');
+const excel = require('../excel');
 
 class dataResolver
 {
@@ -56,7 +57,10 @@ class dataResolver
     }
 
     static resolveForExcel(file = { filename: null, filepath:null }) {
-        
+        let target = file.filepath || file.filename;
+        let excelFile = excel.exportToSheets({ filepath: target });
+
+        return excelFile;
     }
 
     static resolveForCSV(file = { filename: null, filepath:null }) {
