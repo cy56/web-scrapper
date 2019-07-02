@@ -14,7 +14,7 @@ class Worker
         this.start = params.start;
         this.end = params.end || params.start;
         this.brand = params.brand.toUpperCase();
-        this.module = require(`./puppeteer/jobs/${params.vendor}`);
+        this.module = require(`./puppeteer/workers/${params.vendor}`);
     }
 
     async work() {
