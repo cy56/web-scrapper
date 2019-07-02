@@ -1,5 +1,5 @@
 const db = require('../services/database');
-const resolver = require('../services/resolver');
+const datatable = require('../services/datatable');
 
 const CODE_PERFECT = 0;
 const CODE_MISSING_PARAMETERS = 8;
@@ -21,8 +21,8 @@ class Vendor {
         }
         const model = db[vendor.toLowerCase()];
         const data = await model.getDatatable({ brand: brand.toUpperCase(), startDate, endDate });
-        const datatable = await resolver.resolveDatatable(model.getDatatableFilter(), data);
-        return res.status(200).json({ header: model.getDatatableHeader(), data:datatable });
+        const dataset = await datatable.resolveDatatable(model.getDatatableFilter(), data);
+        return res.status(200).json({ header: model.getDatatableHeader(), data: dataset });
     }
 }
 
