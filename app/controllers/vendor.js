@@ -21,8 +21,8 @@ class Vendor {
         }
         const model = db[vendor.toLowerCase()];
         const data = await model.getDatatable({ brand: brand.toUpperCase(), startDate, endDate });
-        const dataset = await datatable.resolveDatatable(model.getDatatableFilter(), data);
-        return res.status(200).json({ header: model.getDatatableHeader(), data: dataset });
+        //const dataset = await datatable.resolveDatatable(model.getDatatableFilter(), data);
+        return res.status(200).json({ header: model.getDatatableHeader(), data });
     }
 }
 

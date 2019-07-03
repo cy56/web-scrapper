@@ -817,4 +817,22 @@ test5 = async() => {
     console.log(results[0].data[sheets[2]]);
     //console.log(results.result[sheets[1]]);
 }
-test5();
+
+test6 = async() => {
+    // const dataframe = require('./app/services/dataframe');
+    // const model = require('./app/services/database').cmd;
+
+    // const data = await model.getDatatable({ brand:'RB88', startDate:'2019-07-01' });
+    // const compares = await model.getOnDuplicateValues();
+    // const vendor = await dataframe.where(data, { source: 'vendor' });
+    // const hydra = await dataframe.where(data, { source: 'hydra' });
+    // console.log(data);
+    //console.log(compares);
+    //console.log(vendor);
+    //console.log(hydra);
+    //console.log(dataframe.diff(vendor, hydra, compares));
+
+    const Series = require('pandas-js').Series;
+    const DataFrame = require('pandas-js').DataFrame;
+}
+test6();

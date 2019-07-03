@@ -58,9 +58,8 @@ class dataResolver
 
     static resolveForExcel(file = { filename: null, filepath:null }) {
         let target = file.filepath || file.filename;
-        let excelFile = excel.exportToSheets({ filepath: target });
 
-        return excelFile;
+        return excel.exportToSheets({ filepath: target });
     }
 
     static resolveForCSV(file = { filename: null, filepath:null }) {

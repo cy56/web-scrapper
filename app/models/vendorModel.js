@@ -29,7 +29,7 @@ class VendorModel extends Sequelize.Model {
 
             const wheres = {
                 brand, date: {
-                    $between: Resolver.resolveDates(startDate, endDate)
+                    [this.Datatypes.Op.between]: Resolver.resolveDates(startDate, endDate)
                 }
             }
             
