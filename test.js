@@ -828,4 +828,22 @@ test6 = async() => {
     console.log(dataframe.diff(data, compares, indexes));
     
 }
-test6();
+
+test7 = async() => {
+    const excel = require('./app/services/excel');
+    const dataframe = require('./app/services/dataframe');
+    const model = require('./app/services/database').cmd;
+
+    const brand = 'RB88';
+    const vendor = 'CMD';
+
+    const results = await model.getDatatable({ brand: 'RB88', startDate: '2019-07-01' });
+    const compares = await model.getOnDuplicateValues();
+    const indexes = ['currency', 'date'];
+    const data = await dataframe.diff(results, compares, indexes);
+    
+    const file = excel.convertDataToWorkbook({brand, vendor}, data);
+    console.log(file);
+};
+
+test7();

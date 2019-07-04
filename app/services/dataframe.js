@@ -3,7 +3,9 @@ const library = require('dataframe-js').DataFrame;
 class DataFrame
 {
     static diff(data, compares, indexes = ['currency', 'date'], group = 'source') {
+        let results = {};
         const df = new library(data);
+        const grouped = df.groupBy(group).toCollection();
         const data1 = grouped[0].group;
         const data2 = grouped[1].group;
         let differences = data1.diff(data2, compares);
@@ -11,10 +13,12 @@ class DataFrame
 
         datadiff.forEach((item) => {
             let filter = {};
-            indexes.forEach((index) => {
-                filter[index] = item[index];
+            indexes.forEach((i) => {
+                filter[i] = item[i];
             });
-            results[Object.values(filter).join('@')] = df.where(filter).toCollection();
+            let index = Object.values(filter).join('@');
+            let dataframe = df.where(filter);
+            results[index] = dataframe.toCollection();
         });
 
         return results;
