@@ -26,20 +26,26 @@ class ResolverService
         return dataResolver.resolve(file);
     }
 
-    static resolvePath(params = {vendor: null}) {
+    static async resolvePath(directory, filetype, options = null, cb = null) {
         try {
             const timer = dateResolver.getTimer();
-            const filename = `${timer}.png`;
-            const directory = `./app/storages/images/${params.vendor}/`;
-            fs.exists(directory, (exists) => {
+            const filename = `${timer}.${filetype}`;
+            const filepath = `${directory}${filename}`;
+            const file = { filename, filepath };
+            
+            await fs.exists(directory, async (exists) => {
                 if (!exists) {
-                    fs.mkdir(directory, { recursive: true }, (err) => {
+                    await fs.mkdir(directory, { recursive: true }, (err) => {
                         if (err) throw err;
+                        if(cb) {
+                            cb(file, options);
+                        }
                     });
                 }
             });
-            const tmpPath = `${directory}${filename}`;
-            return { filename, tmpPath };
+            
+            return file;
+
         } catch(err) {
             throw err.message;
         }

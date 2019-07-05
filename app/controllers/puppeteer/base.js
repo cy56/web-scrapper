@@ -168,8 +168,9 @@ class PuppeteerClient {
     }
 
     async takeScreenshot() {
-        const screenshot = this._resolver.resolvePath({ vendor: this.toString() });
-        await this.page.screenshot({ file: screenshot.tmpPath, fullPage: true });
+        const directory = `./app/storages/images/${this.toString()}/`;
+        const screenshot = this._resolver.resolvePath(directory, 'png');
+        await this.page.screenshot({ file: screenshot.filepath, fullPage: true });
         return screenshot.filename;
     }
 

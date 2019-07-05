@@ -1,7 +1,8 @@
 const library = require('xlsx');
 const path = require('path');
-const dateResolver = require('./resolvers/date');
+const fs = require('fs');
 const _ = require('lodash');
+const resolver = require('./resolver');
 
 class Excel
 {
@@ -19,7 +20,7 @@ class Excel
         return { sheetNames: workbook.SheetNames, data };
     }
 
-    static convertDataToWorkbook(params = { brand: null, vendor:null }, data) {
+    static async convertDataToWorkbook(params = { brand: null, vendor:null }, data) {
         try {
             let { brand, vendor } = params;
 
@@ -27,10 +28,7 @@ class Excel
                 throw 'missing data';
             }
 
-            const filename = `${dateResolver.getTimer()}.xlsx`;
             const exportDirectory = path.join(__dirname, `../storages/exports/${brand}/${vendor}/`);
-            const filepath = path.resolve(exportDirectory, filename);
-            console.log(filepath);
             const workbook = library.utils.book_new();
 
             let end = false;
@@ -56,9 +54,14 @@ class Excel
                 count++;
             };
 
-            library.writeFile(workbook, filename);
+            const content = library.write(workbook, { type: 'buffer', bookType: 'xlsx', bookSST: false });
 
-            return { brand, vendor, filepath };
+            const file = await resolver.resolvePath(exportDirectory, 'xlsx', content, (file, content) => {
+                fs.writeFileSync(file.filepath, content);
+                return file;
+            });
+
+            return file;
 
         } catch(err) {
             console.error(err.message);
