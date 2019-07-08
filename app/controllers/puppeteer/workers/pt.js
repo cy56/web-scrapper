@@ -69,7 +69,7 @@ module.exports = async function run(start, end, brand) {
                 let start = dateResolver[i].start;
                 let end = dateResolver[i].end;
                 await worker.filterConditions(start, end);
-                await worker.extractHtmlTable();
+                await worker.extractHtmlTable(start);
                 await worker.resolveSource(start);
                 await worker.insertIntoDB();
             }

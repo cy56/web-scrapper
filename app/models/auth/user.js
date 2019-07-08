@@ -10,19 +10,13 @@ class User extends Sequelize.Model {
                 type: Datatypes.STRING
             },
             email: {
-                type: Datatypes.STRING
+                type: Datatypes.STRING,
+                unique: true
             },
             password: {
                 type: Datatypes.TEXT
             }
-        }, {
-            indexes: [
-                {
-                    unique: true,
-                    fields: ['email']
-                }
-            ], sequelize 
-        });
+        }, { sequelize });
     }
 
     static async getUser(params = {}) {

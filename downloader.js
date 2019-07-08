@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const puppeteer = require('puppeteer');
+const resolver = require('./app/services/resolver');
 const util = require('util');
 
 // set up, invoke the function, wait for the download to complete
@@ -44,6 +45,10 @@ async function download(page, f) {
         );
         
         console.log(file);
+
+        const data = await resolver.resolveFile(file);
+
+        console.log(data);
 
     } finally {
         await browser.close();

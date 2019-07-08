@@ -31,6 +31,7 @@ exports.serve = async (req, res) => {
         const { brand, vendor, start, end } = req.body || req;
         const worker = new Worker({ brand, vendor, start, end });
         await worker.work();
+        res.status(200).send({ code: CODE_PERFECT, message: 'Task Done' });
     } catch (err) {
         console.error(err.message);
         res.status(500).send({ code: CODE_SYSTEM_ERROR, message: 'System Error' });

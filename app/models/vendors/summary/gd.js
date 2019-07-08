@@ -1,6 +1,6 @@
-const Model = require('../vendorModel');
+const Model = require('../vendor');
 
-class GEN extends Model {
+class GD extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
@@ -18,10 +18,10 @@ class GEN extends Model {
             date: {
                 type: this.Datatypes.DATEONLY
             },
-            currency: {
+            filename: {
                 type: this.Datatypes.STRING
             },
-            filename: {
+            currency: {
                 type: this.Datatypes.STRING
             },
             type: {
@@ -34,31 +34,34 @@ class GEN extends Model {
                 type: this.Datatypes.INTEGER
             },
             turnover: {
-                type: this.Datatypes.DECIMAL(24, 4)
-            },
-            validTurnover: {
-                type: this.Datatypes.DECIMAL(24, 4)
+                type: this.Datatypes.DECIMAL(24, 2)
             },
             playerWinloss: {
-                type: this.Datatypes.DECIMAL(24, 4)
+                type: this.Datatypes.DECIMAL(24, 2)
             },
-            jackpotWinloss: {
-                type: this.Datatypes.DECIMAL(24, 4)
+            winningPercent: {
+                type: this.Datatypes.DECIMAL(24, 2)
             },
-            jackpotContribution: {
-                type: this.Datatypes.DECIMAL(24, 4)
+            tipsAmount: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            jpContribution: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            jpWins: {
+                type: this.Datatypes.DECIMAL(24, 2)
             },
             playerWinlossJP: {
-                type: this.Datatypes.DECIMAL(24, 4)
+                type: this.Datatypes.DECIMAL(24, 2)
             }
         };
     }
 
-    static getModelIndex() { 
+    static getModelIndex() {
         return [
             {
                 unique: true,
-                fields: ['date', 'currency', 'brand', 'source', 'type']
+                fields: ['date', 'source', 'brand', 'currency', 'type']
             },
             {
                 name: 'default_indexes',
@@ -68,25 +71,26 @@ class GEN extends Model {
     }
 
     static getModelDefaultAttributes() {
-        return ['id', 'source', 'brand', 'type', 'date', 'currency', 'players', 'bets', 'turnover',
-            'validTurnover', 'playerWinloss', 'jackpotWinloss', 'jackpotContribution', 'playerWinlossJP'];
+        return ['id', 'source', 'date', 'currency', 'type', 'players', 'bets', 'turnover',
+            'playerWinloss', 'winningPercent', 'tipsAmount', 'jpContribution', 'jpWins', 'playerWinlossJP'];
     }
 
     static getOnDuplicateValues() {
-        return ['players', 'bets', 'turnover', 'validTurnover', 'playerWinloss', 'jackpotWinloss', 'jackpotContribution', 'playerWinlossJP'];
+        return ['players', 'bets', 'turnover', 'playerWinloss', 'winningPercent', 'tipsAmount', 'jpContribution', 'jpWins', 'playerWinlossJP'];
     }
 
     static getDatatableGroupBy() {
         return {
             attributes: [
-                'source', 'currency', 'type', 
+                'source', 'currency', 'type',
                 [this.sequelize.fn('sum', this.sequelize.col('players')), 'players'],
-                [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'], 
+                [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'],
                 [this.sequelize.fn('sum', this.sequelize.col('turnover')), 'turnover'],
-                [this.sequelize.fn('sum', this.sequelize.col('validTurnover')), 'validTurnover'], 
                 [this.sequelize.fn('sum', this.sequelize.col('playerWinloss')), 'playerWinloss'],
-                [this.sequelize.fn('sum', this.sequelize.col('jackpotWinloss')), 'jackpotWinloss'], 
-                [this.sequelize.fn('sum', this.sequelize.col('jackpotContribution')), 'jackpotContribution'],
+                [this.sequelize.fn('sum', this.sequelize.col('winningPercent')), 'winningPercent'],
+                [this.sequelize.fn('sum', this.sequelize.col('tipsAmount')), 'tipsAmount'],
+                [this.sequelize.fn('sum', this.sequelize.col('jpContribution')), 'jpContribution'],
+                [this.sequelize.fn('sum', this.sequelize.col('jpWins')), 'jpWins'],
                 [this.sequelize.fn('sum', this.sequelize.col('playerWinlossJP')), 'playerWinlossJP']
             ],
             groupBy: ['source', 'brand', 'currency', 'type']
@@ -105,14 +109,14 @@ class GEN extends Model {
             { text: 'No of Players', value: 'players' },
             { text: 'No of Bets', value: 'bets' },
             { text: 'Turnover', value: 'turnover' },
-            { text: 'Valid Turnover', value: 'validTurnover' },
             { text: 'Player Winloss (exc. Jackpot)', value: 'playerWinloss' },
-            { text: 'Jackpot Winloss', value: 'jackpotWinloss' },
+            { text: 'Winning (%)', value: 'winningPercent' },
+            { text: 'Tips Amount', value: 'tipsAmount' },
             { text: 'Jackpot Contribution', value: 'jpContribution' },
-            { text: 'Player Winloss (inc. Jackpot)', value: 'playerWinlossJP' },
+            { text: 'Jackpot Wins', value: 'jpWins' },
+            { text: 'Player Winloss (inc. Jackpot)', value: 'playerWinlossJP' }
         ];
     }
-
 }
 
-module.exports = GEN;
+module.exports = GD;

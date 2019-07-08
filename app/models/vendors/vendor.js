@@ -1,9 +1,9 @@
 const Sequelize = require('sequelize');
-const Resolver = require('../services/resolver');
+const Resolver = require('../../services/resolver');
 
-class VendorModel extends Sequelize.Model {
+class Vendor extends Sequelize.Model {
     static setup() {
-        return super.init(this.getModelStructure(), { indexes: this.getModelIndex(), sequelize: this.sequelize });
+        return super.init(this.getModelStructure(), { indexes: this.getModelIndex(), sequelize: this.sequelize, underscored: true, freezeTableName: true, tableName:this.table });
     }
 
     static async getRawSource(params = {}) {
@@ -68,4 +68,4 @@ class VendorModel extends Sequelize.Model {
     }
 }
 
-module.exports = VendorModel;
+module.exports = Vendor;

@@ -1,4 +1,4 @@
-const Model = require('../vendorModel');
+const Model = require('../vendor');
 
 class SAG extends Model {
     static initial(sequelize, Datatypes) {

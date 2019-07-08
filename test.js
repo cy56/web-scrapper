@@ -820,12 +820,12 @@ test5 = async() => {
 
 test6 = async() => {
     const dataframe = require('./app/services/dataframe');
-    const model = require('./app/services/database').cmd;
-
-    const data = await model.getDatatable({ brand:'RB88', startDate:'2019-07-01' });
-    const compares = await model.getOnDuplicateValues();
-    const indexes = ['currency', 'date'];
-    console.log(dataframe.diff(data, compares, indexes));
+    const summary = require('./app/services/database').summary.pt;
+    console.log(summary);
+    // const data = await model.getDatatable({ brand:'RB88', startDate:'2019-07-01' });
+    // const compares = await model.getOnDuplicateValues();
+    // const indexes = ['currency', 'date'];
+    // console.log(dataframe.diff(data, compares, indexes));
     
 }
 
@@ -833,6 +833,7 @@ test7 = async() => {
     const excel = require('./app/services/excel');
     const dataframe = require('./app/services/dataframe');
     const model = require('./app/services/database').cmd;
+    const fs = require('fs');
 
     const brand = 'RB88';
     const vendor = 'CMD';
@@ -842,8 +843,50 @@ test7 = async() => {
     const indexes = ['currency', 'date'];
     const data = await dataframe.diff(results, compares, indexes);
     
-    const file = excel.convertDataToWorkbook({brand, vendor}, data);
+    const file = await excel.convertDataToWorkbook({brand, vendor}, data);
+
     console.log(file);
 };
 
-test7();
+test8 = async() => {
+    const fs = require('fs');
+    const path = require('path');
+    const resolver = require('./app/services/resolver');
+    const directory = path.join(__dirname, './app/storages/');
+    const date = '2019-06-01';
+    // const file = await resolver.resolvePath(directory, 'txt', "hello world", (file, content) => {
+    //     fs.writeFileSync(file.filepath, content);
+    //     return file;
+    // });
+
+    const file = await resolver.resolvePath(directory, 'png', {date});
+
+    console.log(file);
+}
+
+test9 = async() => {
+    const dataframe = require('dataframe-js').DataFrame;
+    const currency = require('./app/services/currency');
+    const df = new dataframe([['人民幣', '39', '52041', 'CNY225,121.4301'], ['泰铢', '1', '1', 'CNY1.000']], ['currency']);
+    //const changed = df.castAll([(val) => { return val === '人民幣' ? 'cny' : 'thb' }, Number, Number, (val) => currency.convert(val, 4)]);
+    //console.log(changed.withColumn('source', () => 'vendor').withColumn('date', () => '2019-05-01').toCollection());
+    console.log(df.toCollection());
+}
+
+test10 = async() => {
+    const resolver = require('./app/services/parser');
+    const db = require('./app/services/database');
+    const brand = 'RB88';
+    const source = 'vendor';
+    const vendor = 'PT';
+    const currency = 'CNY';
+    const date = '2016-06-01';
+    const model = db.summary[vendor.toLowerCase()];
+    const parser = model.getVendorParserColumns();
+    const cast = model.getParserCast();
+    let unresolved = [['Totals CNY (0)', '39', '52041', 'CNY225,121.4301', 'CNY225,121.4301', 'CNY223,136.2300', '99.1%', 'CNY223,136.2300', 'CNY1,985.2001', '99.1%', '0', 'CNY0.0000', 'CNY0.0000', 'CNY0.0000', '0', 'CNY891.0999', 'CNY94.8500', '0', 'CNY0.0000', 'CNY0.0000', 'CNY0.0000']];
+    const data = new resolver({ brand, source, vendor, date, currency }, unresolved, { parser, cast});
+    console.log(data.getResults());
+}
+
+test10();

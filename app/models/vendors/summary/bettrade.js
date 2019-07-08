@@ -1,6 +1,6 @@
-const Model = require('../vendorModel');
+const Model = require('../vendor');
 
-class CMD extends Model {
+class BETTRADE extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
@@ -33,19 +33,19 @@ class CMD extends Model {
             stake: {
                 type: this.Datatypes.DECIMAL(24, 2)
             },
-            stakeSold: {
+            actualStake: {
                 type: this.Datatypes.DECIMAL(24, 2)
             },
-            takeBackAmount: {
+            bbAmount: {
                 type: this.Datatypes.DECIMAL(24, 2)
             },
-            memberComission: {
+            betWinloss: {
                 type: this.Datatypes.DECIMAL(24, 2)
             },
-            playerWinloss: {
+            commission: {
                 type: this.Datatypes.DECIMAL(24, 2)
             },
-            winningPercent: {
+            settlementAmount: {
                 type: this.Datatypes.DECIMAL(24, 2)
             }
         };
@@ -55,7 +55,7 @@ class CMD extends Model {
         return [
             {
                 unique: true,
-                fields: ['date', 'currency', 'source', 'brand']
+                fields: ['date', 'source', 'brand', 'currency']
             },
             {
                 name: 'default_indexes',
@@ -65,29 +65,30 @@ class CMD extends Model {
     }
 
     static getModelDefaultAttributes() {
-        return ['id', 'source', 'date', 'currency', 'players', 'bets', 'stake', 'stakeSold', 'takeBackAmount', 'memberComission', 'playerWinloss', 'winningPercent'];
+        return [
+            'id', 'source', 'date', 'currency', 'type', 'players', 'bets', 'stake',
+            'actualStake', 'bbAmount', 'betWinloss', 'commission', 'settlementAmount'
+        ];
     }
 
     static getOnDuplicateValues() {
-        return [
-            'players', 'bets', 'stake', 'stakeSold', 'takeBackAmount', 'memberComission', 'playerWinloss', 'winningPercent'
-        ];
+        return ['players', 'bets', 'stake', 'actualStake', 'bbAmount', 'betWinloss', 'commission', 'settlementAmount'];
     }
 
     static getDatatableGroupBy() {
         return {
             attributes: [
-                'source', 'currency', 'date',
-                [this.sequelize.fn('sum', this.sequelize.col('players')), 'players'], 
-                [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'], 
-                [this.sequelize.fn('sum', this.sequelize.col('stake')), 'stake'], 
-                [this.sequelize.fn('sum', this.sequelize.col('stakeSold')), 'stakeSold'], 
-                [this.sequelize.fn('sum', this.sequelize.col('takeBackAmount')), 'takeBackAmount'], 
-                [this.sequelize.fn('sum', this.sequelize.col('memberComission')), 'memberComission'],
-                [this.sequelize.fn('sum', this.sequelize.col('playerWinloss')), 'playerWinloss'], 
-                [this.sequelize.fn('sum', this.sequelize.col('winningPercent')), 'winningPercent']
+                'source', 'currency',
+                [this.sequelize.fn('sum', this.sequelize.col('players')), 'players'],
+                [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'],
+                [this.sequelize.fn('sum', this.sequelize.col('stake')), 'stake'],
+                [this.sequelize.fn('sum', this.sequelize.col('actualStake')), 'actualStake'],
+                [this.sequelize.fn('sum', this.sequelize.col('bbAmount')), 'bbAmount'],
+                [this.sequelize.fn('sum', this.sequelize.col('betWinloss')), 'betWinloss'],
+                [this.sequelize.fn('sum', this.sequelize.col('commission')), 'commission'],
+                [this.sequelize.fn('sum', this.sequelize.col('settlementAmount')), 'settlementAmount']
             ],
-            groupBy: ['source', 'brand', 'currency', 'date']
+            groupBy: ['source', 'brand', 'currency']
         }
     }
 
@@ -100,11 +101,15 @@ class CMD extends Model {
             { text: 'Source', value: 'source' },
             { text: 'Currency', value: 'currency' },
             { text: 'No of Players', value: 'players' },
-            { text: 'No of Bets', value: 'bets' },
-            { text: 'Stake Amount', value: 'stake' },
-            { text: 'Winloss Amount', value: 'playerWinloss' },
+            { text: 'No of BuyBack Bets', value: 'bets' },
+            { text: 'Stake', value: 'stake' },
+            { text: 'Actual Stake', value: 'actualStake' },
+            { text: 'BuyBack Amount', value: 'bbAmount' },
+            { text: 'Bet Win/Loss', value: 'betWinloss' },
+            { text: 'Commission', value: 'commission' },
+            { text: 'Settlement Amount', value: 'settlementAmount' },
         ];
     }
 }
 
-module.exports = CMD;
+module.exports = BETTRADE;

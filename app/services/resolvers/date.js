@@ -6,6 +6,10 @@ class dateResolver
         return Date.parse(dateService.format(new Date(), 'YYYY-MM-DD HH:mm:ss'));
     }
 
+    static resolveDate(date) {
+        return dateService.format(new Date(date), 'YYYY-MM-DD');
+    }
+
     static resolveDates(start, end) {
         return [dateService.format(new Date(start), 'YYYY-MM-DD'), dateService.format(new Date(end), 'YYYY-MM-DD')];
     }

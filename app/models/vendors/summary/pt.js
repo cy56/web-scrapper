@@ -1,9 +1,10 @@
-const Model = require('../vendorModel');
+const Model = require('../vendor');
 
 class PT extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
+        this.table = 'PT_Summary';
         return super.setup();
     }
 
@@ -13,9 +14,6 @@ class PT extends Model {
                 type: this.Datatypes.STRING
             },
             brand: {
-                type: this.Datatypes.STRING
-            },
-            filename: {
                 type: this.Datatypes.STRING
             },
             date: {
@@ -30,9 +28,6 @@ class PT extends Model {
             bets: {
                 type: this.Datatypes.INTEGER
             },
-            type: {
-                type: this.Datatypes.STRING
-            },
             turnover: {
                 type: this.Datatypes.DECIMAL(24, 4)
             },
@@ -42,19 +37,7 @@ class PT extends Model {
             gameIncomeShare: {
                 type: this.Datatypes.DECIMAL(24, 4)
             },
-            playerWinloss: {
-                type: this.Datatypes.DECIMAL(24, 4)
-            },
-            winningPercent: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            jpContribution: {
-                type: this.Datatypes.DECIMAL(24, 4)
-            },
             jpWins: {
-                type: this.Datatypes.DECIMAL(24, 4)
-            },
-            playerWinlossJP: {
                 type: this.Datatypes.DECIMAL(24, 4)
             }
         };
@@ -64,67 +47,76 @@ class PT extends Model {
         return [
             {
                 unique: true,
-                fields: ['date', 'source', 'brand', 'currency', 'type']
-            },
-            {
-                name: 'default_indexes',
-                fields: ['source', 'brand', 'currency', 'type']
+                fields: ['date', 'source', 'brand', 'currency']
             }
         ];
     }
 
     static getModelDefaultAttributes() {
         return ['id', 'source', 'brand', 'date', 'currency', 'players',
-            'bets', 'type', 'turnover', 'totalWin', 'gameIncomeShare', 'playerWinloss',
-            'winningPercent', 'jpContribution', 'jpWins', 'playerWinlossJP'
+            'bets', 'turnover', 'totalWin', 'gameIncomeShare', 'jpWins'
         ];
     }
 
     static getOnDuplicateValues() {
         return [
-            'players', 'bets', 'turnover', 'totalWin', 'gameIncomeShare', 'playerWinloss',
-            'winningPercent', 'jpContribution', 'jpWins', 'playerWinlossJP'
+            'players', 'bets', 'turnover', 'totalWin', 'gameIncomeShare', 'jpWins'
         ];
     }
 
     static getDatatableGroupBy() {
         return {
             attributes: [
-                'source', 'currency', 'type', 
+                'source', 'currency', 'date'
                 [this.sequelize.fn('sum', this.sequelize.col('players')), 'players'], 
                 [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'], 
                 [this.sequelize.fn('sum', this.sequelize.col('turnover')), 'turnover'], 
                 [this.sequelize.fn('sum', this.sequelize.col('totalWin')), 'totalWin'], 
-                [this.sequelize.fn('sum', this.sequelize.col('gameIncomeShare')), 'gameIncomeShare'], 
-                [this.sequelize.fn('sum', this.sequelize.col('playerWinloss')), 'playerWinloss'], 
-                [this.sequelize.fn('sum', this.sequelize.col('winningPercent')), 'winningPercent'], 
-                [this.sequelize.fn('sum', this.sequelize.col('jpContribution')), 'jpContribution'], 
-                [this.sequelize.fn('sum', this.sequelize.col('jpWins')), 'jpWins'], 
-                [this.sequelize.fn('sum', this.sequelize.col('playerWinlossJP')), 'playerWinlossJP']
+                [this.sequelize.fn('sum', this.sequelize.col('gameIncomeShare')), 'gameIncomeShare'],
+                [this.sequelize.fn('sum', this.sequelize.col('jpWins')), 'jpWins']
             ],
-            groupBy: ['source', 'brand', 'currency', 'type']
+            groupBy: ['date', 'source', 'brand', 'currency']
         }
     }
 
     static getDatatableFilter() {
-        return ['source', 'currency', 'type'];
+        return ['source', 'currency', 'date'];
     }
 
     static getDatatableHeader() {
         return [
             { text: 'Source', value: 'source' },
+            { text: 'Date', value: 'date' },
             { text: 'Currency', value: 'currency' },
-            { text: 'Game Type', value: 'type' },
             { text: 'No of Players', value: 'players' },
             { text: 'No of Bets', value: 'bets' },
             { text: 'Turnover', value: 'turnover' },
             { text: 'Total Win', value: 'totalWin' },
             { text: 'Game Income Share', value: 'gameIncomeShare' },
-            { text: 'Player Winloss (exc. Jackpot)', value: 'playerWinloss' },
-            { text: 'Winning (%)', value: 'winningPercent' },
-            { text: 'Jackpot Contribution', value: 'jpContribution' },
-            { text: 'Jackpot Wins', value: 'jpWins' },
-            { text: 'Player Winloss (inc. Jackpot)', value: 'playerWinlossJP' },
+            { text: 'Jackpot Wins', value: 'jpWins' }
+        ];
+    }
+
+    static getDataIndexes() {
+        return ['currency', 'date'];
+    }
+
+    static getVendorParserColumns() {
+        return [, 'players', 'bets', 'turnover', , , , 'totalWin', 'gameIncomeShare', , , , , , , , 'jpWins'];
+    }
+
+    static getHydraParserColumns() {
+        return [];
+    }
+
+    static getParserCast() {
+        return [
+            { 'players': Number },
+            { 'bets': Number },
+            { 'turnover': 4 },
+            { 'totalWin': 4 },
+            { 'gameIncomeShare': 4 },
+            { 'jpWins': 4 },
         ];
     }
 }

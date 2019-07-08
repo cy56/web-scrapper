@@ -1,12 +1,12 @@
-const Model = require('../vendorModel');
+const Model = require('../vendor');
 
-class SLC extends Model {
+class NLE extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
-        this.attributes = ['id', 'source', 'date', 'currency', 'players', 'bets', 'turnover', 'actualTurnover', 'commission', 'playerWinloss', 'winningPercent'];
-        this.groupAttr = ['source', 'currency', 'players', 'bets', 'turnover', 'actualTurnover', 'commission', 'playerWinloss', 'winningPercent'];
-        this.group = ['source', 'currency'];
+        this.attributes = ['id', 'source', 'date', 'currency', 'bets', 'players', 'turnover', 'playerWinloss', 'winningPercent'];
+        this.groupAttr = ['source', 'currency', 'bets', 'players', 'turnover', 'playerWinloss', 'winningPercent'];
+        this.group = ['source', 'brand', 'currency'];
         this.structure = {
             source: {
                 type: this.Datatypes.STRING
@@ -23,19 +23,13 @@ class SLC extends Model {
             currency: {
                 type: this.Datatypes.STRING
             },
-            players: {
-                type: this.Datatypes.INTEGER
-            },
             bets: {
                 type: this.Datatypes.INTEGER
             },
+            players: {
+                type: this.Datatypes.INTEGER
+            },
             turnover: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            actualTurnover: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            commission: {
                 type: this.Datatypes.DECIMAL(24, 2)
             },
             playerWinloss: {
@@ -48,18 +42,18 @@ class SLC extends Model {
         this.indexes = [
             {
                 unique: true,
-                fields: ['date', 'currency', 'source']
+                fields: ['date', 'currency', 'source', 'brand']
             },
             {
                 name: 'default_indexes',
-                fields: ['source', 'currency']
+                fields: ['source', 'brand', 'currency']
             }
         ];
         return super.setup();
     }
 }
 
-module.exports = SLC;
+module.exports = NLE;
 
 
 

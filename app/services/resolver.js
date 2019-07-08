@@ -1,4 +1,5 @@
 const fs = require('fs');
+const _ = require('lodash');
 const dateResolver = require('./resolvers/date');
 const dataResolver = require('./resolvers/data');
 
@@ -12,6 +13,10 @@ class ResolverService
         } catch(err) {
             throw err.message;
         }
+    }
+
+    static resolveDate(date) {
+        return dateResolver.resolveDate(date);
     }
 
     static resolveDates(start, end) {
@@ -28,8 +33,8 @@ class ResolverService
 
     static async resolvePath(directory, filetype, options = null, cb = null) {
         try {
-            const timer = dateResolver.getTimer();
-            const filename = `${timer}.${filetype}`;
+            const unknown = (_.isObject(options)) ? (options.hasOwnProperty('date')) ? options.date : dateResolver.getTimer() : dateResolver.getTimer();
+            const filename = `${unknown}.${filetype}`;
             const filepath = `${directory}${filename}`;
             const file = { filename, filepath };
             
@@ -37,10 +42,14 @@ class ResolverService
                 if (!exists) {
                     await fs.mkdir(directory, { recursive: true }, (err) => {
                         if (err) throw err;
-                        if(cb) {
-                            cb(file, options);
+                        if (cb) {
+                            return cb(file, options);
                         }
                     });
+                } else {
+                    if (cb) {
+                        return cb(file, options);
+                    }
                 }
             });
             

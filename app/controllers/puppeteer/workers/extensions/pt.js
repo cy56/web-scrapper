@@ -22,7 +22,9 @@ const SHOW_PROGRESSIVE = '#showjackpot';
 const SHOW_REAL_MONEY = '#showrealmoney';
 const SHOW_LIVES_GAMES = '#showlivegamestip';
 const REPORT_BY_MONTHLY = '#reportby[value="monthly"]';
+const REPORT_BY_USERNAME = '#reportby[value="username"]';
 const RUN_REPORT = 'input[value="Show stats"]';
+const EXPORT_REPORT ='input[name="export"]';
 const TABLE_SELECTOR = 'table.result tr';
 
 const AUTHS = {
@@ -64,11 +66,14 @@ const SELECTORS = {
     showRealMoney: SHOW_REAL_MONEY,
     showLiveGames: SHOW_LIVES_GAMES,
     reportByMonthly: REPORT_BY_MONTHLY,
+    reportByUsername: REPORT_BY_USERNAME,
     runReport: RUN_REPORT,
+    exportReport: EXPORT_REPORT,
     table: TABLE_SELECTOR
 };
 
 module.exports = {
+    auths: AUTHS,
     pages:PAGES,
     selectors:SELECTORS
 };

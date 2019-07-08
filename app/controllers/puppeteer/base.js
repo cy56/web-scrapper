@@ -63,7 +63,7 @@ class PuppeteerClient {
     }
 
     async exportFile(f) {
-        const downloadPath = path.join(__dirname, `../../storages/csv`);
+        const downloadPath = path.join(__dirname, `../../storages/downloads`);
 
         await this.page._client.send('Page.setDownloadBehavior', {
             behavior: 'allow',
@@ -84,11 +84,11 @@ class PuppeteerClient {
         return filePath;
     }
 
-    async extractHtmlTable() {
+    async extractHtmlTable(start) {
         try {
             await this.page.waitFor(10000);
-            this.filename = await this.takeScreenshot();
             this.unresolved = await this.extractHtmlTableProcess();
+            console.log(this.unresolved);
         } catch (err) {
             this.reportError('extractHtmlTable', err);
         }
@@ -167,9 +167,9 @@ class PuppeteerClient {
         });
     }
 
-    async takeScreenshot() {
+    async takeScreenshot(date) {
         const directory = `./app/storages/images/${this.toString()}/`;
-        const screenshot = this._resolver.resolvePath(directory, 'png');
+        const screenshot = this._resolver.resolvePath(directory, 'png', {date});
         await this.page.screenshot({ file: screenshot.filepath, fullPage: true });
         return screenshot.filename;
     }
@@ -199,6 +199,10 @@ class PuppeteerClient {
 
     endProcess() {
         process.exit(1);
+    }
+
+    setFirstToFalse() {
+        this.first = false;
     }
 
     toString() {

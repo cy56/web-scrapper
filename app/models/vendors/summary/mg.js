@@ -1,9 +1,11 @@
-const Model = require('../vendorModel');
+const Model = require('../vendor');
 
-class AGL extends Model {
+class MG extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
+        this.groupAttr = ['source', 'currency', 'type', 'players', 'bets',
+            'turnover', 'playerWinloss', 'winningPercent', 'jpContribution', 'jpWins', 'playerWinlossJP'];
         return super.setup();
     }
 
@@ -41,6 +43,15 @@ class AGL extends Model {
             },
             winningPercent: {
                 type: this.Datatypes.DECIMAL(24, 2)
+            },
+            jpContribution: {
+                type: this.Datatypes.DECIMAL(24, 2)
+            },
+            jpWins: {
+                type: this.Datatypes.INTEGER
+            },
+            playerWinlossJP: {
+                type: this.Datatypes.DECIMAL(24, 2)
             }
         };
     }
@@ -59,36 +70,54 @@ class AGL extends Model {
     }
 
     static getModelDefaultAttributes() {
-        return ['id', 'source', 'date', 'currency', 'type', 'players', 'bets', 'turnover', 'playerWinloss', 'winningPercent'];
+        return ['id', 'source', 'date', 'currency', 'type', 'players', 'bets',
+            'turnover', 'playerWinloss', 'winningPercent', 'jpContribution', 'jpWins', 'playerWinlossJP'];
     }
 
     static getOnDuplicateValues() {
-        return [
-            'players', 'bets', 'turnover', 'playerWinloss', 'winningPercent'
-        ];
+        return ['players', 'bets', 'turnover', 'playerWinloss', 'winningPercent', 
+            'jpContribution', 'jpWins', 'playerWinlossJP'];
     }
 
     static getDatatableGroupBy() {
         return {
             attributes: [
-                'source', 'currency',
+                'source', 'currency', 'type',
                 [this.sequelize.fn('sum', this.sequelize.col('players')), 'players'],
                 [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'],
                 [this.sequelize.fn('sum', this.sequelize.col('turnover')), 'turnover'],
                 [this.sequelize.fn('sum', this.sequelize.col('playerWinloss')), 'playerWinloss'],
-                [this.sequelize.fn('sum', this.sequelize.col('winningPercent')), 'winningPercent']
+                [this.sequelize.fn('sum', this.sequelize.col('winningPercent')), 'winningPercent'],
+                [this.sequelize.fn('sum', this.sequelize.col('jpContribution')), 'jpContribution'],
+                [this.sequelize.fn('sum', this.sequelize.col('jpWins')), 'jpWins'],
+                [this.sequelize.fn('sum', this.sequelize.col('playerWinlossJP')), 'playerWinlossJP']
             ],
             groupBy: ['source', 'brand', 'currency', 'type']
         }
     }
 
     static getDatatableFilter() {
-        
+        return ['source', 'currency', 'type'];
     }
 
     static getDatatableHeader() {
-
+        return [
+            { text: 'Source', value: 'source' },
+            { text: 'Currency', value: 'currency' },
+            { text: 'Game Type', value: 'type' },
+            { text: 'No of Players', value: 'players' },
+            { text: 'No of Bets', value: 'bets' },
+            { text: 'Turnover', value: 'turnover' },
+            { text: 'Player Winloss (exc. Jackpot)', value: 'playerWinloss' },
+            { text: 'Winning (%)', value: 'winningPercent' },
+            { text: 'Jackpot Contribution', value: 'jpContribution' },
+            { text: 'Jackpot Wins', value: 'jpWins' },
+            { text: 'Player Winloss (inc. Jackpot)', value: 'playerWinlossJP' }
+        ];
     }
 }
 
-module.exports = AGL;
+module.exports = MG;
+
+
+

@@ -1,6 +1,6 @@
-const Model = require('../vendorModel');
+const Model = require('../vendor');
 
-class AG extends Model {
+class AGL extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
@@ -36,13 +36,10 @@ class AG extends Model {
             turnover: {
                 type: this.Datatypes.DECIMAL(24, 2)
             },
-            validTurnover: {
+            playerWinloss: {
                 type: this.Datatypes.DECIMAL(24, 2)
             },
-            grossWinAmount: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            jpSettlement: {
+            winningPercent: {
                 type: this.Datatypes.DECIMAL(24, 2)
             }
         };
@@ -62,15 +59,12 @@ class AG extends Model {
     }
 
     static getModelDefaultAttributes() {
-        return [
-            'id', 'source', 'date', 'currency', 'type', 'players', 'bets', 'turnover', 
-            'validTurnover', 'grossWinAmount', 'jpSettlement'
-        ];
+        return ['id', 'source', 'date', 'currency', 'type', 'players', 'bets', 'turnover', 'playerWinloss', 'winningPercent'];
     }
 
     static getOnDuplicateValues() {
         return [
-            'players', 'bets', 'turnover', 'validTurnover', 'grossWinAmount', 'jpSettlement'
+            'players', 'bets', 'turnover', 'playerWinloss', 'winningPercent'
         ];
     }
 
@@ -81,9 +75,8 @@ class AG extends Model {
                 [this.sequelize.fn('sum', this.sequelize.col('players')), 'players'],
                 [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'],
                 [this.sequelize.fn('sum', this.sequelize.col('turnover')), 'turnover'],
-                [this.sequelize.fn('sum', this.sequelize.col('validTurnover')), 'validTurnover'],
-                [this.sequelize.fn('sum', this.sequelize.col('grossWinAmount')), 'grossWinAmount'],
-                [this.sequelize.fn('sum', this.sequelize.col('jpSettlement')), 'jpSettlement']
+                [this.sequelize.fn('sum', this.sequelize.col('playerWinloss')), 'playerWinloss'],
+                [this.sequelize.fn('sum', this.sequelize.col('winningPercent')), 'winningPercent']
             ],
             groupBy: ['source', 'brand', 'currency', 'type']
         }
@@ -98,4 +91,4 @@ class AG extends Model {
     }
 }
 
-module.exports = AG;
+module.exports = AGL;

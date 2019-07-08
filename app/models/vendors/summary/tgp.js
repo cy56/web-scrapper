@@ -1,11 +1,9 @@
-const Model = require('../vendorModel');
+const Model = require('../vendor');
 
-class MG extends Model {
+class TGP extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
-        this.groupAttr = ['source', 'currency', 'type', 'players', 'bets',
-            'turnover', 'playerWinloss', 'winningPercent', 'jpContribution', 'jpWins', 'playerWinlossJP'];
         return super.setup();
     }
 
@@ -43,15 +41,6 @@ class MG extends Model {
             },
             winningPercent: {
                 type: this.Datatypes.DECIMAL(24, 2)
-            },
-            jpContribution: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            jpWins: {
-                type: this.Datatypes.INTEGER
-            },
-            playerWinlossJP: {
-                type: this.Datatypes.DECIMAL(24, 2)
             }
         };
     }
@@ -70,13 +59,11 @@ class MG extends Model {
     }
 
     static getModelDefaultAttributes() {
-        return ['id', 'source', 'date', 'currency', 'type', 'players', 'bets',
-            'turnover', 'playerWinloss', 'winningPercent', 'jpContribution', 'jpWins', 'playerWinlossJP'];
+        return ['id', 'source', 'date', 'currency', 'type', 'players', 'bets', 'turnover', 'playerWinloss', 'winningPercent'];
     }
 
     static getOnDuplicateValues() {
-        return ['players', 'bets', 'turnover', 'playerWinloss', 'winningPercent', 
-            'jpContribution', 'jpWins', 'playerWinlossJP'];
+        return ['players', 'bets', 'turnover', 'playerWinloss', 'winningPercent'];
     }
 
     static getDatatableGroupBy() {
@@ -87,10 +74,7 @@ class MG extends Model {
                 [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'],
                 [this.sequelize.fn('sum', this.sequelize.col('turnover')), 'turnover'],
                 [this.sequelize.fn('sum', this.sequelize.col('playerWinloss')), 'playerWinloss'],
-                [this.sequelize.fn('sum', this.sequelize.col('winningPercent')), 'winningPercent'],
-                [this.sequelize.fn('sum', this.sequelize.col('jpContribution')), 'jpContribution'],
-                [this.sequelize.fn('sum', this.sequelize.col('jpWins')), 'jpWins'],
-                [this.sequelize.fn('sum', this.sequelize.col('playerWinlossJP')), 'playerWinlossJP']
+                [this.sequelize.fn('sum', this.sequelize.col('winningPercent')), 'winningPercent']
             ],
             groupBy: ['source', 'brand', 'currency', 'type']
         }
@@ -109,15 +93,12 @@ class MG extends Model {
             { text: 'No of Bets', value: 'bets' },
             { text: 'Turnover', value: 'turnover' },
             { text: 'Player Winloss (exc. Jackpot)', value: 'playerWinloss' },
-            { text: 'Winning (%)', value: 'winningPercent' },
-            { text: 'Jackpot Contribution', value: 'jpContribution' },
-            { text: 'Jackpot Wins', value: 'jpWins' },
-            { text: 'Player Winloss (inc. Jackpot)', value: 'playerWinlossJP' }
+            { text: 'Winning (%)', value: 'winningPercent' }
         ];
     }
 }
 
-module.exports = MG;
+module.exports = TGP;
 
 
 

@@ -1,11 +1,11 @@
-const Model = require('../vendorModel');
+const Model = require('../vendor');
 
-class AB extends Model {
+class IPSB extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
-        this.groupAttr = ['source', 'currency', 'players', 'bets', 'turnover', 'playerWinloss', 'winningPercent'];
-        this.group = ['source', 'brand', 'currency'];
+        this.groupAttr = ['source', 'currency', 'bets', 'players', 'turnover', 'playerWinloss', 'winningPercent'];
+        this.group = ['source', 'currency'];
         return super.setup();
     }
 
@@ -48,21 +48,21 @@ class AB extends Model {
         return [
             {
                 unique: true,
-                fields: ['date', 'source', 'brand', 'currency']
+                fields: ['date', 'currency', 'source']
             },
             {
                 name: 'default_indexes',
-                fields: ['source', 'brand', 'currency']
+                fields: ['source', 'currency']
             }
         ];
     }
 
     static getModelDefaultAttributes() {
-        return ['id', 'date', 'source', 'currency', 'players', 'bets', 'turnover', 'playerWinloss', 'winningPercent'];
+        return ['id', 'source', 'date', 'currency', 'bets', 'players', 'turnover', 'playerWinloss', 'winningPercent'];
     }
 
     static getOnDuplicateValues() {
-        return ['players', 'bets', 'turnover', 'playerWinloss', 'winningPercent'];
+        return ['bets', 'players', 'turnover', 'playerWinloss', 'winningPercent'];
     }
 
     static getDatatableGroupBy() {
@@ -78,14 +78,6 @@ class AB extends Model {
             groupBy: ['source', 'brand', 'currency']
         }
     }
-
-    static getDatatableFilter() {
-
-    }
-
-    static getDatatableHeader() {
-
-    }
 }
 
-module.exports = AB;
+module.exports = IPSB;
