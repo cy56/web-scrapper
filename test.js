@@ -874,19 +874,19 @@ test9 = async() => {
 }
 
 test10 = async() => {
-    const resolver = require('./app/services/parser');
-    const db = require('./app/services/database');
+    const resolver = require('./app/services/resolver');
+    const path = require('path');
     const brand = 'RB88';
     const source = 'vendor';
     const vendor = 'PT';
-    const currency = 'CNY';
     const date = '2016-06-01';
-    const model = db.summary[vendor.toLowerCase()];
-    const parser = model.getVendorParserColumns();
-    const cast = model.getParserCast();
-    let unresolved = [['Totals CNY (0)', '39', '52041', 'CNY225,121.4301', 'CNY225,121.4301', 'CNY223,136.2300', '99.1%', 'CNY223,136.2300', 'CNY1,985.2001', '99.1%', '0', 'CNY0.0000', 'CNY0.0000', 'CNY0.0000', '0', 'CNY891.0999', 'CNY94.8500', '0', 'CNY0.0000', 'CNY0.0000', 'CNY0.0000']];
-    const data = new resolver({ brand, source, vendor, date, currency }, unresolved, { parser, cast});
-    console.log(data.getResults());
+    const report = 'summary';
+    const currency = 'cny';
+    const filename = 'summary_games_stats.csv';
+    const filepath = path.join('./app/storages/downloads', filename);
+    const unresolved = await resolver.resolveFile({filename, filepath});
+    unresolved.shift();
+    const data = resolver.resolveParser({ brand, source, vendor, report, date, currency}, unresolved);
 }
 
 test10();

@@ -47,9 +47,9 @@ class dataResolver
             let extension = path.extname(files.filename);
 
             if (extension === '.csv') {
-                items.push(this.resolveForCSV(files));
+                items = this.resolveForCSV(files);
             } else {
-                items.push(this.resolveForExcel(files));
+                items = this.resolveForExcel(files);
             }
         }
 
@@ -66,7 +66,7 @@ class dataResolver
         let target = file.filepath || file.filename;
         let csvFile = fs.readFileSync(target, "utf8");
 
-        return csv.parse(csvFile, { header: true, skipEmptyLines: true }).data;
+        return csv.parse(csvFile, { header: false, skipEmptyLines: true }).data;
     }
 }
 

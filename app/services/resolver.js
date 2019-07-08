@@ -1,14 +1,19 @@
 const fs = require('fs');
 const _ = require('lodash');
+const db = require('./database');
 const dateResolver = require('./resolvers/date');
 const dataResolver = require('./resolvers/data');
 
 class ResolverService
 {
-    static resolveParser(params = { source:null, brand:null, vendor:null, filename:null, date:null, currency:null }, data) {
+    static resolveParser(params = { source:null, brand:null, vendor:null, date:null, currency:null, report:null }, data) {
         try {
-            const parser = require(`../puppeteer/workers/parsers/${params.vendor.toLowerCase()}`);
-            const resolved = new parser(params, data);
+            let {source, brand, vendor, date, currency, report} = params;
+            const converter = require('./parser');
+            const model = db[report.toLowerCase()][vendor.toLowerCase()];
+            const parser = model.getVendorParserColumns();
+            const cast = model.getParserCast();
+            const resolved = new converter(params, data, {parser, cast});
             return resolved.getResults();
         } catch(err) {
             throw err.message;

@@ -41,6 +41,7 @@ class Parser
                     this.df = this.df.cast(key, value);
                 }
             }
+        
 
             this.df = this.df.withColumn('source', () => this.source)
             .withColumn('brand', () => this.brand)
@@ -48,6 +49,14 @@ class Parser
 
             if (!this.df.listColumns().includes('currency')) {
                 this.df = this.df.withColumn('currency', () => this.currency);
+            }
+
+            if(this.df.listColumns().includes('currency')) {
+                this.df = this.df.dropDuplicates('currency');
+            }
+
+            if(this.df.listColumns().includes('username')) {
+                this.df = this.df.dropDuplicates('username');
             }
 
             return this.df.toCollection();
