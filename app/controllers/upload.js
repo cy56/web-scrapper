@@ -9,25 +9,18 @@ const CODE_SYSTEM_ERROR = 9;
 
 class Uploader
 {
-    constructor() {
-
-    }
-
     async resolveFile(file) {
-        console.log('resolve file');
         const csvFile = fs.readFileSync(file, "utf8");
         const csvData = csv.parse(csvFile, { header: false, skipEmptyLines: true }).data;
-        csvData.shift();
         return csvData;
     }
 
-    async resolveData (params = { source: '', brand: '', vendor: '', filename: '', date: '' }, csvData) {
+    async resolveData (params = { source: null, brand: null, vendor: null, report: null, date: null }, csvData) {
         return await resolver.resolveParser(params, csvData);
     };
 
-    async insertIntoDB (vendor, resolved) {
-        
-        const model = db[vendor.toLowerCase()];
+    async insertIntoDB (params = { vendor: null, report: null }, resolved) {
+        const model = db[params.report.toLowerCase()][params.vendor.toLowerCase()];
         await model.createMany(resolved);
     };
 
@@ -40,17 +33,17 @@ exports.upload = async (req, res) => {
     try {
         const controller = new Uploader();
         const source = 'hydra';
-        const filename = null;
-        const { brand, vendor, date } = req.body;
+        const { brand, vendor, date, report } = req.body;
         const file = req.file.path;
 
-        if (!brand || !vendor || !date) {
+        if (!brand || !vendor || !date || !report) {
             return res.status(400).json({ code: CODE_MISSING_PARAMETERS, message: 'Missing Parameter(s)' });
         }
 
         const data = await controller.resolveFile(file);
-        const resolved = await controller.resolveData({ source, brand, vendor, filename, date }, data);
-        await controller.insertIntoDB(vendor, resolved);
+        const resolved = await controller.resolveData({ source, brand, vendor, report, date }, data);
+        
+        await controller.insertIntoDB({ vendor, report }, resolved);
 
         return res.status(200).json({ code: CODE_PERFECT, message: "Upload Successfully..." });
     } catch (err) {

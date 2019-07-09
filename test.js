@@ -839,7 +839,7 @@ test7 = async() => {
     const vendor = 'pt';
     const report = 'summary';
     const model = db[report.toLowerCase()][vendor.toLowerCase()];
-    const results = await model.getDatatable({ brand: 'RB88', startDate: '2019-06-01', endDate: '2019-06-05' });
+    const results = await model.getDatatable({ brand: 'RB88', startDate: '2019-06-01' });
     const compares = await model.getOnDuplicateValues();
     const indexes = await model.getDataIndexes();
     const data = await dataframe.diff(results, compares, indexes);
@@ -917,4 +917,4 @@ test11 = async() => {
     console.log(df.dropDuplicates('currency').dropDuplicates('date').toCollection());
 }
 
-test10();
+test7();

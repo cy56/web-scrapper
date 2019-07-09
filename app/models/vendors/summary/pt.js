@@ -67,13 +67,13 @@ class PT extends Model {
     static getDatatableGroupBy() {
         return {
             attributes: [
-                'source', 'currency', 'date'
+                'source', 'currency', 'date',
                 [this.sequelize.fn('sum', this.sequelize.col('players')), 'players'], 
                 [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'], 
                 [this.sequelize.fn('sum', this.sequelize.col('turnover')), 'turnover'], 
-                [this.sequelize.fn('sum', this.sequelize.col('totalWin')), 'totalWin'], 
-                [this.sequelize.fn('sum', this.sequelize.col('gameIncomeShare')), 'gameIncomeShare'],
-                [this.sequelize.fn('sum', this.sequelize.col('jpWins')), 'jpWins']
+                [this.sequelize.fn('sum', this.sequelize.col('total_win')), 'totalWin'], 
+                [this.sequelize.fn('sum', this.sequelize.col('game_income_share')), 'gameIncomeShare'],
+                [this.sequelize.fn('sum', this.sequelize.col('jp_wins')), 'jpWins']
             ],
             groupBy: ['date', 'source', 'brand', 'currency']
         }
