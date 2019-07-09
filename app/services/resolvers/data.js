@@ -58,15 +58,17 @@ class dataResolver
 
     static resolveForExcel(file = { filename: null, filepath:null }) {
         let target = file.filepath || file.filename;
-
-        return excel.exportToSheets({ filepath: target });
+        let data = excel.exportToSheets({ filepath: target });
+        fs.unlinkSync(target);
+        return data;
     }
 
     static resolveForCSV(file = { filename: null, filepath:null }) {
         let target = file.filepath || file.filename;
         let csvFile = fs.readFileSync(target, "utf8");
-
-        return csv.parse(csvFile, { header: false, skipEmptyLines: true }).data;
+        let data = csv.parse(csvFile, { header: false, skipEmptyLines: true }).data;
+        fs.unlinkSync(target);
+        return data;
     }
 }
 

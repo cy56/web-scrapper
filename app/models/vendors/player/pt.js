@@ -98,7 +98,37 @@ class PT extends Model {
     }
 
     static getDataIndexes() {
-        return ['currency', 'date'];
+        return ['currency', 'date', 'username'];
+    }
+
+    static getVendorParserColumns() {
+        return ['username', , , , 'bets', 'turnover', , , , 'totalWin', 'gameIncomeShare', , , , , , , , 'jpWins'];
+    }
+
+    static getVendorParserSkipLines() {
+        return [0, -1];
+    }
+
+    static getHydraParserColumns() {
+        return [, , 'username', 'currency', 'bets', , 'turnover', 'totalWin', 'gameIncomeShare', , , , 'jpWins'];
+    }
+
+    static getHydraParserSkipLines() {
+        return [0];
+    }
+
+    static getParserCast() {
+        return [
+            { 'bets': Number },
+            { 'turnover': 4 },
+            { 'totalWin': 4 },
+            { 'gameIncomeShare': 4 },
+            { 'jpWins': 4 },
+        ];
+    }
+
+    static getSkipDuplicate() {
+        return ['currency', 'date', 'username'];
     }
 }
 

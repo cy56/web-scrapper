@@ -1,6 +1,5 @@
 const fs = require('fs');
 const _ = require('lodash');
-const db = require('./database');
 const dateResolver = require('./resolvers/date');
 const dataResolver = require('./resolvers/data');
 
@@ -8,15 +7,18 @@ class ResolverService
 {
     static resolveParser(params = { source:null, brand:null, vendor:null, date:null, currency:null, report:null }, data) {
         try {
-            let {source, brand, vendor, date, currency, report} = params;
+            let { source, vendor, report } = params;
             const converter = require('./parser');
+            const db = require('./database');
             const model = db[report.toLowerCase()][vendor.toLowerCase()];
-            const parser = model.getVendorParserColumns();
+            const parser = (source.toLowerCase() == 'vendor') ? model.getVendorParserColumns() : model.getHydraParserColumns();
+            const skip = (source.toLowerCase() == 'vendor') ? model.getVendorParserSkipLines() : model.getHydraParserSkipLines();
             const cast = model.getParserCast();
-            const resolved = new converter(params, data, {parser, cast});
+            const duplicate = model.getSkipDuplicate();
+            const resolved = new converter(params, data, { parser, cast, skip, duplicate });
             return resolved.getResults();
         } catch(err) {
-            throw err.message;
+            console.error(err);
         }
     }
 
@@ -32,8 +34,8 @@ class ResolverService
         return dateResolver.resolveVendorDates(params);
     }
 
-    static resolveFile(file) {
-        return dataResolver.resolve(file);
+    static async resolveFile(file) {
+        return await dataResolver.resolve(file);
     }
 
     static async resolvePath(directory, filetype, options = null, cb = null) {

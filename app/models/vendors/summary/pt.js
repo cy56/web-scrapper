@@ -105,8 +105,16 @@ class PT extends Model {
         return [, 'players', 'bets', 'turnover', , , , 'totalWin', 'gameIncomeShare', , , , , , , , 'jpWins'];
     }
 
+    static getVendorParserSkipLines() {
+        return [0];
+    }
+
     static getHydraParserColumns() {
-        return [];
+        return [, 'currency', 'players', 'bets', , 'turnover', 'totalWin', 'gameIncomeShare', , , , 'jpWins'];
+    }
+
+    static getHydraParserSkipLines() {
+        return [0, 2, 4];
     }
 
     static getParserCast() {
@@ -118,6 +126,10 @@ class PT extends Model {
             { 'gameIncomeShare': 4 },
             { 'jpWins': 4 },
         ];
+    }
+
+    static getSkipDuplicate() {
+        return ['currency', 'date'];
     }
 }
 
