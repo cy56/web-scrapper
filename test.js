@@ -832,15 +832,16 @@ test6 = async() => {
 test7 = async() => {
     const excel = require('./app/services/excel');
     const dataframe = require('./app/services/dataframe');
-    const model = require('./app/services/database').cmd;
+    const db = require('./app/services/database');
     const fs = require('fs');
 
     const brand = 'RB88';
-    const vendor = 'CMD';
-
-    const results = await model.getDatatable({ brand: 'RB88', startDate: '2019-07-01' });
+    const vendor = 'pt';
+    const report = 'summary';
+    const model = db[report.toLowerCase()][vendor.toLowerCase()];
+    const results = await model.getDatatable({ brand: 'RB88', startDate: '2019-06-01', endDate: '2019-06-05' });
     const compares = await model.getOnDuplicateValues();
-    const indexes = ['currency', 'date'];
+    const indexes = await model.getDataIndexes();
     const data = await dataframe.diff(results, compares, indexes);
     
     const file = await excel.convertDataToWorkbook({brand, vendor}, data);
@@ -875,18 +876,45 @@ test9 = async() => {
 
 test10 = async() => {
     const resolver = require('./app/services/resolver');
+    const db = require('./app/services/database');
     const path = require('path');
     const brand = 'RB88';
     const source = 'vendor';
     const vendor = 'PT';
     const date = '2016-06-01';
-    const report = 'summary';
+    const report = 'player';
     const currency = 'cny';
-    const filename = 'summary_games_stats.csv';
+    const filename = 'player_games_stats.csv';
     const filepath = path.join('./app/storages/downloads', filename);
     const unresolved = await resolver.resolveFile({filename, filepath});
-    unresolved.shift();
     const data = resolver.resolveParser({ brand, source, vendor, report, date, currency}, unresolved);
+    const model = db[report.toLowerCase()][vendor.toLowerCase()];
+    model.createMany(data);
+}
+
+test11 = async() => {
+    const DataFrame = require('dataframe-js').DataFrame;
+
+    let data = [
+        ['cny', '2019-05-01', '1'],
+        ['thb', '2019-05-01', '1'],
+        ['cny', '2019-05-02', '1'],
+        ['thb', '2019-05-02', '1'],
+        ['cny', '2019-05-02', '1']
+    ];
+
+    let columns = ['currency', 'date', 'bets'];
+
+    let duplicate = ['currency', 'date'];
+
+
+    let df = new DataFrame(data, columns);
+
+    //   if (df.listColumns().includes(duplicate[i])) {
+    //       df =df.dropDuplicates(duplicate[i]);
+    //   }
+    // }
+    console.log(df.dropDuplicates('currency').dropDuplicates('date').toCollection());
 }
 
 test10();
