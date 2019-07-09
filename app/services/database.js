@@ -17,13 +17,10 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-let summary = {};
-let player = {};
-
-db.summary = {
+let summary = {
     pt: require('../models/vendors/summary/pt.js').initial(sequelize, Sequelize),
 };
-db.player = {
+let player = {
     pt: require('../models/vendors/player/pt.js').initial(sequelize, Sequelize),
 };
 
@@ -48,5 +45,8 @@ db.user = require('../models/auth/user').init(sequelize, Sequelize);
 // db.sag = require('../models/vendors/sag.js')(sequelize, Sequelize);
 // db.slc = require('../models/vendors/slc.js')(sequelize, Sequelize);
 // db.spg = require('../models/vendors/spg.js')(sequelize, Sequelize);
+
+db.summary = summary;
+db.player = player;
 
 module.exports = db;

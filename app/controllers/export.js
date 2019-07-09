@@ -2,6 +2,7 @@ const excel = require('../services/excel');
 const dataframe = require('../services/dataframe');
 const zipper = require('../services/zipper');
 const db = require('../services/database');
+const _ = require('lodash');
 
 const CODE_PERFECT = 0;
 const CODE_MISSING_PARAMETERS = 8;
@@ -9,56 +10,51 @@ const CODE_SYSTEM_ERROR = 9;
 
 class Exporter
 {
-    constructor() {
-
-    }
-
-    static async export(options = { brand, source, start, end }) {
+    async export(options = { brand:null , vendor:null, report:null, start:null, end:null }) {
         try {
-
-            if (!brand, !source || !start || !end) {
-                throw 'missing parameters';
-            }
-
             const summary = await this.getSummaryReport(options);
-            const player = await this.getPlayerReport(options);
-            
-
-        } catch (err) {
-            
+            console.log(summary);
+        } catch (error) {
+            console.error(error);
         }
     }
 
-    static async getSummaryReport(options) {
-        let { brand, source, start, end } = options;
-        const model = db[source.toLowerCase()];
-        let data = model.getDatatable({ brand, start, end });
+    async getSummaryReport(options) {
+
+        let { brand, vendor, report, start, end } = options;
+
+        const model = db[report.toLowerCase()][vendor.toLowerCase()];
+        let data = await model.getDatatable({ brand, start, end });
         let compares = model.getOnDuplicateValues();
         let indexes = model.getDataIndexes();
+
+        if(_.isUndefined(data)) {
+            return false;
+        }
+        
         let results = await dataframe.diff(data, compares, indexes);
         
         return results;
     }
 
-    static async getPlayerReport(options) {
+    async getPlayerReport(options) {
 
     }
 
-    static packages(options, packages) {
+    async packages(options, packages) {
         
     }
 }
 
-module.export = async (req, res) => {
+exports.export = async (req, res) => {
     const controller = new Exporter();
-    let { brand, source, start, end } = req.body;
+    let { brand, vendor, report, start, end } = req.body;
 
-    if(!brand, !source || !start || !end) {
+    if(!brand || !vendor || !start || !report) {
         return res.status(400).json({ code: CODE_MISSING_PARAMETERS, message: 'Missing Parameter(s)' });
     }
 
-    const file = await controller.export({ brand, source, start, end});
+    const file = await controller.export({ brand, vendor, report, start, end});
 
-    return res.status(200).download(file.filepath);
-
+    return res.status(200).send('ok');
 };
