@@ -49,6 +49,8 @@ class Parser
             // If missing currency columns, add it
             this.patchCurrency();
 
+            this.df = this.df.cast('currency', (val) => val.toLowerCase());
+
             // Skips Duplicates
             if(this.model.duplicate) {
                 this.skipDuplicates();

@@ -3,6 +3,7 @@ const dataframe = require('../services/dataframe');
 const zipper = require('../services/zipper');
 const db = require('../services/database');
 const _ = require('lodash');
+const fs = require('fs');
 
 const CODE_PERFECT = 0;
 const CODE_MISSING_PARAMETERS = 8;
@@ -10,7 +11,7 @@ const CODE_SYSTEM_ERROR = 9;
 
 class Exporter
 {
-    async export(options = { brand:null , vendor:null, report:null, start:null, end:null }) {
+    async export(options = { brand: null, vendor: null, report: null, startDate:null, endDate:null }) {
         try {
             let files = [];
 
@@ -25,7 +26,9 @@ class Exporter
                 files.push(player);
             }
 
-            return await this.packages(options, files);
+            const packages = await this.packages(options, files);
+
+            return packages;
 
         } catch (error) {
             console.error(error);
@@ -34,10 +37,10 @@ class Exporter
 
     async getSummaryReport(options) {
 
-        let { brand, vendor, start, end } = options;
+        let { brand, vendor, startDate, endDate } = options;
         let report = 'summary';
         const model = db[report][vendor.toLowerCase()];
-        let data = await model.getDatatable({ brand, start, end });
+        let data = await model.getDatatable({ brand, startDate, endDate });
         let compares = model.getOnDuplicateValues();
         let indexes = model.getDataIndexes();
 
@@ -53,11 +56,11 @@ class Exporter
     }
 
     async getPlayerReport(options) {
-        let { brand, vendor, start, end } = options;
+        let { brand, vendor, startDate, endDate } = options;
         let report = 'player';
 
         const model = db[report][vendor.toLowerCase()];
-        let data = await model.getDatatable({ brand, start, end });
+        let data = await model.getDatatable({ brand, startDate, endDate });
         let compares = model.getOnDuplicateValues();
         let indexes = model.getDataIndexes();
 
@@ -79,13 +82,18 @@ class Exporter
 
 exports.export = async (req, res) => {
     const controller = new Exporter();
-    let { brand, vendor, start, end } = req.body;
+    let { brand, vendor, startDate, endDate } = req.body;
 
-    if(!brand || !vendor || !start) {
+    if (!brand || !vendor || !startDate) {
         return res.status(400).json({ code: CODE_MISSING_PARAMETERS, message: 'Missing Parameter(s)' });
     }
 
-    const file = await controller.export({ brand, vendor, start, end});
+    const file = await controller.export({ brand, vendor, startDate, endDate});
+    const exists = await fs.existsSync(file.filepath);
 
-    return res.status(200).send('ok');
+    if(exists) {
+        return res.status(200).download(file.filepath, file.filname);
+    } else {
+        return res.status(404).send('file not found');
+    }
 };

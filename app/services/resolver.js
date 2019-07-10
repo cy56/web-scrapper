@@ -71,15 +71,15 @@ class ResolverService
         if(_.isObject(options)) {
 
             if(options.hasOwnProperty('date')) {
-                return options.date;
+                return `${options.date}.${options.extension}`;
             }
 
             if(options.hasOwnProperty('report')) {
-                return `${options.vendor}_${options.report}_${dateResolver.getTimer()}`;
+                return `${options.vendor}_${options.report}_${dateResolver.getTimer()}.${options.extension}`;
             }
         }
 
-        return dateResolver.getTimer();
+        return 'unknown';
     }
 }
 

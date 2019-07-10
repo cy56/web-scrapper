@@ -67,15 +67,14 @@ class PT extends Model {
     static getDatatableGroupBy() {
         return {
             attributes: [
-                'source', 'currency', 'date', 'username'
-                [this.sequelize.fn('sum', this.sequelize.col('players')), 'players'],
+                'source', 'currency', 'date', 'username',
                 [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'],
                 [this.sequelize.fn('sum', this.sequelize.col('turnover')), 'turnover'],
-                [this.sequelize.fn('sum', this.sequelize.col('totalWin')), 'totalWin'],
-                [this.sequelize.fn('sum', this.sequelize.col('gameIncomeShare')), 'gameIncomeShare'],
-                [this.sequelize.fn('sum', this.sequelize.col('jpWins')), 'jpWins']
+                [this.sequelize.fn('sum', this.sequelize.col('total_win')), 'totalWin'],
+                [this.sequelize.fn('sum', this.sequelize.col('game_income_share')), 'gameIncomeShare'],
+                [this.sequelize.fn('sum', this.sequelize.col('jp_wins')), 'jpWins']
             ],
-            groupBy: ['date', 'source', 'brand', 'currency']
+            groupBy: ['date', 'source', 'brand', 'currency', 'username']
         }
     }
 
@@ -98,7 +97,7 @@ class PT extends Model {
     }
 
     static getDataIndexes() {
-        return ['currency', 'date', 'username'];
+        return ['currency', 'username'];
     }
 
     static getVendorParserColumns() {
@@ -114,7 +113,7 @@ class PT extends Model {
     }
 
     static getHydraParserSkipLines() {
-        return [0];
+        return [0, -1];
     }
 
     static getParserCast() {

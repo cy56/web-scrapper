@@ -837,7 +837,7 @@ test7 = async() => {
 
     const brand = 'RB88';
     const vendor = 'pt';
-    const report = 'summary';
+    const report = 'player';
     const model = db[report.toLowerCase()][vendor.toLowerCase()];
     const results = await model.getDatatable({ brand: 'RB88', startDate: '2019-06-01' });
     const compares = await model.getOnDuplicateValues();
@@ -846,7 +846,7 @@ test7 = async() => {
     
     const file = await excel.convertDataToWorkbook({brand, vendor, report }, data);
 
-    console.log(file);
+    console.log(data);
 };
 
 test8 = async() => {
@@ -879,17 +879,18 @@ test10 = async() => {
     const db = require('./app/services/database');
     const path = require('path');
     const brand = 'RB88';
-    const source = 'vendor';
+    const source = 'hydra';
     const vendor = 'PT';
     const date = '2016-06-01';
     const report = 'player';
     const currency = 'cny';
-    const filename = 'player_games_stats.csv';
+    const filename = 'player_01.csv';
     const filepath = path.join('./app/storages/downloads', filename);
     const unresolved = await resolver.resolveFile({filename, filepath});
     const data = resolver.resolveParser({ brand, source, vendor, report, date, currency}, unresolved);
-    const model = db[report.toLowerCase()][vendor.toLowerCase()];
-    model.createMany(data);
+    // const model = db[report.toLowerCase()][vendor.toLowerCase()];
+    // model.createMany(data);
+    console.log(data);
 }
 
 test11 = async() => {

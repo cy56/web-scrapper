@@ -2,7 +2,7 @@ const library = require('xlsx');
 const path = require('path');
 const fs = require('fs');
 const _ = require('lodash');
-const resolver = require('./resolver');
+const util = require('util');
 
 class Excel
 {
@@ -22,13 +22,18 @@ class Excel
 
     static async convertDataToWorkbook(params = { brand: null, vendor:null, report:null }, data) {
         try {
+            const resolver = require('./resolver');
+            const writeFile = util.promisify(fs.writeFile);
             let { brand, vendor, report } = params;
 
             if(!brand || !vendor || !report || !data) {
                 throw 'missing parameters';
             }
 
-            const exportDirectory = path.join(__dirname, `../storages/exports/${brand}/${vendor}/`);
+            const filename = resolver.resolveFilename({ report, vendor, extension:'xlsx' });
+            const directory = path.join(__dirname, `../storages/exports/${brand}/${vendor}/`);
+            const filepath = path.join(__dirname, `../storages/exports/${brand}/${vendor}/${filename}`);
+            
             const workbook = library.utils.book_new();
 
             let end = false;
@@ -56,15 +61,17 @@ class Excel
 
             const content = library.write(workbook, { type: 'buffer', bookType: 'xlsx', bookSST: false });
 
-            const file = await resolver.resolvePath(exportDirectory, 'xlsx', { content, report, vendor }, (file, options) => {
-                fs.writeFileSync(file.filepath, options.content);
-                return file;
-            });
-
-            return file;
+            if (!fs.existsSync(directory)) {
+                await fs.promises.mkdir(directory, { recursive: true });
+                await writeFile(filepath, content);
+                return { filename, filepath};   
+            } else {
+                await writeFile(filepath, content);
+                return { filename, filepath };
+            }
 
         } catch(err) {
-            console.error(err.message);
+            console.error(err);
         }
     }
 }
