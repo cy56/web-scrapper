@@ -40,7 +40,7 @@ class ResolverService
 
     static async resolvePath(directory, filetype, options = null, cb = null) {
         try {
-            const unknown = (_.isObject(options)) ? (options.hasOwnProperty('date')) ? options.date : dateResolver.getTimer() : dateResolver.getTimer();
+            const unknown = this.resolveFilename(options);
             const filename = `${unknown}.${filetype}`;
             const filepath = `${directory}${filename}`;
             const file = { filename, filepath };
@@ -65,6 +65,21 @@ class ResolverService
         } catch(err) {
             throw err.message;
         }
+    }
+
+    static resolveFilename(options = null) {
+        if(_.isObject(options)) {
+
+            if(options.hasOwnProperty('date')) {
+                return options.date;
+            }
+
+            if(options.hasOwnProperty('report')) {
+                return `${options.vendor}_${options.report}_${dateResolver.getTimer()}`;
+            }
+        }
+
+        return dateResolver.getTimer();
     }
 }
 

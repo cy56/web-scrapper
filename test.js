@@ -844,9 +844,9 @@ test7 = async() => {
     const indexes = await model.getDataIndexes();
     const data = await dataframe.diff(results, compares, indexes);
     
-    //const file = await excel.convertDataToWorkbook({brand, vendor}, data);
+    const file = await excel.convertDataToWorkbook({brand, vendor, report }, data);
 
-    console.log(data);
+    console.log(file);
 };
 
 test8 = async() => {

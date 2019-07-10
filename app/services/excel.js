@@ -20,12 +20,12 @@ class Excel
         return { sheetNames: workbook.SheetNames, data };
     }
 
-    static async convertDataToWorkbook(params = { brand: null, vendor:null }, data) {
+    static async convertDataToWorkbook(params = { brand: null, vendor:null, report:null }, data) {
         try {
-            let { brand, vendor } = params;
+            let { brand, vendor, report } = params;
 
-            if(!brand || !vendor || !data) {
-                throw 'missing data';
+            if(!brand || !vendor || !report || !data) {
+                throw 'missing parameters';
             }
 
             const exportDirectory = path.join(__dirname, `../storages/exports/${brand}/${vendor}/`);
@@ -56,8 +56,8 @@ class Excel
 
             const content = library.write(workbook, { type: 'buffer', bookType: 'xlsx', bookSST: false });
 
-            const file = await resolver.resolvePath(exportDirectory, 'xlsx', content, (file, content) => {
-                fs.writeFileSync(file.filepath, content);
+            const file = await resolver.resolvePath(exportDirectory, 'xlsx', { content, report, vendor }, (file, options) => {
+                fs.writeFileSync(file.filepath, options.content);
                 return file;
             });
 
