@@ -918,4 +918,21 @@ test11 = async() => {
     console.log(df.dropDuplicates('currency').dropDuplicates('date').toCollection());
 }
 
-test7();
+test12 = async() => {
+    const db = require('./app/services/database');
+    const datatable = require('./app/services/datatable');
+    const brand = 'RB88';
+    const vendor = 'pt';
+    const report = 'summary';
+    const model = db[report.toLowerCase()][vendor.toLowerCase()];
+    const results = await model.getDatatable({ brand: 'RB88', startDate: '2019-06-01' });
+    const columns = model.getDatatableColumns();
+    const compares = model.getOnDuplicateValues();
+    
+    const table = new datatable(results, columns, compares);
+
+    console.log(table.generateDatatable());
+
+}
+
+test12();

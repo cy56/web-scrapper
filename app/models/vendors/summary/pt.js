@@ -79,8 +79,8 @@ class PT extends Model {
         }
     }
 
-    static getDatatableFilter() {
-        return ['source', 'currency', 'date'];
+    static getDatatableColumns() {
+        return ['source', 'currency', 'date', 'players', 'bets', 'turnover', 'totalWin', 'gameIncomeShare', 'jpWins'];
     }
 
     static getDatatableHeader() {
