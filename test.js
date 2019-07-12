@@ -881,15 +881,16 @@ test10 = async() => {
     const brand = 'RB88';
     const source = 'hydra';
     const vendor = 'PT';
-    const date = '2016-06-01';
-    const report = 'player';
+    const date = '2016-06-02';
+    const report = 'summary';
     const currency = 'cny';
-    const filename = 'player_01.csv';
+    const filename = 'summary_02.csv';
     const filepath = path.join('./app/storages/downloads', filename);
     const unresolved = await resolver.resolveFile({filename, filepath});
+    //const unresolved = [, ['1', 'CNY', '35', '50,211', 'RNG', '354,539.35', '356,639.35', '-2,099.99', '975.08', '0.27', '1,124.91', '0', '975.08'], , ['3', 'THB', '70', '46,519', 'RNG', '354,726.69', '354,056.50', '670.19', '-3,296.00', '-0.92', '2,625.80', '92.14', '-3,203.86'],  ];
     const data = resolver.resolveParser({ brand, source, vendor, report, date, currency}, unresolved);
-    // const model = db[report.toLowerCase()][vendor.toLowerCase()];
-    // model.createMany(data);
+    const model = db[report.toLowerCase()][vendor.toLowerCase()];
+    model.createMany(data);
     console.log(data);
 }
 
@@ -925,7 +926,7 @@ test12 = async() => {
     const vendor = 'pt';
     const report = 'summary';
     const model = db[report.toLowerCase()][vendor.toLowerCase()];
-    const results = await model.getDatatable({ brand: 'RB88', startDate: '2019-06-01' });
+    const results = await model.getDatatable({ brand, startDate: '2019-06-01', endDate: '2019-06-02' });
     const columns = model.getDatatableColumns();
     const compares = model.getOnDuplicateValues();
     

@@ -4,7 +4,7 @@ const currency = require('./currency');
 
 class DataTable
 {
-    constructor(data, columns, compares, group = 'source', join = 'currency') {
+    constructor(data, columns, compares, group = 'source', join = ['date', 'currency']) {
         this.df = new DataFrame(data);
         this.columns = columns;
         this.compares = compares;
@@ -85,7 +85,7 @@ class DataTable
                 `${key}_${column}`, (row) => currency.convert(row.get(`${indexes[0]}_${column}`) - row.get(`${indexes[1]}_${column}`), 4)
             )
         }
-        
+
         return diffGroup.toCollection();
     }
 }

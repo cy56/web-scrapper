@@ -31,13 +31,13 @@ class PT extends Model {
             turnover: {
                 type: this.Datatypes.DECIMAL(24, 4)
             },
-            totalWin: {
+            total_win: {
                 type: this.Datatypes.DECIMAL(24, 4)
             },
-            gameIncomeShare: {
+            game_income_share: {
                 type: this.Datatypes.DECIMAL(24, 4)
             },
-            jpWins: {
+            jp_wins: {
                 type: this.Datatypes.DECIMAL(24, 4)
             }
         };
@@ -54,46 +54,40 @@ class PT extends Model {
 
     static getModelDefaultAttributes() {
         return ['id', 'source', 'brand', 'date', 'currency', 'players',
-            'bets', 'turnover', 'totalWin', 'gameIncomeShare', 'jpWins'
+            'bets', 'turnover', 'total_win', 'game_income_share', 'jp_wins'
         ];
     }
 
     static getOnDuplicateValues() {
-        return [
-            'players', 'bets', 'turnover', 'totalWin', 'gameIncomeShare', 'jpWins'
-        ];
-    }
-
-    static getDatatableGroupBy() {
-        return {
-            attributes: [
-                'source', 'currency', 'date',
-                [this.sequelize.fn('sum', this.sequelize.col('players')), 'players'], 
-                [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'], 
-                [this.sequelize.fn('sum', this.sequelize.col('turnover')), 'turnover'], 
-                [this.sequelize.fn('sum', this.sequelize.col('total_win')), 'totalWin'], 
-                [this.sequelize.fn('sum', this.sequelize.col('game_income_share')), 'gameIncomeShare'],
-                [this.sequelize.fn('sum', this.sequelize.col('jp_wins')), 'jpWins']
-            ],
-            groupBy: ['date', 'source', 'brand', 'currency']
-        }
+        return [ 'players', 'bets', 'turnover', 'total_win', 'game_income_share', 'jp_wins' ];
     }
 
     static getDatatableColumns() {
-        return ['source', 'currency', 'date', 'players', 'bets', 'turnover', 'totalWin', 'gameIncomeShare', 'jpWins'];
+        return ['source', 'currency', 'date', 'players', 'bets', 'turnover', 'total_win', 'game_income_share', 'jp_wins'];
     }
 
     static getDatatableHeader() {
         return [
-            { text: 'Source', value: 'source' },
-            { text: 'Date', value: 'date' },
-            { text: 'Currency', value: 'currency' },
-            { text: 'No of Players', value: 'players' },
-            { text: 'No of Bets', value: 'bets' },
-            { text: 'Turnover', value: 'turnover' },
-            { text: 'Total Win', value: 'totalWin' },
-            { text: 'Game Income Share', value: 'gameIncomeShare' },
-            { text: 'Jackpot Wins', value: 'jpWins' }
+            { text: 'Currency', value: 'currency', softable: true },
+            { text: 'Date', value: 'date', softable: true },
+            { text: 'Players (vendor)', value: 'vendor_players', align: 'start' },
+            { text: 'Bets (vendor)', value: 'vendor_bets', align: 'start' },
+            { text: 'Turnover (vendor)', value: 'vendor_turnover', align: 'start' },
+            { text: 'Total Win (vendor)', value: 'vendor_total_win', align: 'start' },
+            { text: 'Game Income Share (vendor)', value: 'vendor_game_income_share', align: 'start' },
+            { text: 'Jackpot Wins (vendor)', value: 'vendor_jp_wins', align: 'start' },
+            { text: 'Players (hydra)', value: 'hydra_players', align: 'start' },
+            { text: 'Bets (hydra)', value: 'hydra_bets', align: 'start' },
+            { text: 'Turnover (hydra)', value: 'hydra_turnover', align: 'start' },
+            { text: 'Total Win (hydra)', value: 'hydra_total_win', align: 'start' },
+            { text: 'Game Income Share (hydra)', value: 'hydra_game_income_share', align: 'start' },
+            { text: 'Jackpot Wins (hydra)', value: 'hydra_jp_wins', align: 'start' },
+            { text: 'Players (Diff)', value: 'diff_players', align: 'start' },
+            { text: 'Bets (Diff)', value: 'diff_bets', align: 'start' },
+            { text: 'Turnover (Diff)', value: 'diff_turnover', align: 'start' },
+            { text: 'Total Win (Diff)', value: 'diff_total_win', align: 'start' },
+            { text: 'Game Income Share (Diff)', value: 'diff_game_income_share', align: 'start' },
+            { text: 'Jackpot Wins (Diff)', value: 'diff_jp_wins', align: 'start' }  
         ];
     }
 
@@ -102,7 +96,7 @@ class PT extends Model {
     }
 
     static getVendorParserColumns() {
-        return [, 'players', 'bets', 'turnover', , , , 'totalWin', 'gameIncomeShare', , , , , , , , 'jpWins'];
+        return [, 'players', 'bets', 'turnover', , , , 'total_win', 'game_income_share', , , , , , , , 'jp_wins'];
     }
 
     static getVendorParserSkipLines() {
@@ -110,7 +104,7 @@ class PT extends Model {
     }
 
     static getHydraParserColumns() {
-        return [, 'currency', 'players', 'bets', , 'turnover', 'totalWin', 'gameIncomeShare', , , , 'jpWins'];
+        return [, 'currency', 'players', 'bets', , 'turnover', 'total_win', 'game_income_share', , , , 'jp_wins'];
     }
 
     static getHydraParserSkipLines() {
@@ -120,11 +114,11 @@ class PT extends Model {
     static getParserCast() {
         return [
             { 'players': Number },
-            { 'bets': Number },
+            { 'bets': 0 },
             { 'turnover': 4 },
-            { 'totalWin': 4 },
-            { 'gameIncomeShare': 4 },
-            { 'jpWins': 4 },
+            { 'total_win': 4 },
+            { 'game_income_share': 4 },
+            { 'jp_wins': 4 },
         ];
     }
 

@@ -31,13 +31,13 @@ class PT extends Model {
             turnover: {
                 type: this.Datatypes.DECIMAL(24, 4)
             },
-            totalWin: {
+            total_win: {
                 type: this.Datatypes.DECIMAL(24, 4)
             },
-            gameIncomeShare: {
+            game_income_share: {
                 type: this.Datatypes.DECIMAL(24, 4)
             },
-            jpWins: {
+            jp_wins: {
                 type: this.Datatypes.DECIMAL(24, 4)
             }
         };
@@ -54,28 +54,14 @@ class PT extends Model {
 
     static getModelDefaultAttributes() {
         return ['id', 'source', 'brand', 'date', 'currency', 'username',
-            'bets', 'turnover', 'totalWin', 'gameIncomeShare', 'jpWins'
+            'bets', 'turnover', 'total_win', 'game_income_share', 'jp_wins'
         ];
     }
 
     static getOnDuplicateValues() {
         return [
-            'bets', 'turnover', 'totalWin', 'gameIncomeShare', 'jpWins'
+            'bets', 'turnover', 'total_win', 'game_income_share', 'jp_wins'
         ];
-    }
-
-    static getDatatableGroupBy() {
-        return {
-            attributes: [
-                'source', 'currency', 'date', 'username',
-                [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'],
-                [this.sequelize.fn('sum', this.sequelize.col('turnover')), 'turnover'],
-                [this.sequelize.fn('sum', this.sequelize.col('total_win')), 'totalWin'],
-                [this.sequelize.fn('sum', this.sequelize.col('game_income_share')), 'gameIncomeShare'],
-                [this.sequelize.fn('sum', this.sequelize.col('jp_wins')), 'jpWins']
-            ],
-            groupBy: ['date', 'source', 'brand', 'currency', 'username']
-        }
     }
 
     static getDatatableFilter() {
@@ -90,9 +76,9 @@ class PT extends Model {
             { text: 'No of Players', value: 'players' },
             { text: 'No of Bets', value: 'bets' },
             { text: 'Turnover', value: 'turnover' },
-            { text: 'Total Win', value: 'totalWin' },
-            { text: 'Game Income Share', value: 'gameIncomeShare' },
-            { text: 'Jackpot Wins', value: 'jpWins' }
+            { text: 'Total Win', value: 'total_win' },
+            { text: 'Game Income Share', value: 'game_income_share' },
+            { text: 'Jackpot Wins', value: 'jp_wins' }
         ];
     }
 
@@ -101,7 +87,7 @@ class PT extends Model {
     }
 
     static getVendorParserColumns() {
-        return ['username', , , , 'bets', 'turnover', , , , 'totalWin', 'gameIncomeShare', , , , , , , , 'jpWins'];
+        return ['username', , , , 'bets', 'turnover', , , , 'total_win', 'game_income_share', , , , , , , , 'jp_wins'];
     }
 
     static getVendorParserSkipLines() {
@@ -109,7 +95,7 @@ class PT extends Model {
     }
 
     static getHydraParserColumns() {
-        return [, , 'username', 'currency', 'bets', , 'turnover', 'totalWin', 'gameIncomeShare', , , , 'jpWins'];
+        return [, , 'username', 'currency', 'bets', , 'turnover', 'total_win', 'game_income_share', , , , 'jp_wins'];
     }
 
     static getHydraParserSkipLines() {
@@ -120,9 +106,9 @@ class PT extends Model {
         return [
             { 'bets': Number },
             { 'turnover': 4 },
-            { 'totalWin': 4 },
-            { 'gameIncomeShare': 4 },
-            { 'jpWins': 4 },
+            { 'total_win': 4 },
+            { 'game_income_share': 4 },
+            { 'jp_wins': 4 },
         ];
     }
 

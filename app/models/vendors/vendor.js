@@ -33,7 +33,7 @@ class Vendor extends Sequelize.Model {
                 }
             }
             
-            return await this.findAll({ attributes: this.getDatatableGroupBy().attributes, group: this.getDatatableGroupBy().groupBy, where: wheres, raw: true });
+            return await this.findAll({ attributes: this.getModelDefaultAttributes(), where: wheres, raw: true });
 
         } catch (err) {
             console.error('Database Error: ', err.message);
