@@ -79,7 +79,6 @@ class DataTable
     getDiffGroup(groups, indexes) {
         const key = 'diff';
         let diffGroup = groups[indexes[0]].join(groups[indexes[1]], this.join, 'full');
-
         for(let column of this.compares) {
             diffGroup = diffGroup.withColumn(
                 `${key}_${column}`, (row) => currency.convert(row.get(`${indexes[0]}_${column}`) - row.get(`${indexes[1]}_${column}`), 4)
