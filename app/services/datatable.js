@@ -85,7 +85,7 @@ class DataTable
             )
         }
 
-        return diffGroup.toCollection();
+        return { data: diffGroup.toCollection(), column: diffGroup.listColumns() };
     }
 }
 
