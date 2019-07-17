@@ -10,10 +10,27 @@ const CODE_SYSTEM_ERROR = 9;
 class Vendor {
    async getDataTable(params = { brand: null, vendor: null, report: null, startDate: null, endDate: null }) {
         try {
-            let { brand, vendor, report, startDate, endDate } = params;
+            let { brand, vendor, report, startDate, endDate, currency } = params;
+            let wheres = {};
+
+            if(!brand || !vendor || !report || !startDate) {
+                return CODE_MISSING_PARAMETERS;
+            }
+
+            wheres.brand = brand;
+            wheres.startDate = startDate;
+            wheres.endDate = endDate;
+
+            if(report.toLowerCase() === 'player') {
+                if(!currency) {
+                    return CODE_MISSING_PARAMETERS
+                }
+
+                wheres.currency = currency;
+            }
 
             const model = db[report.toLowerCase()][vendor.toLowerCase()];
-            const results = await model.getDatatable({ brand, startDate, endDate });
+            const results = await model.getDatatable(wheres);
 
             if(_.isEmpty(results)) {
                 return CODE_NO_RESULTS;
@@ -21,8 +38,9 @@ class Vendor {
 
             const columns = model.getDatatableColumns();
             const compares = model.getOnDuplicateValues();
+            const join = model.getDataIndexes();
 
-            const table = new datatable(results, columns, compares);
+            const table = new datatable(results, columns, compares, join);
 
             return { header: model.getDatatableHeader(), data: table.generateDatatable() } ;
 
@@ -35,13 +53,12 @@ class Vendor {
 
 exports.getDataTable = async(req, res) => {
     const controller = new Vendor();
-    const { brand, vendor, report, startDate } = req.body;
-
-    if(!brand || !vendor || !report || !startDate) {
-        return res.status(400).json({ code: CODE_MISSING_PARAMETERS, message: 'Missing Parameter(s)' });
-    }
 
     const results = await controller.getDataTable(req.body);
+
+    if (results === CODE_MISSING_PARAMETERS) {
+        return res.status(400).json({ code: CODE_MISSING_PARAMETERS, message: 'Missing Parameter(s)' });
+    }
 
     if (results === CODE_NO_RESULTS) {
         return res.status(404).json({ code: CODE_NO_RESULTS, message: 'No results' });

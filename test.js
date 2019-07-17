@@ -924,15 +924,19 @@ test12 = async() => {
     const datatable = require('./app/services/datatable');
     const brand = 'RB88';
     const vendor = 'pt';
-    const report = 'summary';
+    const report = 'player';
     const model = db[report.toLowerCase()][vendor.toLowerCase()];
-    const results = await model.getDatatable({ brand, startDate: '2019-06-01', endDate: '2019-06-02' });
+    const results = await model.getDatatable({ brand, startDate: '2019-06-01', endDate: '2019-06-01', currency: 'cny'});
     const columns = model.getDatatableColumns();
     const compares = model.getOnDuplicateValues();
-    
-    const table = new datatable(results, columns, compares);
+    const join = model.getDataIndexes();
 
+    const table = new datatable(results, columns, compares, join);
+
+    //console.log(columns);
+    //console.log(compares);
     console.log(table.generateDatatable());
+    //console.log(results);
 
 }
 

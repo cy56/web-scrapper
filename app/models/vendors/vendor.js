@@ -17,20 +17,23 @@ class Vendor extends Sequelize.Model {
 
     static async getDatatable(params = {}) {
         try {
-            let { brand, startDate, endDate } = params.body || params;
-
-            if(!brand || !startDate) {
-                throw 'missing parameters';
-            }
+            let { brand, startDate, endDate, currency } = params.body || params;
+            let wheres = {};
 
             if(!endDate) {
                 endDate = startDate;
             }
 
-            const wheres = {
-                brand, date: {
-                    [this.Datatypes.Op.between]: Resolver.resolveDates(startDate, endDate)
-                }
+            if (brand) {
+                wheres.brand = brand;
+            }
+
+            if (currency) {
+                wheres.currency = currency;
+            }
+
+            wheres.date = {
+                [this.Datatypes.Op.between]: Resolver.resolveDates(startDate, endDate)
             }
             
             return await this.findAll({ attributes: this.getModelDefaultAttributes(), where: wheres, raw: true });

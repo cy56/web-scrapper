@@ -4,7 +4,7 @@ const currency = require('./currency');
 
 class DataTable
 {
-    constructor(data, columns, compares, group = 'source', join = ['date', 'currency']) {
+    constructor(data, columns, compares, join, group = 'source') {
         this.df = new DataFrame(data);
         this.columns = columns;
         this.compares = compares;
@@ -19,7 +19,7 @@ class DataTable
         }
 
         const grouped = this.getSeparatedGroup();
-        
+
         if(grouped.indexes.length !== 2) {
             return false;
         }
@@ -64,7 +64,7 @@ class DataTable
         let item = null;
 
         for (let column of this.getSelectedColumns()) {
-            if (column === 'currency' || column === 'date') {
+            if (column === 'currency' || column === 'date' || column === 'username') {
                 item = column;
             } else {
                 item = `${index}_${column}`;
@@ -79,12 +79,13 @@ class DataTable
     getDiffGroup(groups, indexes) {
         const key = 'diff';
         let diffGroup = groups[indexes[0]].join(groups[indexes[1]], this.join, 'full');
+
         for(let column of this.compares) {
             diffGroup = diffGroup.withColumn(
                 `${key}_${column}`, (row) => currency.convert(row.get(`${indexes[0]}_${column}`) - row.get(`${indexes[1]}_${column}`), 4)
             )
         }
-
+        
         return { data: diffGroup.toCollection(), column: diffGroup.listColumns() };
     }
 }

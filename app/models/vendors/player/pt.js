@@ -64,26 +64,37 @@ class PT extends Model {
         ];
     }
 
-    static getDatatableFilter() {
-        return ['source', 'currency', 'date'];
+    static getDatatableColumns() {
+        return ['source', 'currency', 'date', 'username', 'bets', 'turnover', 'total_win', 'game_income_share', 'jp_wins'];
     }
 
     static getDatatableHeader() {
         return [
-            { text: 'Source', value: 'source' },
-            { text: 'Date', value: 'date' },
-            { text: 'Currency', value: 'currency' },
-            { text: 'No of Players', value: 'players' },
-            { text: 'No of Bets', value: 'bets' },
-            { text: 'Turnover', value: 'turnover' },
-            { text: 'Total Win', value: 'total_win' },
-            { text: 'Game Income Share', value: 'game_income_share' },
-            { text: 'Jackpot Wins', value: 'jp_wins' }
+            { text: 'Currency', value: 'currency', sortable: true, align: 'left', width: "1%" },
+            { text: 'Date', value: 'date', sortable: true, align: 'left', width: "1%" },
+            { text: 'Username', value: 'username', align: 'left', sortable: true, width: "1%" },
+            { text: '(vendor) Bets ', value: 'vendor_bets', align: 'left', sortable: false, width: "1%" },
+            { text: '(vendor) Turnover', value: 'vendor_turnover', align: 'left', sortable: false, width: "1%" },
+            { text: '(vendor) Total Win', value: 'vendor_total_win', align: 'left', sortable: false, width: "1%" },
+            { text: '(vendor) Game Income Share', value: 'vendor_game_income_share', align: 'left', sortable: false, width: "1%" },
+            { text: '(vendor) Jackpot Wins', value: 'vendor_jp_wins', align: 'left', sortable: false, width: "1%" },
+            { text: '(hydra) Players', value: 'hydra_players', align: 'left', sortable: false, width: "1%" },
+            { text: '(hydra) Bets', value: 'hydra_bets', align: 'left', sortable: false, width: "1%" },
+            { text: '(hydra) Turnover', value: 'hydra_turnover', align: 'left', sortable: false, width: "1%" },
+            { text: '(hydra) Total Win', value: 'hydra_total_win', align: 'left', sortable: false, width: "1%" },
+            { text: '(hydra) Game Income Share', value: 'hydra_game_income_share', align: 'left', sortable: false, width: "1%" },
+            { text: '(hydra) Jackpot Wins', value: 'hydra_jp_wins', align: 'left', sortable: false, width: "1%" },
+            { text: '(Diff) Players', value: 'diff_players', align: 'left', sortable: true, width: "1%" },
+            { text: '(Diff) Bets', value: 'diff_bets', align: 'left', sortable: true, width: "1%" },
+            { text: '(Diff) Turnover', value: 'diff_turnover', align: 'left', sortable: true, width: "1%" },
+            { text: '(Diff) Total Win', value: 'diff_total_win', align: 'left', sortable: true, width: "1%" },
+            { text: '(Diff) Game Income Share', value: 'diff_game_income_share', align: 'left', sortable: true, width: "1%" },
+            { text: '(Diff) Jackpot Wins', value: 'diff_jp_wins', align: 'left', sortable: true, width: "1%" }
         ];
     }
 
     static getDataIndexes() {
-        return ['currency', 'username'];
+        return ['currency', 'date', 'username'];
     }
 
     static getVendorParserColumns() {
