@@ -68,26 +68,26 @@ class PT extends Model {
 
     static getDatatableHeader() {
         return [
-            { text: 'Currency', value: 'currency', sortable: true },
-            { text: 'Date', value: 'date', sortable: true },
-            { text: '(vendor) Players', value: 'vendor_players', align: 'start', sortable: false },
-            { text: '(vendor) Bets ', value: 'vendor_bets', align: 'start', sortable: false },
-            { text: '(vendor) Turnover', value: 'vendor_turnover', align: 'start', sortable: false },
-            { text: '(vendor) Total Win', value: 'vendor_total_win', align: 'start', sortable: false },
-            { text: '(vendor) Game Income Share', value: 'vendor_game_income_share', align: 'start', sortable: false },
-            { text: '(vendor) Jackpot Wins', value: 'vendor_jp_wins', align: 'start', sortable: false },
-            { text: '(hydra) Players', value: 'hydra_players', align: 'start', sortable: false },
-            { text: '(hydra) Bets', value: 'hydra_bets', align: 'start', sortable: false },
-            { text: '(hydra) Turnover', value: 'hydra_turnover', align: 'start', sortable: false },
-            { text: '(hydra) Total Win', value: 'hydra_total_win', align: 'start', sortable: false },
-            { text: '(hydra) Game Income Share', value: 'hydra_game_income_share', align: 'start', sortable: false },
-            { text: '(hydra) Jackpot Wins', value: 'hydra_jp_wins', align: 'start', sortable: false },
-            { text: '(Diff) Players', value: 'diff_players', align: 'start', sortable: true },
-            { text: '(Diff) Bets', value: 'diff_bets', align: 'start', sortable: true },
-            { text: '(Diff) Turnover', value: 'diff_turnover', align: 'start', sortable: true },
-            { text: '(Diff) Total Win', value: 'diff_total_win', align: 'start', sortable: true },
-            { text: '(Diff) Game Income Share', value: 'diff_game_income_share', align: 'start', sortable: true },
-            { text: '(Diff) Jackpot Wins', value: 'diff_jp_wins', align: 'start', sortable: true }  
+            { text: 'Currency', value: 'currency', sortable: true, align: 'left', width: "1%" },
+            { text: 'Date', value: 'date', sortable: true, align: 'left', width: "1%" },
+            { text: '(vendor) Players', value: 'vendor_players', align: 'left', sortable: false, width: "1%" },
+            { text: '(vendor) Bets ', value: 'vendor_bets', align: 'left', sortable: false, width: "1%" },
+            { text: '(vendor) Turnover', value: 'vendor_turnover', align: 'left', sortable: false, width: "1%" },
+            { text: '(vendor) Total Win', value: 'vendor_total_win', align: 'left', sortable: false, width: "1%" },
+            { text: '(vendor) Game Income Share', value: 'vendor_game_income_share', align: 'left', sortable: false, width: "1%" },
+            { text: '(vendor) Jackpot Wins', value: 'vendor_jp_wins', align: 'left', sortable: false, width: "1%" },
+            { text: '(hydra) Players', value: 'hydra_players', align: 'left', sortable: false, width: "1%" },
+            { text: '(hydra) Bets', value: 'hydra_bets', align: 'left', sortable: false, width: "1%" },
+            { text: '(hydra) Turnover', value: 'hydra_turnover', align: 'left', sortable: false, width: "1%" },
+            { text: '(hydra) Total Win', value: 'hydra_total_win', align: 'left', sortable: false, width: "1%" },
+            { text: '(hydra) Game Income Share', value: 'hydra_game_income_share', align: 'left', sortable: false, width: "1%" },
+            { text: '(hydra) Jackpot Wins', value: 'hydra_jp_wins', align: 'left', sortable: false, width: "1%" },
+            { text: '(Diff) Players', value: 'diff_players', align: 'left', sortable: true, width: "1%" },
+            { text: '(Diff) Bets', value: 'diff_bets', align: 'left', sortable: true, width: "1%" },
+            { text: '(Diff) Turnover', value: 'diff_turnover', align: 'left', sortable: true, width: "1%" },
+            { text: '(Diff) Total Win', value: 'diff_total_win', align: 'left', sortable: true, width: "1%" },
+            { text: '(Diff) Game Income Share', value: 'diff_game_income_share', align: 'left', sortable: true, width: "1%" },
+            { text: '(Diff) Jackpot Wins', value: 'diff_jp_wins', align: 'left', sortable: true, width: "1%" }  
         ];
     }
 
