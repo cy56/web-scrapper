@@ -940,4 +940,35 @@ test12 = async() => {
 
 }
 
-test12();
+test13 = async() => {
+    const _ = require('lodash');
+
+    const run = (callback) => {
+        console.log('Resolving captcha...');
+        setTimeout(() => {
+            let captcha = '1235';
+            callback(captcha);
+            console.log('Resolved Done...');
+        }, 3000);
+    }
+
+    const resolveCaptcha = (captcha) => {
+        if (captcha === '1234') {
+            return resolvedDone();
+        }
+
+        return resolvedFailed();
+    }
+
+    const resolvedDone = () => {
+        console.log('captcha is correct');
+    }
+
+    const resolvedFailed = () => {
+        console.log('captcha is wrong');
+    }
+
+    run(resolveCaptcha);
+}
+
+test13();
