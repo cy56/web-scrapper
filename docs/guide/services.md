@@ -6,7 +6,7 @@ sidebarDepth: 2
 ## Data Frame JS
 ### Install
 ```
-npm install --save dataframe-js
+$ npm install --save dataframe-js
 ```
 ### Documentation
 [Official Documentation](https://gmousse.gitbooks.io/dataframe-js/#dataframe-js)
@@ -14,7 +14,7 @@ npm install --save dataframe-js
 ## ADM Zip
 ### Install
 ```
-npm install --save adm-zip
+$ npm install --save adm-zip
 ```
 ### Documentation
 [Official Documentation](https://www.npmjs.com/package/adm-zip)
@@ -22,7 +22,7 @@ npm install --save adm-zip
 ## Papaparse
 ### Install
 ```
-npm install --save papaparse
+$ npm install --save papaparse
 ```
 ### Documentation
 [Official Documentation](https://www.papaparse.com/docs)
@@ -30,7 +30,7 @@ npm install --save papaparse
 ## Lodash
 ### Install
 ```
-npm install --save lodash
+$ npm install --save lodash
 ```
 ### Documentation
 [Offical Documentation](https://lodash.com/docs/4.17.14)
@@ -38,8 +38,8 @@ npm install --save lodash
 ## Sequelize
 ### Install
 ```
-npm install --save sequelize
-npm install --save mysql2
+$ npm install --save sequelize
+$ npm install --save mysql2
 ```
 
 ### Documentation

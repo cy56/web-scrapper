@@ -21,7 +21,7 @@ Please click the link to get the application [Visual Studio Code](https://code.v
 ### Download
 Please click the link to get the application [node js](https://nodejs.org/en/download/)
 ### About More
-[Learn Node JS](/get-started/learn)
+[Learn Node JS](/get-started/before-start.html#node-js)
 
 ## MySQL
 ### Download

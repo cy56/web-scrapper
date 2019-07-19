@@ -5,11 +5,16 @@ title: Kick Start
 ## Install
 Please download the project file
 ```
+// before start please check git, node, npm is it exists
+$ git --version
+$ node --version
+$ npm --version
+
 // clone the project
-git clone https://github.com/cy56/web-scrapper.git .
+$ git clone https://github.com/cy56/web-scrapper.git .
 
 // install dependencies
-npm install
+$ npm install
 ```
 
 ## Folder Structure
