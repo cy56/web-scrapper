@@ -61,7 +61,7 @@ exports.getDataTable = async(req, res) => {
     }
 
     if (results === CODE_NO_RESULTS) {
-        return res.status(404).json({ code: CODE_NO_RESULTS, message: 'No results' });
+        return res.status(200).json({ code: CODE_NO_RESULTS, message: 'No results' });
     }
 
     if (results === CODE_SYSTEM_ERROR) {
