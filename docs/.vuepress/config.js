@@ -10,7 +10,7 @@ module.exports = {
             { text: 'Guide', link: '/guide/api-reference' },
             { text: 'Get Started', link: '/get-started/installation' },
             // external link
-            { text: 'Github', link: 'https://github.com/cy56' },
+            { text: 'Github', link: 'https://github.com/cy56' }
         ],
         sidebar: [
             // These links will appear in the sidebar
@@ -21,7 +21,8 @@ module.exports = {
                 children: [
                     // These are pages we'll add later
                     '/get-started/installation',
-                    '/get-started/learn',
+                    '/get-started/before-start',
+                    '/get-started/kick-start'
                 ]
             },
             {
