@@ -1,57 +1,31 @@
-// Auths
-const PARTNER = 'RB88';
-const USERNAME = 'data01';
-const PASSWORD = 'aaaa1111';
-
-// Pages
-const LOGIN_PAGE = 'http://bo.flashtechsolution.net/';
-const TARGET_PAGE = 'http://bo.flashtechsolution.net/Admin/Report/LicenseeWinLose.aspx';
-const MAIN_PAGE = 'http://bo.flashtechsolution.net/index.aspx';
-const LOGOUT_PAGE = 'http://bo.flashtechsolution.net/main/logout.ashx';
-
-// Elements
-const PARTNER_SELECTOR = '#partnerCode';
-const USERNAME_SELECTOR = '#userName';
-const PASSWORD_SELECTOR = '#password';
-const LOGIN_SELECTOR = '#btn-login';
-const LOGOUT_SELECTOR = 'body > header > div.userinfo > span.logout > a';
-const CURRENCY_SELECTOR = '#currency';
-const DATE_FROM_SELECTOR = '#date-from';
-const DATE_TO_SELECTOR = '#date-to';
-const SUBMIT_SELECTOR = '#btn-submit';
-
-//Selectors for save
-const SOURCE_DAILY_GRAY = '.bg-gray';
-const SOURCE_DAILY_LIGHT = '.bg-gray-light';
-
 const AUTHS = {
-    partner: PARTNER,
-    username: USERNAME,
-    password: PASSWORD
+    partner: 'RB88',
+    username: 'data01',
+    password: 'aaaa1111'
 }
 
 const PAGES = {
-    login: LOGIN_PAGE,
-    target: TARGET_PAGE,
-    main: MAIN_PAGE,
-    logout: LOGOUT_PAGE
+    login: 'http://bo.flashtechsolution.net/',
+    target: 'http://bo.flashtechsolution.net/Admin/Report/LicenseeWinLose.aspx',
+    main: 'http://bo.flashtechsolution.net/index.aspx',
+    logout: 'http://bo.flashtechsolution.net/main/logout.ashx'
 };
 
 const SELECTORS = {
-    partner: PARTNER_SELECTOR,
-    username: USERNAME_SELECTOR,
-    password: PASSWORD_SELECTOR,
-    login: LOGIN_SELECTOR,
-    logout: LOGOUT_SELECTOR,
-    currency: CURRENCY_SELECTOR,
-    dateFrom: DATE_FROM_SELECTOR,
-    dateTo: DATE_TO_SELECTOR,
-    submit: SUBMIT_SELECTOR
+    partner: '#partnerCode',
+    username: '#userName',
+    password: '#password',
+    login: '#btn-login',
+    logout: 'body > header > div.userinfo > span.logout > a',
+    currency: '#currency',
+    dateFrom: '#date-from',
+    dateTo: '#date-to',
+    submit: '#btn-submit'
 };
 
 const SOURCES = {
-    tableGray: SOURCE_DAILY_GRAY,
-    tableLight: SOURCE_DAILY_LIGHT
+    tableGray: '.bg-gray',
+    tableLight: '.bg-gray-light'
 };
 
 module.exports = {
