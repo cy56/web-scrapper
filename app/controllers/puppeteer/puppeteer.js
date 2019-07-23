@@ -1,20 +1,21 @@
-const puppeteer = require('puppeteer');
-const db = require('../../services/database');
-const dbc = require('../../services/dbc');
-const mailer = require('../../services/mailer');
-const resolver = require('../../services/resolver');
+const puppeteer = require('puppeteer')
+const db = require('../../services/database')
+const dbc = require('../../services/dbc')
+const mailer = require('../../services/mailer')
+const resolver = require('../../services/resolver')
 
 class PuppeteerClient {
     constructor(options = {}) {
         // Setup Puppeteer
-        this.headless = options.headless;
-        this.args = options.args || ['--window-size=1920,1080'];
-        this.slowMo = this.headless === false ? 100 : 500;
+        this.headless = options.headless
+        this.args = options.args || ['--window-size=1920,1080']
+        this.slowMo = this.headless === false ? 100 : 500
 
         // Setup Services
-        this._dbc = new dbc();
-        this._mailer = new mailer();
-        this._resolver = resolver;
+        this._dbc = new dbc()
+        this._mailer = new mailer()
+        this._resolver = resolver
+        this._db = db
 
         // Setup Properties
         this.browser = null;
@@ -93,6 +94,34 @@ class PuppeteerClient {
             const result = this._dbc.report(captcha);
             resolve(result);
         });
+    }
+
+    async download(button) {
+        const path = require('path');
+        const util = require('util');
+        const fs = require('fs');
+        const downloadPath = path.join(__dirname, `./app/storages/downloads`);
+
+        await this.page._client.send('Page.setDownloadBehavior', {
+            behavior: 'allow',
+            downloadPath: downloadPath
+        });
+
+        await this.page.click(button);
+
+        let filename;
+
+        while (!filename || filename.endsWith('.crdownload')) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+            [filename] = await util.promisify(fs.readdir)(downloadPath);
+        }
+
+        const filepath = path.resolve(downloadPath, filename);
+        const extension = path.extname(filename);
+
+        const file = { filename, filepath, extension };
+
+        return file;
     }
 
     async takeScreenshot(date) {
