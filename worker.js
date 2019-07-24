@@ -18,11 +18,9 @@ class Worker {
     }
 }
 
-async function work(jobs = [], options = { start: null, end: null, brand:null }) {
+module.exports = async function work(jobs = [], options = { start: null, end: null, brand:null }) {
     jobs.forEach(async (job) => {
         const worker = new Worker({ vendor: job, start: options.start, end: options.end, brand: options.brand });
         await worker.work();
     });
 }
-
-work(['pt'], {start:'2019-05-01', end:'2019-05-01', brand:'rb88'});
