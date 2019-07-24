@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer')
+const url = require('url')
 const db = require('../../services/database')
 const dbc = require('../../services/dbc')
 const mailer = require('../../services/mailer')
@@ -16,6 +17,7 @@ class PuppeteerClient {
         this._mailer = new mailer()
         this._resolver = resolver
         this._db = db
+        this._url = url
 
         // Setup Properties
         this.browser = null;
@@ -29,69 +31,69 @@ class PuppeteerClient {
     async init() {
         try {
             this.browser = await this.getBrowser();
-            this.page = await this.getPage();
+            this.page = await this.getPage()
         } catch (err) {
-            this.reportError('init', err);
+            this.reportError('init', err)
         }
     }
 
     async login() {
         try {
-            await this.loginProcess();
+            await this.loginProcess()
         } catch (err) {
-            this.reportError('login', err);
+            this.reportError('login', err)
         }
     }
 
     async gotoReport() {
         try {
-            await this.delaySeconds(10);
-            await this.gotoReportProcess();
+            await this.delaySeconds(10)
+            await this.gotoReportProcess()
         } catch (err) {
-            this.reportError('gotoReport', err);
+            this.reportError('gotoReport', err)
         }
     }
 
     async logout() {
         try {
-            await this.delaySeconds(5);
-            await this.logoutProcess();
-            await this.close();
+            await this.delaySeconds(5)
+            await this.logoutProcess()
+            await this.close()
         } catch (err) {
-            this.reportError('logout', err);
+            this.reportError('logout', err)
         }
     }
 
     async close() {
-        await this.delaySeconds(5);
-        await this.browser.close();
+        await this.delaySeconds(5)
+        await this.browser.close()
     }
 
     async reportError(func, err) {
-        let errMsg = `${func}: ${err.message}`;
-        console.error(errMsg);
+        let errMsg = `${func}: ${err.message}`
+        console.error(errMsg)
         if (func === 'login') {
-            await this.endProcess();
+            await this.endProcess()
         } else {
-            await this.logout();
-            await this.endProcess();
+            await this.logout()
+            await this.endProcess()
         }
     }
 
     async resolveCaptcha(b64Captcha, timeout = 60, type = null) {
         return new Promise((resolve, reject) => {
-            const result = this._dbc.decode({ captcha: b64Captcha, timeout: timeout });
+            const result = this._dbc.decode({ captcha: b64Captcha, timeout: timeout })
             if (!result) {
-                reject(result);
+                reject(result)
             } else {
-                resolve(result);
+                resolve(result)
             }
         });
     }
 
     async reportCaptcha(captcha) {
         return new Promise((resolve, reject) => {
-            const result = this._dbc.report(captcha);
+            const result = this._dbc.report(captcha)
             resolve(result);
         });
     }
@@ -125,10 +127,10 @@ class PuppeteerClient {
     }
 
     async takeScreenshot(date) {
-        const directory = `./app/storages/images/${this.toString()}/`;
-        const screenshot = this._resolver.resolvePath(directory, 'png', { date });
-        await this.page.screenshot({ file: screenshot.filepath, fullPage: true });
-        return screenshot.filename;
+        const directory = `./app/storages/images/${this.toString()}/`
+        const screenshot = this._resolver.resolvePath(directory, 'png', { date })
+        await this.page.screenshot({ file: screenshot.filepath, fullPage: true })
+        return screenshot.filename
     }
 
     getBrowser() {
@@ -142,39 +144,39 @@ class PuppeteerClient {
     }
 
     getPage() {
-        return this.browser.newPage();
+        return this.browser.newPage()
     }
 
     async delaySeconds(seconds = 5) {
-        await this.page.waitFor(seconds*1000);
+        await this.page.waitFor(seconds*1000)
     }
 
     resolveDateTime(start, end) {
-        return this._resolver.resolveVendorDates({ vendor: this.toString(), start, end });
+        return this._resolver.resolveVendorDates({ vendor: this.toString(), start, end })
     }
 
     async reloadPage() {
         await this.page.evaluate(() => {
-            location.reload(true);
+            location.reload(true)
         });
-        await this.delaySeconds(5);
+        await this.delaySeconds(5)
     }
 
     clearItems() {
-        this.resolved.length = 0;
-        this.unresolved.length = 0;
+        this.resolved.length = 0
+        this.unresolved.length = 0
     }
 
     endProcess() {
-        process.exit(1);
+        process.exit(1)
     }
 
     setFirstToFalse() {
-        this.first = false;
+        this.first = false
     }
 
     toString() {
-        return this.constructor.name;
+        return this.constructor.name
     }
 }
 

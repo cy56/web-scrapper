@@ -15,9 +15,9 @@ const SELECTORS = {
     password: '#txtPassword',
     brand: '#DdlBrands',
     login: 'input[name="btnLogin"]',
-    start: '#ctl00_content_txtDateFrom',
-    end: '#ctl00_content_txtDateTo',
-    export: '#ctl00_content_btnExportCSV'
+    start: 'input[name="ctl00$content$txtDateFrom"]',
+    end: 'input[name="ctl00$content$txtDateTo"]',
+    exportReport: 'input[name="ctl00$content$btnExportCSV"]'
 }
 
 module.exports = {
