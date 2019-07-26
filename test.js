@@ -128,8 +128,8 @@ test15 = async() => {
 
 test16 = async() => {
     const storage = require('./app/services/storage')
-
-    let filepath = 'downloads'
+    let key = 'PT'
+    let filepath = `images/${key}/`
     let filename = 'test.txt'
 
     const file = await storage.touch({ filepath, ext:'txt', content: 'hello world' })
@@ -137,4 +137,4 @@ test16 = async() => {
     console.log(file)
 }
 
-test10();
+test16();

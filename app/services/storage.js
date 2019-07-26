@@ -20,7 +20,7 @@ class Storage {
             return filepath
         }
 
-        await fsMkDir(filepath)
+        await fsMkDir(filepath, { recursive: true })
 
         return filepath
     }
