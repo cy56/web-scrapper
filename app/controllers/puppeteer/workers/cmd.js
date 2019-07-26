@@ -1,7 +1,6 @@
-const PuppeteerClient = require('../base');
+const PuppeteerClient = require('./app/controllers/puppeteer/puppeteer');
 
-class CMD extends PuppeteerClient
-{
+class CMD extends PuppeteerClient {
     constructor(options = {}, brand) {
         super(options);
         this.brand = brand;
@@ -10,49 +9,65 @@ class CMD extends PuppeteerClient
     async loginProcess() {
         await this.page.goto(this.vendor.pages.login);
         await this.page.waitFor(this.vendor.selectors.login, { visible: true });
-        await this.page.type(this.vendor.selectors.partner, this.creds.partner);
-        await this.page.type(this.vendor.selectors.username, this.creds.username);
-        await this.page.type(this.vendor.selectors.password, this.creds.password);
+        await this.page.type(this.vendor.selectors.partner, this.creds.partner, { delay: 100 });
+        await this.page.type(this.vendor.selectors.username, this.creds.username, { delay: 100 });
+        await this.page.type(this.vendor.selectors.password, this.creds.password, { delay: 100 });
         await this.page.click(this.vendor.selectors.login);
     }
 
     async gotoReportProcess() {
-        await this.page.goto(this.vendor.pages.target);
+        await this.page.goto(this.vendor.pages.target, { waitUntil: 'load' });
     }
 
-    async filterConditionsProcess(start, end) {
-        const fitlers = {
-            start: this.vendor.selectors.dateFrom,
-            end: this.vendor.selectors.dateTo
-        };
-        await this.page.waitFor(this.vendor.selectors.dateFrom, { visible: true });
-        await this.page.evaluate((fitlers) => {
-            let from = document.querySelector(fitlers.end);
-            let to = document.querySelector(fitlers.start);
-            from.removeAttribute('readonly');
-            to.removeAttribute('readonly');
-            from.value = '';
-            to.value = '';
-        }, fitlers);
-        await this.page.type(this.vendor.selectors.dateFrom, start);
-        await this.page.type(this.vendor.selectors.dateTo, end);
-        await this.page.click(this.vendor.selectors.submit);
+    async scrap(start, end) {
+        await this.scrapForSummary(start, end)
+        await this.scrapForPlayer(start)
     }
 
-    async extractHtmlTableProcess() {
-        const sources = this.vendor.sources;
-        return await this.page.evaluate((sources) => {
-            let items = [];
-            let grayItems = document.querySelectorAll(sources.tableGray);
-            let lightItems = document.querySelectorAll(sources.tableLight);
-            grayItems.forEach((item) => {
-                items.push(item.outerText.split('\t'));
-            });
-            lightItems.forEach((item) => {
-                items.push(item.outerText.split('\t'));
-            });
-            return items;
-        }, sources);
+    async scrapForSummary(start, end) {
+        await this.filter(start, end)
+        let file = await this.download(this.vendor.selectors.exportReport)
+        let data = await this._resolver.resolveFile(file)
+        await this.resolveForSummary(start, data)
+    }
+
+    async scrapForPlayer(date) {
+        const liSelector = this.vendor.selectors.drillDownList
+        let lists = await this.page.evaluate((liSelector) => {
+            let items = []
+            const liLists = document.querySelectorAll(liSelector)
+
+            for (let liList of liLists) {
+                items.push(liList.getAttribute('href'))
+            }
+
+            return items
+
+        }, liSelector)
+    }
+
+    async resolveForSummary(date, data) {
+        const report = 'summary'
+        const source = this.source
+        const vendor = this.platform
+        const brand = this.brand.toUpperCase() || 'RB88'
+        const currency = this.currency || null
+        const model = this.db[report.toLowerCase()][vendor.toLowerCase()]
+        let results = await this._resolver.resolveParser({ source, brand, vendor, date, currency, report }, data)
+        await model.createMany(results)
+        return true
+    }
+
+    async resolveForPlayer(date, data) {
+        const report = 'player'
+        const source = this.source
+        const vendor = this.platform
+        const brand = this.brand.toUpperCase() || 'RB88'
+        const currency = this.currency || null
+        const model = this.db[report.toLowerCase()][vendor.toLowerCase()]
+        let results = await this._resolver.resolveParser({ source, brand, vendor, date, currency, report }, data)
+        await model.createMany(results)
+        return true
     }
 
     async logoutProcess() {
@@ -70,10 +85,7 @@ module.exports = async (start, end, brand) => {
         for (let i = 0; i < dateResolver.length; i++) {
             let start = dateResolver[i].start;
             let end = dateResolver[i].end;
-            await worker.filterConditions(start, end);
-            await worker.extractHtmlTable();
-            await worker.resolveSource(start);
-            await worker.insertIntoDB();
+            await worker.scrap(start, end)
         }
         await worker.logout();
     } catch (err) {

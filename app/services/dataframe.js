@@ -1,33 +1,40 @@
-const library = require('dataframe-js').DataFrame;
+const library = require('dataframe-js').DataFrame
+const _ = require('lodash')
 
 class DataFrame
 {
-    static diff(data, compares, indexes = ['currency', 'date'], group = 'source') {
-        let results = {};
-        const df = new library(data);
-        const grouped = df.groupBy(group).toCollection();
-        const data1 = grouped[0].group;
-        const data2 = grouped[1].group;
-        let differences = data1.diff(data2, compares);
-        let datadiff = differences.toCollection();
-
-        datadiff.forEach((item) => {
-            let filter = {};
-            indexes.forEach((i) => {
-                filter[i] = item[i];
-            });
-            let index = Object.values(filter).join('@');
-            let dataframe = df.where(filter);
-            results[index] = dataframe.toCollection();
-        });
-
-        return results;
+    constructor(data) {
+        this.data = (_.isEmpty(data)) ? null : library(data)
     }
 
-    static where(data, wheres = {}) {
-        const df = new library(data);
+    where(wheres = null) {
+        if (_.isNull(wheres)) {
+            return this
+        }
 
-        return df.where(wheres).toCollection();
+        this.data = this.data.where(wheres)
+
+        return this
+    }
+
+    renameHeader(headers, replacement = null) {
+        if (_.isEmpty(headers)) {
+            return this
+        }
+
+        if(_.isArray(headers)) {
+            this.data = this.data.renameAll(headers)
+        }
+
+        if(_.isString(headers)) {
+            this.data = this.data.rename(replacement, headers)
+        }
+
+        return this
+    }
+
+    toCollection() {
+        return this.data.toCollection()
     }
 }
 

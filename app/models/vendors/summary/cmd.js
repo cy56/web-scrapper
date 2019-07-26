@@ -4,6 +4,7 @@ class CMD extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
+        this.table = 'summary_cmd';
         return super.setup();
     }
 

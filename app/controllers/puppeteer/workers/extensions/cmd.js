@@ -20,7 +20,10 @@ const SELECTORS = {
     currency: '#currency',
     dateFrom: '#date-from',
     dateTo: '#date-to',
-    submit: '#btn-submit'
+    submit: '#btn-submit',
+    exportReport: '#export-menu > ul > li:nth-child(1)',
+    downloadButton: '#export-menu > button',
+    drillDownList: 'a[data-type="winlose"]'
 };
 
 const SOURCES = {

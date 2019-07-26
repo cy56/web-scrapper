@@ -4,7 +4,7 @@ class PT extends Model {
     static initial(sequelize, Datatypes) {
         this.sequelize = sequelize;
         this.Datatypes = Datatypes;
-        this.table = 'PT_Summary';
+        this.table = 'summary_pt';
         return super.setup();
     }
 

@@ -1,5 +1,7 @@
 const puppeteer = require('puppeteer')
 const url = require('url')
+const jsdom = require("jsdom")
+const jquery = require('jquery')
 const db = require('../../services/database')
 const dbc = require('../../services/dbc')
 const mailer = require('../../services/mailer')
@@ -18,6 +20,9 @@ class PuppeteerClient {
         this._resolver = resolver
         this._db = db
         this._url = url
+        this._window = null
+        this._document = null
+        this._$ = null
 
         // Setup Properties
         this.browser = null;
@@ -99,31 +104,40 @@ class PuppeteerClient {
     }
 
     async download(button) {
-        const path = require('path');
-        const util = require('util');
-        const fs = require('fs');
-        const downloadPath = path.join(__dirname, `./app/storages/downloads`);
+        const path = require('path')
+        const util = require('util')
+        const fs = require('fs')
+        const _ = require('lodash')
 
-        await this.page._client.send('Page.setDownloadBehavior', {
+        const downloadPath = path.join(__dirname, `./app/storages/downloads`)
+
+
+        await page._client.send('Page.setDownloadBehavior', {
             behavior: 'allow',
             downloadPath: downloadPath
-        });
+        })
 
-        await this.page.click(button);
+        if (_.isArray(buttons)) {
+            for (let button of buttons) {
+                await page.click(button)
+            }
+        } else {
+            await page.click(buttons)
+        }
 
-        let filename;
+        let filename
 
         while (!filename || filename.endsWith('.crdownload')) {
             await new Promise(resolve => setTimeout(resolve, 100));
-            [filename] = await util.promisify(fs.readdir)(downloadPath);
+            [filename] = await util.promisify(fs.readdir)(downloadPath)
         }
 
-        const filepath = path.resolve(downloadPath, filename);
-        const extension = path.extname(filename);
+        const filepath = path.resolve(downloadPath, filename)
+        const extension = path.extname(filename)
 
-        const file = { filename, filepath, extension };
+        const file = { filename, filepath, extension }
 
-        return file;
+        return file
     }
 
     async takeScreenshot(date) {
@@ -160,6 +174,14 @@ class PuppeteerClient {
             location.reload(true)
         });
         await this.delaySeconds(5)
+    }
+
+    getHtmlDocument(html) {
+        const { JSDOM } = jsdom
+        const dom = new JSDOM(html)
+        this._window = dom.window
+        this._document = dom.window.document
+        this._$ = jquery(window)
     }
 
     clearItems() {

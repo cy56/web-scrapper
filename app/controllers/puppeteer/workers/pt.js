@@ -18,7 +18,7 @@ class PT extends PuppeteerClient {
     }
 
     async gotoReportProcess() {
-        await this.page.goto(this.vendor.pages.report[this.currency])
+        await this.page.goto(this.vendor.pages.report[this.currency], { waitUntil: 'load' })
     }
 
     async scrap(start, end) {
