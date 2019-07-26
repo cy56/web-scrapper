@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const Resolver = require('../../services/resolver');
+const _date = require('../../services/date');
 
 class Vendor extends Sequelize.Model {
     static setup() {
@@ -33,7 +33,7 @@ class Vendor extends Sequelize.Model {
             }
 
             wheres.date = {
-                [this.Datatypes.Op.between]: Resolver.resolveDates(startDate, endDate)
+                [this.Datatypes.Op.between]: _date.resolveDates(startDate, endDate)
             }
             
             return await this.findAll({ attributes: this.getModelDefaultAttributes(), where: wheres, raw: true });

@@ -95,23 +95,23 @@ class PT extends Model {
         return ['currency', 'date'];
     }
 
-    static getVendorParserColumns() {
+    static getVendorMapperColumns() {
         return [, 'players', 'bets', 'turnover', , , , 'total_win', 'game_income_share', , , , , , , , 'jp_wins'];
     }
 
-    static getVendorParserSkipLines() {
+    static getVendorMapperSkipLines() {
         return [0];
     }
 
-    static getHydraParserColumns() {
+    static getHydraMapperColumns() {
         return [, 'currency', 'players', 'bets', , 'turnover', 'total_win', 'game_income_share', , , , 'jp_wins'];
     }
 
-    static getHydraParserSkipLines() {
+    static getHydraMapperSkipLines() {
         return [0, 2, 4];
     }
 
-    static getParserCast() {
+    static getMapperCast() {
         return [
             { 'players': Number },
             { 'bets': 0 },

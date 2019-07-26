@@ -5,7 +5,9 @@ const jquery = require('jquery')
 const db = require('../../services/database')
 const dbc = require('../../services/dbc')
 const mailer = require('../../services/mailer')
-const resolver = require('../../services/resolver')
+const storage = require('../../services/storage')
+const mapper = require('../../services/mapper')
+const date = require('../../services/date')
 
 class PuppeteerClient {
     constructor(options = {}) {
@@ -17,7 +19,9 @@ class PuppeteerClient {
         // Setup Services
         this._dbc = new dbc()
         this._mailer = new mailer()
-        this._resolver = resolver
+        this._storage = storage
+        this._mapper = mapper
+        this._date = date
         this._db = db
         this._url = url
         this._window = null
@@ -103,14 +107,13 @@ class PuppeteerClient {
         });
     }
 
-    async download(button) {
+    async download(buttons) {
         const path = require('path')
         const util = require('util')
         const fs = require('fs')
         const _ = require('lodash')
 
         const downloadPath = path.join(__dirname, `./app/storages/downloads`)
-
 
         await page._client.send('Page.setDownloadBehavior', {
             behavior: 'allow',
@@ -141,8 +144,9 @@ class PuppeteerClient {
     }
 
     async takeScreenshot(date) {
-        const directory = `./app/storages/images/${this.toString()}/`
-        const screenshot = this._resolver.resolvePath(directory, 'png', { date })
+        const filepath = `images/${this.toString()}/`
+        const filename = `${date}.png`
+        const screenshot = this._storage.touch({ filepath, filename })
         await this.page.screenshot({ file: screenshot.filepath, fullPage: true })
         return screenshot.filename
     }
@@ -166,7 +170,7 @@ class PuppeteerClient {
     }
 
     resolveDateTime(start, end) {
-        return this._resolver.resolveVendorDates({ vendor: this.toString(), start, end })
+        return this._date.resolveVendorDates({ vendor: this.toString(), start, end })
     }
 
     async reloadPage() {

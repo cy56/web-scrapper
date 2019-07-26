@@ -95,15 +95,15 @@ class PT extends Model {
         return ['currency', 'date', 'username'];
     }
 
-    static getVendorParserColumns() {
+    static getVendorMapperColumns() {
         return ['username', , , , 'bets', 'turnover', , , , 'total_win', 'game_income_share', , , , , , , , 'jp_wins'];
     }
 
-    static getVendorParserSkipLines() {
+    static getVendorMapperSkipLines() {
         return [0, -1];
     }
 
-    static getHydraParserColumns() {
+    static getHydraMapperColumns() {
         return [, , 'username', 'currency', 'bets', , 'turnover', 'total_win', 'game_income_share', , , , 'jp_wins'];
     }
 
@@ -111,7 +111,7 @@ class PT extends Model {
         return [0, -1];
     }
 
-    static getParserCast() {
+    static getMapperCast() {
         return [
             { 'bets': Number },
             { 'turnover': 4 },

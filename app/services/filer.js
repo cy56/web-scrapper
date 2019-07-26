@@ -2,10 +2,10 @@ const _ = require('lodash');
 const csv = require('papaparse');
 const path = require('path');
 const fs = require('fs');
-const zipper = require('../zipper');
-const excel = require('../excel');
+const zipper = require('./zipper');
+const excel = require('./excel');
 
-class dataResolver
+class Filer
 {
     static async resolve(file = { filename:null, filepath:null, extension:null }) {
         try {
@@ -72,4 +72,4 @@ class dataResolver
     }
 }
 
-module.exports = dataResolver;
+module.exports = Filer;

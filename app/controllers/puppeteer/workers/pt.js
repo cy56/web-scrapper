@@ -49,7 +49,8 @@ class PT extends PuppeteerClient {
         const brand = this.brand.toUpperCase() || 'RB88'
         const currency = this.currency || null
         const model = this.db[report.toLowerCase()][vendor.toLowerCase()]
-        let results = await this._resolver.resolveParser({ source, brand, vendor, date, currency, report }, data)
+        const data = new this.mapper({ source, brand, vendor, date, currency, report }, data)
+        let results = data.getResult()
         await model.createMany(results)
         return true
     }
@@ -61,7 +62,8 @@ class PT extends PuppeteerClient {
         const brand = this.brand.toUpperCase() || 'RB88'
         const currency = this.currency || null
         const model = this.db[report.toLowerCase()][vendor.toLowerCase()]
-        let results = await this._resolver.resolveParser({ source, brand, vendor, date, currency, report }, data)
+        const data = new this.mapper({ source, brand, vendor, date, currency, report }, data)
+        let results = data.getResult()
         await model.createMany(results)
         return true
     }
