@@ -19,9 +19,10 @@ db.sequelize = sequelize;
 
 let summary = {
     pt: require('../models/vendors/summary/pt.js').initial(sequelize, Sequelize),
+    cmd: require('../models/vendors/summary/cmd.js').initial(sequelize, Sequelize),
 };
 let player = {
-    pt: require('../models/vendors/player/pt.js').initial(sequelize, Sequelize),
+    pt: require('../models/vendors/player/pt.js').initial(sequelize, Sequelize)
 };
 
 //Models/tables

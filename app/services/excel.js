@@ -75,9 +75,9 @@ class Excel
         }
     }
 
-    static convertHtmlTableToJson(selector) {
+    static convertHtmlTableToCSV(selector) {
         let wb = library.utils.table_to_sheet(selector)
-        return library.utils.sheet_to_json(wb)
+        return library.utils.sheet_to_csv(wb)
     }
 }
 

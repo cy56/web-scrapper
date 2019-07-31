@@ -94,7 +94,7 @@ const convert = async(htmlTable, selector) => {
     const document = dom.window.document
     const table = document.querySelector(selector)
 
-    return await excel.convertHtmlTableToJson(table)
+    return await excel.convertHtmlTableToCSV(table)
 }
 
 const download = async (page, buttons) => {
@@ -137,6 +137,5 @@ const download = async (page, buttons) => {
 const logout = async (page) => {
     await page.goto(vendor.pages.logout)
 }
-
 
 run();

@@ -1,6 +1,6 @@
 const csv = require('papaparse');
 const fs = require('fs');
-const resolver = require('../services/resolver');
+const mapper = require('../services/mapper');
 const db = require('../services/database');
 
 const CODE_PERFECT = 0;
@@ -16,7 +16,7 @@ class Uploader
     }
 
     async resolveData (params = { source: null, brand: null, vendor: null, report: null, date: null }, csvData) {
-        return await resolver.resolveParser(params, csvData);
+        return await (new mapper(params, csvData)).getResults();
     };
 
     async insertIntoDB (params = { vendor: null, report: null }, resolved) {

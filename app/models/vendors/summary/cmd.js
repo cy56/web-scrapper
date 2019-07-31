@@ -16,17 +16,11 @@ class CMD extends Model {
             brand: {
                 type: this.Datatypes.STRING
             },
-            filename: {
-                type: this.Datatypes.STRING
-            },
             date: {
                 type: this.Datatypes.DATEONLY
             },
             currency: {
                 type: this.Datatypes.STRING
-            },
-            players: {
-                type: this.Datatypes.INTEGER
             },
             bets: {
                 type: this.Datatypes.INTEGER
@@ -34,19 +28,7 @@ class CMD extends Model {
             stake: {
                 type: this.Datatypes.DECIMAL(24, 2)
             },
-            stakeSold: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            takeBackAmount: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            memberComission: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            playerWinloss: {
-                type: this.Datatypes.DECIMAL(24, 2)
-            },
-            winningPercent: {
+            player_winloss: {
                 type: this.Datatypes.DECIMAL(24, 2)
             }
         };
@@ -57,54 +39,73 @@ class CMD extends Model {
             {
                 unique: true,
                 fields: ['date', 'currency', 'source', 'brand']
-            },
-            {
-                name: 'default_indexes',
-                fields: ['source', 'brand', 'currency']
             }
         ];
     }
 
     static getModelDefaultAttributes() {
-        return ['id', 'source', 'date', 'currency', 'players', 'bets', 'stake', 'stakeSold', 'takeBackAmount', 'memberComission', 'playerWinloss', 'winningPercent'];
+        return ['id', 'source', 'date', 'currency', 'bets', 'stake', 'player_winloss'];
     }
 
     static getOnDuplicateValues() {
         return [
-            'players', 'bets', 'stake', 'stakeSold', 'takeBackAmount', 'memberComission', 'playerWinloss', 'winningPercent'
+            'bets', 'stake', 'player_winloss'
         ];
     }
 
-    static getDatatableGroupBy() {
-        return {
-            attributes: [
-                'source', 'currency', 'date',
-                [this.sequelize.fn('sum', this.sequelize.col('players')), 'players'], 
-                [this.sequelize.fn('sum', this.sequelize.col('bets')), 'bets'], 
-                [this.sequelize.fn('sum', this.sequelize.col('stake')), 'stake'], 
-                [this.sequelize.fn('sum', this.sequelize.col('stakeSold')), 'stakeSold'], 
-                [this.sequelize.fn('sum', this.sequelize.col('takeBackAmount')), 'takeBackAmount'], 
-                [this.sequelize.fn('sum', this.sequelize.col('memberComission')), 'memberComission'],
-                [this.sequelize.fn('sum', this.sequelize.col('playerWinloss')), 'playerWinloss'], 
-                [this.sequelize.fn('sum', this.sequelize.col('winningPercent')), 'winningPercent']
-            ],
-            groupBy: ['source', 'brand', 'currency', 'date']
-        }
-    }
-
-    static getDatatableFilter() {
-        return ['source', 'currency'];
+    static getDatatableColumns() {
+        return ['source', 'currency', 'date', 'bets', 'stake', 'player_winloss'];
     }
 
     static getDatatableHeader() {
         return [
-            { text: 'Source', value: 'source' },
-            { text: 'Currency', value: 'currency' },
-            { text: 'No of Players', value: 'players' },
-            { text: 'No of Bets', value: 'bets' },
-            { text: 'Stake Amount', value: 'stake' },
-            { text: 'Winloss Amount', value: 'playerWinloss' },
+            { text: 'Currency', value: 'currency', sortable: true, align: 'left', width: "1%" },
+            { text: 'Date', value: 'date', sortable: true, align: 'left', width: "1%" },
+            { text: '(vendor) Players', value: 'vendor_players', align: 'left', sortable: false, width: "1%" },
+            { text: '(vendor) Bets ', value: 'vendor_bets', align: 'left', sortable: false, width: "1%" },
+            { text: '(vendor) Stake', value: 'vendor_stake', align: 'left', sortable: false, width: "1%" },
+            { text: '(vendor) Player WinLoss', value: 'vendor_player_winloss', align: 'left', sortable: false, width: "1%" },
+            { text: '(hydra) Players', value: 'hydra_players', align: 'left', sortable: false, width: "1%" },
+            { text: '(hydra) Bets', value: 'hydra_bets', align: 'left', sortable: false, width: "1%" },
+            { text: '(hydra) Stake', value: 'hydra_stake', align: 'left', sortable: false, width: "1%" },
+            { text: '(hydra) Player WinLoss', value: 'hydra_player_winloss', align: 'left', sortable: false, width: "1%" },
+            { text: '(Diff) Players', value: 'diff_players', align: 'left', sortable: true, width: "1%" },
+            { text: '(Diff) Bets', value: 'diff_bets', align: 'left', sortable: true, width: "1%" },
+            { text: '(Diff) Stake', value: 'diff_stake', align: 'left', sortable: true, width: "1%" },
+            { text: '(Diff) Player WinLoss', value: 'diff_player_winloss', align: 'left', sortable: true, width: "1%" },
         ];
+    }
+
+    static getDataIndexes() {
+        return ['currency', 'date'];
+    }
+
+    static getVendorMapperColumns() {
+        return [, , 'currency', 'bets', 'stake', , 'player_winloss']
+    }
+
+    static getVendorMapperSkipLines() {
+        return [0, 1, 2, 5, 6]
+    }
+
+    static getHydraMapperColumns() {
+        
+    }
+
+    static getHydraMapperSkipLines() {
+
+    }
+
+    static getMapperCast() {
+        return [
+            { 'bets': 0 },
+            { 'stake': 2 },
+            { 'player_winloss': 2 }
+        ];
+    }
+
+    static getSkipDuplicate() {
+        return ['currency', 'date'];
     }
 }
 

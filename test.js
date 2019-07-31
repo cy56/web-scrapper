@@ -1,20 +1,19 @@
 test10 = async() => {
-    const parser = require('./app/services/mapper')
+    const mapper = require('./app/services/mapper')
     const filer = require('./app/services/filer')
-    //const db = require('./app/services/database');
+    const db = require('./app/services/database');
     const path = require('path');
     const brand = 'RB88';
-    const source = 'hydra';
-    const vendor = 'PT';
-    const date = '2016-06-02';
+    const source = 'vendor';
+    const vendor = 'CMD';
+    const date = '2016-06-01';
     const report = 'summary';
-    const currency = 'cny';
-    const filename = 'summary_02.csv';
+    const filename = 'LicenseeWinLose1564380045475.csv';
     const filepath = path.join('./app/storages/downloads', filename);
     const unresolved = await filer.resolve({filename, filepath});
-    const data = new parser({ brand, source, vendor, report, date, currency}, unresolved)
-    // const model = db[report.toLowerCase()][vendor.toLowerCase()];
-    // model.createMany(data);
+    const data = new mapper({ brand, source, vendor, report, date }, unresolved)
+    const model = db[report.toLowerCase()][vendor.toLowerCase()];
+    model.createMany(data.getResults());
     //console.log(unresolved)
     console.log(data.getResults());
 }
@@ -137,4 +136,4 @@ test16 = async() => {
     console.log(file)
 }
 
-test16();
+test10();
